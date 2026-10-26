@@ -43,7 +43,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .hero-trust span:before{content:"✓";color:var(--gold);margin-right:8px;font-weight:800}
 .hero-preview{position:relative}
 .halo{position:absolute;inset:-20px;background:linear-gradient(135deg,#edc57332,transparent 60%);border-radius:37px;filter:blur(14px)}
-.preview-card{position:relative;background:#fff;color:var(--ink);border-radius:26px;box-shadow:0 32px 75px #0004;overflow:hidden;transform:rotate(1deg)}
+.preview-card{position:relative;background:#fff;color:var(--ink);border-radius:26px;box-shadow:0 32px 75px #0004;overflow:hidden;transform:none}
 .preview-top{padding:29px 30px 23px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid #e9eef4}
 .mini-label{color:#8190a3;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
 .preview-top strong{font-size:14px}
@@ -58,7 +58,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .preview-foot div:not(:last-child){border-right:1px solid var(--line)}
 .preview-foot small{display:block;font-size:11px;color:#75859b;margin-bottom:5px}
 .preview-foot b{font-size:17px;letter-spacing:-.025em}
-.floating-note{position:absolute;right:-14px;bottom:23px;background:var(--gold);color:var(--navy);border-radius:12px;padding:12px 15px;box-shadow:0 12px 40px #0002;font-weight:750;font-size:12px;transform:rotate(-4deg)}
+
 .benefits{position:relative;z-index:1;background:white;border:1px solid #e8edf2;border-radius:20px;margin-top:-38px;padding:28px 34px;display:grid;grid-template-columns:repeat(3,1fr);gap:30px;box-shadow:0 18px 48px #112c4510}
 .benefit{display:flex;align-items:center;gap:17px}
 .benefit:not(:last-child){border-right:1px solid var(--line)}
@@ -143,7 +143,7 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 .footer-bottom{margin-top:38px;border-top:1px solid #ffffff1c;padding-top:19px;color:#879ab2;font-size:11px}
 .hidden{display:none}
 @media(max-width:1020px){.hero{gap:34px;padding:80px 0 104px}.hero h1{font-size:54px}.preview-main .preview-value{font-size:43px}.simulator-input,.simulator-result{padding:32px}.projections{grid-template-columns:repeat(3,1fr)}.action-card{gap:24px}}
-@media(max-width:750px){.wrap{width:min(100% - 34px,600px)}.header-inner{min-height:72px}.site-nav{display:none}.brand{font-size:19px}.hero{grid-template-columns:1fr;padding:65px 0 88px}.hero h1{font-size:clamp(44px,10vw,59px)}.hero-preview{max-width:510px}.floating-note{right:0}.benefits{grid-template-columns:1fr;margin-top:-29px;padding:20px 23px;gap:18px}.benefit{border-right:0!important}.benefit-icon{width:41px;height:41px;font-size:19px}.section{padding:70px 0}.simulator-frame{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}.step{min-height:auto}.faq-grid{grid-template-columns:1fr;gap:20px}.action-card{grid-template-columns:1fr;padding:29px}.footer-grid{flex-direction:column}.projections{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:750px){.wrap{width:min(100% - 34px,600px)}.header-inner{min-height:72px}.site-nav{display:none}.brand{font-size:19px}.hero{grid-template-columns:1fr;padding:65px 0 88px}.hero h1{font-size:clamp(44px,10vw,59px)}.hero-preview{max-width:510px}.benefits{grid-template-columns:1fr;margin-top:-29px;padding:20px 23px;gap:18px}.benefit{border-right:0!important}.benefit-icon{width:41px;height:41px;font-size:19px}.section{padding:70px 0}.simulator-frame{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}.step{min-height:auto}.faq-grid{grid-template-columns:1fr;gap:20px}.action-card{grid-template-columns:1fr;padding:29px}.footer-grid{flex-direction:column}.projections{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:440px){.header-inner .btn{font-size:11px;padding:10px 12px}.hero h1{letter-spacing:-.055em}.hero p{font-size:15px}.hero-ctas .btn{width:100%}.preview-top,.preview-main{padding:23px}.preview-foot{padding:16px 23px}.simulator-input,.simulator-result{padding:24px}.grid-two{grid-template-columns:1fr}.channel{align-items:flex-start;flex-direction:column}.projections{gap:9px}.projection-item{padding:14px}.projection-item strong{font-size:17px}.intake-card{padding:21px}.action-card{padding:20px}.notice-banner{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
 </style>
@@ -176,7 +176,7 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
       <path d="M3 114C36 111 62 113 90 97S142 91 175 78 236 94 273 59 337 67 364 39 426 36 457 12" fill="none" stroke="#d4a34e" stroke-width="4" stroke-linecap="round"/>
       <circle cx="457" cy="12" r="6" fill="#d4a34e" stroke="#fff" stroke-width="3"/></svg></div>
       </div><div class="preview-foot"><div><small>Economia mensal</small><b id="hero-month">R$ 100,00</b></div><div><small>Canal de origem</small><b>Energy Business</b></div></div>
-    </div><div class="floating-note">✦ Uma nova relação com a energia</div>
+    </div>
   </div>
 </div></section>
 <div class="wrap benefits" aria-label="Benefícios"><div class="benefit"><span class="benefit-icon">↗</span><div><b>Economia em perspectiva</b><small>Visualize diferentes cenários.</small></div></div><div class="benefit"><span class="benefit-icon">◇</span><div><b>Experiência simplificada</b><small>Simule sem burocracia.</small></div></div><div class="benefit"><span class="benefit-icon">✳</span><div><b>Energia inteligente</b><small>Soluções conforme disponibilidade.</small></div></div></div>
