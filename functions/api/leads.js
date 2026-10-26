@@ -1,5 +1,5 @@
 const json=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
-const sources=new Set(["clube-demo","avai-demo","figueirense-demo","outro-demo"]);
+const sources=new Set(["clube-demo"]);
 const profiles=new Set(["Residência","Empresa","Condomínio"]);
 export async function onRequestPost({request,env}){
   if(env.LEADS_ENABLED!=="true" || !env.DB || !env.TURNSTILE_SITE_KEY || !env.TURNSTILE_SECRET || !env.PRIVACY_CONTACT){

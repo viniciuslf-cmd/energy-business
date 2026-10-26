@@ -1,34 +1,23 @@
-# Energy Business — Plataforma de energia para clubes
+# Energy Business
 
-Plataforma web da Energy Business para simulação de economia, cadastro futuro de interessados e gestão comercial. A primeira etapa é independente; campanhas dentro dos sites de clubes ocorrerão depois de validar a operação.
+Plataforma: https://energy-business.pages.dev
+Painel: https://energy-business.pages.dev/admin/
+
+## Mudanças nesta versão
+
+- Reformulação completa da home e da área de gestão com layout moderno responsivo.
+- Origem da simulação fixa em Energy Business, sem seleção de clubes.
+- Painel com visualização sem senha nesta fase e opção de registros de exemplo claramente fictícios.
+- A API administrativa de dados pessoais continua protegida por segredo no Cloudflare; a remoção de senha na visualização não expõe dados de clientes.
+- LEADS_ENABLED=false: nenhum cadastro real enviado ou armazenado. O formulário testa apenas a simulação.
+- Simulador e projeções são valores ilustrativos, nunca garantia comercial.
 
 ## Infraestrutura
 
-- Produção: https://energy-business.pages.dev
-- GitHub: branch main; Framework None; build vazio; saída dist.
-- Cloudflare D1: energy-business-prod, binding de produção DB.
-- Pages Functions: /api/config, /api/leads e /api/admin/leads.
-- Gestão: /admin/ (chave secreta ADMIN_TOKEN configurada somente no Cloudflare).
-- Identidade visual da Energy Business e simulador ilustrativo preservados.
+Cloudflare Pages conectado ao branch main do GitHub, saída dist, sem comando de build. Cloudflare D1 ligado pelo binding DB; funções em functions/api.
 
-## Segurança e estado atual
+## Para ativar operação real
 
-O recebimento de dados reais permanece DESATIVADO (LEADS_ENABLED=false). A simulação ainda é demonstrativa, sem transmissão dos campos pessoais. O painel administrativo está preparado e exige uma chave secreta armazenada fora do repositório.
+Finalizar política LGPD e identificação da empresa, proteção Cloudflare Turnstile, integração da fornecedora, homologação e login de usuário individual para acesso a informações reais. Somente depois alterar LEADS_ENABLED para true.
 
-Para habilitar o recebimento real:
-
-1. Completar a Política de Privacidade com a pessoa jurídica controladora, contato, retenção, compartilhamento e direitos LGPD.
-2. Configurar Cloudflare Turnstile: TURNSTILE_SITE_KEY e TURNSTILE_SECRET.
-3. Definir PRIVACY_CONTACT com canal de contato válido.
-4. Testar a jornada e ativar LEADS_ENABLED=true nas variáveis de produção do Cloudflare Pages.
-5. Formalizar condições de economia, disponibilidade, fornecedora e eventuais clubes antes de comercializar.
-
-API pública com validação de entrada, verificação de origem e Turnstile obrigatório; a administração utiliza token de alta entropia, páginas HTTPS e respostas sem cache. Os descontos continuam ilustrativos. O pedido de análise não configura adesão nem contratação.
-
-## Modelo de dados
-
-schema.sql mantém a tabela leads e índices. Etapas: novo, em_analise, contatado, convertido, descartado. Estimativa do valor da conta e taxas são cenários de demonstração.
-
-## Próximas entregas
-
-Fluxo para anexar fatura com controle de acesso, avaliação de elegibilidade, integração com fornecedora, política LGPD definitiva, acesso individual para usuários administrativos e páginas personalizadas por clube após acordos.
+Clubes de futebol não fazem parte da seleção pública nesta versão. A fonte inicial de todos os cadastros será a Energy Business.

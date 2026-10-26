@@ -1,6 +1,6 @@
 const json=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store, private","X-Content-Type-Options":"nosniff"}});
 const statuses=new Set(["novo","em_analise","contatado","convertido","descartado"]);
-const sources=new Set(["clube-demo","avai-demo","figueirense-demo","outro-demo"]);
+const sources=new Set(["clube-demo"]);
 async function authorized(request,env){
   const expected=env.ADMIN_TOKEN;
   const supplied=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
