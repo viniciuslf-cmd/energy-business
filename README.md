@@ -1,31 +1,34 @@
-# Energy Business
+# Energy Business — Plataforma de energia para clubes
 
-Plataforma web da Energy Business para apresentação de soluções de energia, simulação de economia e futura integração com os sites de clubes de futebol.
+Plataforma web da Energy Business para simulação de economia, cadastro futuro de interessados e gestão comercial. A primeira etapa é independente; campanhas dentro dos sites de clubes ocorrerão depois de validar a operação.
 
-## Estado atual
+## Infraestrutura
 
-Prévia navegável com identidade da empresa, formulário demonstrativo, etapas da adesão e projeções em 1, 2, 5, 10 e 15 anos. Nenhum dado pessoal é armazenado ou enviado. Percentuais são ilustrativos.
+- Produção: https://energy-business.pages.dev
+- GitHub: branch main; Framework None; build vazio; saída dist.
+- Cloudflare D1: energy-business-prod, binding de produção DB.
+- Pages Functions: /api/config, /api/leads e /api/admin/leads.
+- Gestão: /admin/ (chave secreta ADMIN_TOKEN configurada somente no Cloudflare).
+- Identidade visual da Energy Business e simulador ilustrativo preservados.
 
-## Cloudflare Pages com GitHub
+## Segurança e estado atual
 
-- Branch de produção: `main`
-- Framework: `None`
-- Comando de build: vazio
-- Diretório de saída: `dist`
-- Diretório raiz: `/`
+O recebimento de dados reais permanece DESATIVADO (LEADS_ENABLED=false). A simulação ainda é demonstrativa, sem transmissão dos campos pessoais. O painel administrativo está preparado e exige uma chave secreta armazenada fora do repositório.
 
-Conectar o repositório no Cloudflare Pages. Cada alteração em `main` poderá gerar uma publicação automática. Não são necessárias dependências ou variáveis de ambiente para esta prévia.
+Para habilitar o recebimento real:
 
-## Arquivos
+1. Completar a Política de Privacidade com a pessoa jurídica controladora, contato, retenção, compartilhamento e direitos LGPD.
+2. Configurar Cloudflare Turnstile: TURNSTILE_SITE_KEY e TURNSTILE_SECRET.
+3. Definir PRIVACY_CONTACT com canal de contato válido.
+4. Testar a jornada e ativar LEADS_ENABLED=true nas variáveis de produção do Cloudflare Pages.
+5. Formalizar condições de economia, disponibilidade, fornecedora e eventuais clubes antes de comercializar.
 
-- `dist/index.html`: página, estilos e simulador.
-- `dist/energy-business-logo.png`: imagem fornecida pelo proprietário, com enquadramento visual por CSS.
-- `dist/_headers`: cabeçalhos básicos de segurança.
+API pública com validação de entrada, verificação de origem e Turnstile obrigatório; a administração utiliza token de alta entropia, páginas HTTPS e respostas sem cache. Os descontos continuam ilustrativos. O pedido de análise não configura adesão nem contratação.
 
-## Próximas integrações
+## Modelo de dados
 
-Recebimento persistente de solicitações, painel administrativo protegido, análise de fatura e integração com a fornecedora. Após validar a operação, conectar campanhas aos sites dos clubes. Essas funcionalidades ainda não estão implementadas.
+schema.sql mantém a tabela leads e índices. Etapas: novo, em_analise, contatado, convertido, descartado. Estimativa do valor da conta e taxas são cenários de demonstração.
 
-## Verificação
+## Próximas entregas
 
-Abrir a página no navegador e testar o formulário com dados fictícios. Exemplo: conta de R$ 800 com cenário de 20% resulta em R$ 160 por mês e R$ 1.920 por ano.
+Fluxo para anexar fatura com controle de acesso, avaliação de elegibilidade, integração com fornecedora, política LGPD definitiva, acesso individual para usuários administrativos e páginas personalizadas por clube após acordos.
