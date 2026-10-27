@@ -318,6 +318,24 @@ html{scroll-padding-top:88px}
 .partner-test{border:1px solid #ead39f;border-radius:13px;background:#fff8e9;padding:14px 16px;margin:15px 0 6px;color:#463c2e}
 .partner-test[hidden]{display:none!important}.partner-test strong{font-size:13px}.partner-test p{font-size:11px;line-height:1.7;color:#745f3b;margin:7px 0}
 .partner-test button{font-size:11px;padding:9px 12px;min-height:36px}
+
+/* Conclusão visível: sucesso e convite lado a lado, na primeira tela. */
+.complete-section{padding:46px 0 58px}
+.complete-section>.wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:20px;max-width:1200px}
+.complete-section .complete-panel{width:100%;max-width:none;margin:0;padding:30px 29px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.complete-section .complete-icon{margin:0 auto 14px;width:52px;height:52px}
+.complete-section .complete-panel h2{font-size:clamp(25px,2.8vw,34px);margin:6px 0 12px}
+.complete-section .complete-panel>p:not(.eyebrow){font-size:13px;line-height:1.65}
+.complete-section .complete-club{margin:14px 0;padding:14px}
+.complete-section .complete-referral{width:100%;max-width:none;margin:0;min-width:0;display:flex}
+.complete-section .complete-referral .fan-panel-referral{height:100%;width:100%;min-width:0;padding:26px 29px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;border:2px solid #cfa258;box-shadow:0 15px 38px #162b4519}
+.complete-section .complete-referral .fan-panel-referral h3{font-size:clamp(22px,2.35vw,28px);margin-bottom:14px}
+.complete-section .complete-referral .fan-panel-referral>p{font-size:13px;line-height:1.7}
+.complete-section .fan-panel-buttons{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 7px}
+.complete-section .fan-panel-buttons .btn{justify-content:center;min-height:47px;font-size:12px;padding:10px 12px;white-space:normal}
+.complete-section .fan-panel .fan-referral-status{font-size:11px;line-height:1.6;margin-top:11px}
+@media(max-width:850px){.complete-section>.wrap{grid-template-columns:1fr;max-width:740px}.complete-section .complete-panel{padding:28px 23px}.complete-section .complete-referral{margin-top:0}.complete-section .complete-referral .fan-panel-referral{padding:26px 24px}}
+@media(max-width:450px){.complete-section{padding:26px 0 40px}.complete-section .fan-panel-buttons{grid-template-columns:1fr}.complete-section .complete-referral .fan-panel-referral{padding:22px 20px}}
 </style>
 </head>
 <body>
@@ -488,7 +506,7 @@ html{scroll-padding-top:88px}
   <button type="button" id="complete-back" class="btn outline">Voltar para o início</button>
  </div>
  <div class="complete-referral" aria-label="Indique amigos depois da conclusão">
-<div class="fan-panel fan-panel-referral"><div class="fan-panel-icon" aria-hidden="true">✉</div><h3>Terminou seu cadastro? Convide seus amigos!</h3>
+<div class="fan-panel fan-panel-referral"><div class="fan-panel-icon" aria-hidden="true">✉</div><span class="eyebrow" style="color:#edc573;font-size:11px;letter-spacing:.09em">PRÓXIMO PASSO: CONVIDE AMIGOS</span><h3>Seu convite está pronto para compartilhar!</h3>
 <p>Compartilhe o link da Energy Business com amigos que também querem economizar. Os benefícios por indicação só serão contabilizados após o cadastro completo, a validação do indicado e a ativação do programa conforme regulamento.</p>
 <div class="fan-panel-buttons"><button class="btn gold" type="button" id="fan-whatsapp">Indicar pelo WhatsApp <span aria-hidden="true">↗</span></button><button class="btn fan-copy" type="button" id="fan-copy">Copiar link</button></div>
 <p id="fan-referral-status" class="fan-referral-status" role="status" aria-live="polite">O convite já pode ser compartilhado, mas indicações e bonificações ainda não são contabilizadas nesta versão.</p></div>
