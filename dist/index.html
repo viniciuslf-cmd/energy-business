@@ -278,6 +278,28 @@ html{scroll-padding-top:88px}
 @media(max-width:800px){.fan-heading{display:block}.fan-status{display:inline-block;margin-top:13px}.fan-explain,.fan-panel-grid{grid-template-columns:1fr}.fan-section{padding:62px 0}}
 @media(max-width:480px){.fan-panel{padding:21px}.fan-panel-buttons .btn{flex:1}.fan-feature{padding:19px}.fan-hero-promo{margin-top:17px}.fan-heading h2{font-size:30px}}
 
+
+/* Pergunta condicional sobre apoiar o clube */
+.support-team-question{border:0;padding:0;margin:15px 0 10px;display:flex;gap:11px;flex-wrap:wrap;align-items:center;min-width:0}
+.support-team-question legend{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:9px;float:none;width:100%}
+.support-team-option{display:flex;align-items:center;gap:9px;min-height:45px;flex:1;min-width:95px;border:1px solid #dbe4ed;border-radius:11px;padding:10px 13px;font-size:13px;font-weight:700;cursor:pointer;color:#2c4360;background:#f9fbfe}
+.support-team-option:has(input:checked){background:#fbf1dc;border-color:#d1a14c}
+.support-team-option input{flex:none;width:16px!important;height:16px!important;min-height:0!important;margin:0!important;accent-color:#ad802d}
+#club-select-wrap[hidden],#conclusao[hidden],#complete-club[hidden],#complete-club-percent[hidden]{display:none!important}
+#club-select-wrap{background:#f7f9fc;border:1px solid #e1e8f0;border-radius:12px;padding:12px 14px;margin:12px 0}
+#club-select-wrap .field{margin:0 0 7px}
+.finish-status{font-size:12px;color:#eed5a1;line-height:1.6;min-height:0;margin:12px 0 0}
+.complete-section{padding:80px 0;background:linear-gradient(145deg,#eaf2fa,#fff)}
+.complete-panel{max-width:780px;margin:auto;background:white;border:1px solid #dce6f0;padding:42px 48px;border-radius:24px;box-shadow:0 18px 55px #102a4412;text-align:center}
+.complete-icon{display:grid;place-items:center;width:62px;height:62px;border-radius:50%;background:#e8f6ef;color:#20784f;margin:0 auto 21px;font-size:30px;font-weight:850}
+.complete-panel h2{font-size:clamp(29px,3.6vw,41px);line-height:1.2;letter-spacing:-.04em;margin:9px 0 13px}
+.complete-panel>p:not(.eyebrow){color:#617790;line-height:1.8}
+.complete-club{background:#f6f8fc;border:1px solid #dce7f2;border-radius:14px;margin:24px 0;padding:21px 23px;text-align:left}
+.complete-club h3{margin:0 0 9px;font-size:18px}
+.complete-club p{color:#516984;font-size:13px;line-height:1.7;margin:0}
+.complete-club .complete-percent{margin-top:12px;color:#9b752f;font-weight:800}
+.complete-panel .complete-footnote{font-size:12px;color:#8393a5;margin:19px 0}
+@media(max-width:590px){.complete-panel{padding:27px 21px}.complete-section{padding:50px 0}}
 </style>
 </head>
 <body>
@@ -291,8 +313,8 @@ html{scroll-padding-top:88px}
 <section class="hero-shell" id="cadastro"><div class="wrap hero intake-hero">
   <div class="hero-intro">
     <div class="eyebrow">Energy Business · Seu primeiro passo</div>
-    <h1>Ajude seu time do coração e descubra como <span>economizar energia.</span></h1>
-    <p>Quer ajudar seu time do coração e ainda buscar desconto na fatura de energia? Escolha seu time, faça seu cadastro e envie sua conta para análise.</p>
+    <h1>Economize energia e ajude seu <span>time do coração.</span></h1>
+    <p>Quer economizar na sua conta de energia e ainda ajudar seu time do coração? Faça seu cadastro e envie sua conta para análise.</p>
 <a href="#torcida" class="fan-hero-promo" id="fan-hero-link"><span class="fan-hero-ball" aria-hidden="true">⚽</span><span><strong>Como meu time pode ganhar com minha conta de luz?</strong><small>Veja como funcionam a proposta e as indicações de amigos</small></span><span class="fan-hero-arrow" aria-hidden="true">↗</span></a>
     <div class="intake-steps" aria-label="Etapas da solicitação">
       <span class="step-chip active"><b>01</b> Seus dados</span>
@@ -312,10 +334,15 @@ html{scroll-padding-top:88px}
         <div><label class="field" for="entry-email">E-mail</label>
         <input id="entry-email" name="email" type="email" maxlength="254" required placeholder="teste@exemplo.com" autocomplete="off"></div>
       </div>
-      <label class="field" for="entry-club">Seu time do coração</label>
-<select id="entry-club" name="club" required aria-describedby="club-helper"><option value="">Escolha seu time</option><option value="sem_clube">Prefiro não escolher um time</option></select>
-<input id="entry-club-custom" type="text" maxlength="70" placeholder="Digite o nome do clube" aria-label="Nome de outro clube" hidden>
-<p class="club-helper" id="club-helper">Preferência do torcedor. Não indica parceria oficial com o clube.</p>
+      <fieldset class="support-team-question" id="team-support-question"><legend>Quer ajudar seu time do coração?</legend>
+  <label class="support-team-option"><input type="radio" name="help_club" value="sim" required> Sim</label>
+  <label class="support-team-option"><input type="radio" name="help_club" value="nao" required> Não</label>
+</fieldset>
+<div id="club-select-wrap" hidden>
+  <label class="field" for="entry-club">Escolha seu time</label>
+  <select id="entry-club" name="club" aria-describedby="club-helper"><option value="">Escolha seu time</option></select>
+  <p class="club-helper" id="club-helper">A seleção de clube representa preferência. A parceria e os benefícios dependem de acordo formal.</p>
+</div>
 <div id="referral-arrival" class="referral-arrival" hidden>Você chegou por uma indicação. O acompanhamento de indicações ainda não está ativo nesta demonstração.</div>
 <label class="field" for="entry-bill">Valor aproximado da conta por mês</label>
       <select id="entry-bill" name="bill" required>
@@ -420,13 +447,27 @@ html{scroll-padding-top:88px}
     <div class="simulator-result" aria-live="polite"><div class="result-top"><span class="eyebrow" style="color:var(--gold)">Resultado estimado</span><span class="result-tag">Cenário ilustrativo</span></div>
       <p class="result-title">Você poderia economizar por ano</p><div class="result-savings" id="year">R$ 1.200,00</div><p class="result-sub">Um novo jeito de olhar para seus gastos com energia.</p>
       <ul class="result-details"><li><span>Economia mensal</span><b id="month">R$ 100,00</b></li><li><span>Nova conta estimada</span><b id="after">R$ 400,00</b></li><li><span>Origem</span><b>Energy Business</b></li></ul>
-      <a class="btn gold" href="#cadastro">Começar cadastro <span>↗</span></a><div class="result-caption">Simulação sem oferta comercial ou garantia de desconto.</div>
+      <button class="btn gold" id="finish-flow" type="button">Concluir as 3 etapas <span aria-hidden="true">✓</span></button><p id="finish-status" role="status" aria-live="polite" class="finish-status"></p><div class="result-caption">Simulação sem oferta comercial ou garantia de desconto.</div>
     </div>
   </div>
   <div class="projections" id="projections" aria-live="polite"></div>
   <p class="helper" style="text-align:center">Projeções sem juros ou reajustes, com valores de conta e percentuais constantes ao longo do período.</p>
 </div></section>
-
+<section id="conclusao" class="complete-section" hidden><div class="wrap">
+ <div class="complete-panel">
+  <div class="complete-icon" aria-hidden="true">✓</div>
+  <p class="eyebrow" id="complete-mode-label">Fluxo concluído</p>
+  <h2 id="complete-title">Etapas concluídas</h2>
+  <p id="complete-description"></p>
+  <div id="complete-club" class="complete-club" hidden>
+   <h3 id="complete-club-title"></h3>
+   <p id="complete-club-message"></p>
+   <p id="complete-club-percent" class="complete-percent" hidden></p>
+  </div>
+  <p id="complete-footnote" class="complete-footnote"></p>
+  <button type="button" id="complete-back" class="btn outline">Voltar para o início</button>
+ </div>
+</div></section>
 <section class="section section-alt" id="como-funciona"><div class="wrap"><div class="section-heading"><span class="eyebrow">Como funciona</span><h2>Uma jornada simples, do primeiro cálculo à análise.</h2><p>A Energy Business conecta tecnologia, informação e uma experiência de energia descomplicada.</p></div>
 <div class="process-grid"><article class="step"><span class="step-number">01</span><h3>Faça sua simulação</h3><p>Informe o valor aproximado da sua conta e visualize cenários ilustrativos de economia.</p></article><article class="step"><span class="step-number">02</span><h3>Solicite uma avaliação</h3><p>Na operação comercial, a equipe analisará a distribuidora, a fatura e a elegibilidade da unidade.</p></article><article class="step"><span class="step-number">03</span><h3>Conheça a proposta</h3><p>Após a análise, você poderá conhecer condições, disponibilidade e próximos passos antes de contratar.</p></article></div>
 </div></section>
