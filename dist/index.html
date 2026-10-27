@@ -146,13 +146,65 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 @media(max-width:750px){.wrap{width:min(100% - 34px,600px)}.header-inner{min-height:72px}.site-nav{display:none}.brand{font-size:19px}.hero{grid-template-columns:1fr;padding:65px 0 88px}.hero h1{font-size:clamp(44px,10vw,59px)}.hero-preview{max-width:510px}.benefits{grid-template-columns:1fr;margin-top:-29px;padding:20px 23px;gap:18px}.benefit{border-right:0!important}.benefit-icon{width:41px;height:41px;font-size:19px}.section{padding:70px 0}.simulator-frame{grid-template-columns:1fr}.process-grid{grid-template-columns:1fr}.step{min-height:auto}.faq-grid{grid-template-columns:1fr;gap:20px}.action-card{grid-template-columns:1fr;padding:29px}.footer-grid{flex-direction:column}.projections{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:440px){.header-inner .btn{font-size:11px;padding:10px 12px}.hero h1{letter-spacing:-.055em}.hero p{font-size:15px}.hero-ctas .btn{width:100%}.preview-top,.preview-main{padding:23px}.preview-foot{padding:16px 23px}.simulator-input,.simulator-result{padding:24px}.grid-two{grid-template-columns:1fr}.channel{align-items:flex-start;flex-direction:column}.projections{gap:9px}.projection-item{padding:14px}.projection-item strong{font-size:17px}.intake-card{padding:21px}.action-card{padding:20px}.notice-banner{font-size:10px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
+
+/* Leitor de faturas: módulos isolados do simulador */
+#fatura{background:linear-gradient(180deg,#f0f5fa,#f8fafc);border-top:1px solid #e3ebf3;border-bottom:1px solid #e3ebf3}
+#fatura .bill-layout{display:grid;grid-template-columns:1.04fr .96fr;gap:23px;align-items:start}
+#fatura .bill-card{background:white;border:1px solid #e0e8f1;border-radius:23px;padding:30px;box-shadow:0 17px 48px #122e460a}
+#fatura .bill-card h3{font-size:19px;letter-spacing:-.04em;margin:0 0 9px}
+#fatura .bill-card>p{font-size:12px;color:#718299}
+#fatura .bill-chooser{position:relative;margin-top:19px;min-height:250px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:linear-gradient(135deg,#f8fafc,#eef3f9);border:2px dashed #c7d5e5;border-radius:18px;text-align:center;overflow:hidden}
+#fatura .bill-chooser.drag{border-color:#c99b45;background:#fff9e8}
+#fatura .bill-placeholder-icon{width:57px;height:57px;display:grid;place-items:center;margin:0 auto 12px;background:#ffffff;color:#aa8242;border-radius:16px;font-size:27px;box-shadow:0 7px 20px #172f4810}
+#fatura .bill-chooser b{font-size:14px;display:block}
+#fatura .bill-chooser small{font-size:11px;color:#8291a2;display:block;margin:4px 0 15px}
+#fatura .bill-input-hidden{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+#fatura .bill-preview-img{max-width:100%;max-height:330px;object-fit:contain;padding:16px;transition:transform .2s}
+#fatura .bill-pdf-label{font-weight:850;color:#49617c;background:#fff;border-radius:13px;padding:26px;margin:30px 0}
+#fatura .bill-filename{display:block;word-break:break-all;color:#5d7390;font-size:11px;margin:11px 0}
+#fatura .bill-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+#fatura .bill-actions .btn{font-size:12px;padding:12px 16px}
+#fatura .bill-status{min-height:39px;margin:17px 0 0;padding:12px 14px;border-radius:10px;background:#f1f5f9;color:#58718b;font-size:12px}
+#fatura .bill-status[data-kind="error"]{background:#fff0ee;color:#a13225}
+#fatura .bill-status[data-kind="warn"]{background:#fff8e5;color:#835c22}
+#fatura .bill-status[data-kind="ok"]{background:#eaf7f1;color:#226845}
+#fatura .bill-guide{margin-top:18px}
+#fatura .bill-guide strong{font-size:12px;color:#263d56}
+#fatura .bill-guide p{font-size:11px;color:#8291a3;line-height:1.8;margin-top:5px}
+#fatura .bill-privacy{background:#102a47;color:#e8f0fb;border-radius:15px;padding:20px;margin-top:20px}
+#fatura .bill-privacy strong{font-size:13px;display:block;color:#f0cd87}
+#fatura .bill-privacy p{color:#bfd0e1;font-size:11px;line-height:1.8;margin:8px 0 0}
+#fatura .bill-results{margin-top:18px;background:white;border:1px solid #dfe7f0;border-radius:19px;padding:25px}
+#fatura .bill-results h3{margin:0 0 7px;font-size:18px}
+#fatura .bill-results .bill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 16px}
+#fatura .bill-results label{font-size:12px;font-weight:750;display:block;color:#3b506a;margin-top:13px}
+#fatura .bill-results input{display:block;width:100%;margin-top:6px;background:#f9fbfe;border:1px solid #dce5ee;border-radius:10px;padding:11px 13px;font-size:13px}
+#fatura .bill-results .full{grid-column:1/-1}
+#fatura .bill-check{display:flex;align-items:start;gap:9px;margin-top:16px;color:#667c91;font-size:11px;line-height:1.65}
+#fatura .bill-check input{margin:2px 0 0;min-height:0;width:16px;height:16px;flex:none}
+#fatura details{border:1px solid #e0e7ef;border-radius:10px;padding:12px;margin-top:15px}
+#fatura details summary{font-size:12px;color:#5d718a;cursor:pointer;list-style:initial}
+#fatura details summary:after{display:none}
+#fatura pre{white-space:pre-wrap;word-break:break-word;max-height:200px;overflow:auto;color:#5d7085;background:#f6f8fa;padding:12px;border-radius:8px;font-size:11px}
+#fatura .bill-confirmed{color:#8a6b32;font-size:11px}
+#fatura .bill-input-desc{font-size:10px;color:#8b9aad;margin:4px 0 0}
+#fatura .bill-helper-card{background:white;border:1px solid #e0e8f1;border-radius:23px;padding:30px}
+#fatura .bill-tag{display:inline-flex;gap:8px;align-items:center;color:#a57c37;font-size:11px;font-weight:800;letter-spacing:.04em}
+#fatura .bill-help-list{display:grid;gap:15px;margin:26px 0}
+#fatura .bill-help-item{display:flex;gap:12px;align-items:start}
+#fatura .bill-help-item i{font-style:normal;display:grid;place-items:center;flex:none;width:31px;height:31px;border-radius:10px;background:#f8f1e2;color:#956d31;font-weight:850;font-size:12px}
+#fatura .bill-help-item b{font-size:12px;display:block}
+#fatura .bill-help-item small{color:#8391a1;font-size:11px}
+@media(max-width:900px){#fatura .bill-layout{grid-template-columns:1fr}}
+@media(max-width:600px){#fatura .bill-card,#fatura .bill-helper-card{padding:20px}#fatura .bill-results{padding:19px}#fatura .bill-results .bill-grid{grid-template-columns:1fr}#fatura .bill-chooser{min-height:215px}#fatura .bill-actions .btn{flex:1}}
+
 </style>
 </head>
 <body>
 <div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação.</div>
 <header class="site-header"><div class="wrap header-inner">
   <a class="brand" href="/" aria-label="Energy Business, início"><span class="brand-icon" role="img" aria-label="Logotipo da empresa"></span>Energy Business<span class="dot">.</span></a>
-  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a></nav>
+  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#simular">Simulador</a><a href="#fatura">Ler fatura</a><a href="#duvidas">Dúvidas</a></nav>
   <a class="btn sm" href="#simular">Simular economia <span aria-hidden="true">↗</span></a>
 </div></header>
 <main>
@@ -199,6 +251,55 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
   <div class="projections" id="projections" aria-live="polite"></div>
   <p class="helper" style="text-align:center">Projeções sem juros ou reajustes, com valores de conta e percentuais constantes ao longo do período.</p>
 </div></section>
+
+<section id="fatura" class="section"><div class="wrap">
+<div class="section-heading"><span class="eyebrow">Leitura de faturas</span><h2>Envie uma foto da sua conta.<br>Confira os dados em segundos.</h2><p>Leitor experimental de contas de energia brasileiras. Aceita formatos de diferentes distribuidoras e permite revisão antes de qualquer uso dos dados.</p></div>
+<div class="bill-layout">
+<div class="bill-card">
+<h3>Selecione sua fatura</h3><p>Foto em JPG/PNG/WebP ou documento PDF. Máximo de 15 MB. Use imagens nítidas, sem cortes nem reflexos.</p>
+<div id="bill-drop" class="bill-chooser">
+ <div id="bill-placeholder"><span class="bill-placeholder-icon" aria-hidden="true">▧</span><b>Arraste a fatura para cá</b><small>Ou escolha uma imagem / PDF no seu dispositivo</small>
+ <label class="btn gold" for="bill-file">Selecionar foto ou PDF ↗</label></div>
+ <img id="bill-preview-image" class="bill-preview-img" alt="Prévia local da fatura escolhida" hidden>
+ <div id="bill-pdf-label" class="bill-pdf-label" hidden>▤ Documento PDF selecionado</div>
+</div>
+<input id="bill-file" class="bill-input-hidden" type="file" accept="image/jpeg,image/png,image/webp,image/bmp,image/heic,image/heif,application/pdf,.pdf,.heic,.heif">
+<span id="bill-file-name" class="bill-filename"></span>
+<div class="bill-actions"><button type="button" class="btn" id="bill-read" disabled>⚡ Ler dados da fatura</button><button type="button" class="btn outline" id="bill-rotate" disabled>↻ Girar foto</button><button type="button" class="btn outline" id="bill-clear" disabled>Limpar</button></div>
+<div id="bill-status" class="bill-status" role="status" aria-live="polite">Aguardando imagem.</div>
+<div class="bill-guide"><strong>Teste antes com informações fictícias</strong><p>Experimente o extrator sem usar dados de clientes.</p><button type="button" id="bill-example" class="btn outline sm">Carregar exemplo fictício</button></div>
+</div>
+<div class="bill-helper-card">
+<span class="bill-tag">✦ Leitura inteligente</span>
+<h3 style="font-size:24px;letter-spacing:-.05em;line-height:1.25;margin:13px 0">O que o sistema procura?</h3>
+<p style="color:#77889e;font-size:13px">Localiza as informações mesmo quando o desenho da conta muda entre distribuidoras.</p>
+<div class="bill-help-list">
+<div class="bill-help-item"><i>01</i><div><b>Nome completo</b><small>Identificação do titular da unidade consumidora</small></div></div>
+<div class="bill-help-item"><i>02</i><div><b>Endereço de consumo</b><small>Rua, número e demais elementos disponíveis</small></div></div>
+<div class="bill-help-item"><i>03</i><div><b>Valor total da fatura</b><small>Total a pagar — não comprova quitação</small></div></div>
+<div class="bill-help-item"><i>04</i><div><b>Consumo mensal em kWh</b><small>Consumo faturado, sem confundir com histórico ou injeção solar</small></div></div>
+</div>
+<div class="bill-privacy"><strong>🔒 Privacidade desde o início</strong><p>A foto e o texto são processados localmente no seu navegador. Não enviamos a fatura à Energy Business, ao Cloudflare ou ao banco de dados nesta demonstração. O navegador baixa as bibliotecas de leitura quando você inicia a análise.</p></div>
+<p style="font-size:11px;color:#8c9baf;margin:16px 0 0">Layouts inicialmente estudados: Celesc, Copel, Cemig, CPFL/RGE, Enel, Neoenergia, Equatorial, Energisa, EDP, Light e outras. Não há garantia de leitura completa em todos os modelos; confirme cada campo.</p>
+</div>
+</div>
+<div id="bill-results" class="bill-results" aria-live="polite">
+<form id="bill-review" hidden>
+<div class="bill-tag">Conferência humana necessária</div><h3>Dados identificados</h3>
+<p style="font-size:12px;color:#8494a6">Revise cada informação olhando a fatura original. Corrija qualquer campo que esteja incompleto ou incorreto.</p>
+<div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:13px"><span class="result-tag" style="color:#2a4968;border-color:#dae4ed">Distribuidora: <b id="bill-distributor">—</b></span><span id="bill-confidence" class="result-tag" style="color:#946f34;border-color:#ead8b8">Aguardando</span></div>
+<div class="bill-grid">
+<label for="bill-name" class="full">Nome completo do titular<input id="bill-name" maxlength="130" autocomplete="off" required></label>
+<label for="bill-address" class="full">Endereço da unidade consumidora<input id="bill-address" maxlength="240" autocomplete="off" required></label>
+<label for="bill-amount">Valor total da fatura (R$)<input id="bill-amount" inputmode="decimal" autocomplete="off" placeholder="Ex.: 358,90" required><p class="bill-input-desc">Valor cobrado, não valor efetivamente pago.</p></label>
+<label for="bill-kwh">Consumo faturado (kWh)<input id="bill-kwh" inputmode="decimal" autocomplete="off" placeholder="Ex.: 320" required></label>
+</div>
+<label class="bill-check" for="bill-confirm"><input type="checkbox" id="bill-confirm">Conferi os quatro campos na fatura e assumo a responsabilidade pela confirmação. Nenhum dado é salvo automaticamente.</label>
+<div class="bill-actions"><button id="bill-copy" type="button" class="btn" disabled>Copiar dados conferidos</button><button id="bill-apply" type="button" class="btn gold" disabled>Usar valor no simulador ↗</button></div>
+<details id="bill-raw"><summary>Conferir trechos reconhecidos pelo OCR (somente neste navegador)</summary><pre id="bill-evidence"></pre><pre id="bill-ocr-text"></pre></details>
+</form>
+</div>
+</div></section>
 <section class="section section-alt" id="como-funciona"><div class="wrap"><div class="section-heading"><span class="eyebrow">Como funciona</span><h2>Uma jornada simples, do primeiro cálculo à análise.</h2><p>A Energy Business conecta tecnologia, informação e uma experiência de energia descomplicada.</p></div>
 <div class="process-grid"><article class="step"><span class="step-number">01</span><h3>Faça sua simulação</h3><p>Informe o valor aproximado da sua conta e visualize cenários ilustrativos de economia.</p></article><article class="step"><span class="step-number">02</span><h3>Solicite uma avaliação</h3><p>Na operação comercial, a equipe analisará a distribuidora, a fatura e a elegibilidade da unidade.</p></article><article class="step"><span class="step-number">03</span><h3>Conheça a proposta</h3><p>Após a análise, você poderá conhecer condições, disponibilidade e próximos passos antes de contratar.</p></article></div>
 </div></section>
@@ -218,7 +319,7 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 <details><summary>Os dados do teste são armazenados?</summary><p>Não. Enquanto a plataforma estiver em modo de demonstração, os campos do teste não são enviados ou armazenados no servidor.</p></details>
 </div></div></section>
 </main>
-<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#simular">Simulação</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
+<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#simular">Simulação</a><a href="#fatura">Leitor de faturas</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
 <script>
 (function(){
   const $=id=>document.getElementById(id);
@@ -292,4 +393,4 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
     }catch(err){console.warn("Cadastro público indisponível nesta fase.")}
   })();
 })();
-</script></body></html>
+</script><script src="/fatura/parser.js" defer></script><script src="/fatura/reader.js" defer></script></body></html>
