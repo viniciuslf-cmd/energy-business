@@ -28,7 +28,7 @@ export async function onRequestPost({request,env}){
   const stats=await env.DB.prepare("SELECT COUNT(*) AS total FROM test_leads").first();
   if(Number(stats?.total)>=1500)return reply({error:"Limite de testes atingido."},429);
   if(favoriteClub){
-   const allowed=await env.DB.prepare("SELECT id FROM clubs WHERE name=? COLLATE NOCASE AND is_active=1 LIMIT 1").bind(favoriteClub).first();
+   const allowed=await env.DB.prepare("SELECT id FROM test_clubs WHERE name=? COLLATE NOCASE AND is_active=1 LIMIT 1").bind(favoriteClub).first();
    if(!allowed)return reply({error:"Clube não disponível. Atualize a lista."},400);
   }
   const previous=await env.DB.prepare("SELECT id FROM test_leads WHERE phone=? OR email=? LIMIT 1").bind(phone,email).first();
