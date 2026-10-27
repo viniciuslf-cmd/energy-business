@@ -434,6 +434,8 @@ html{scroll-padding-top:88px}
 <details><summary>O desconto mostrado é uma oferta válida?</summary><p>Não. Os percentuais de 10%, 15% e 20% são cenários matemáticos ilustrativos. Uma oferta real depende de análise e condições de um fornecedor.</p></details>
 <details><summary>Preciso instalar um aplicativo?</summary><p>Não. A plataforma funciona diretamente no navegador, no computador e no celular.</p></details>
 <details><summary>Posso contratar agora?</summary><p>Ainda não. A jornada de contratação e integração com a fornecedora está em desenvolvimento.</p></details>
+<details><summary>Escolher meu time significa parceria oficial?</summary><p>Não. A seleção representa preferência do torcedor. Um eventual repasse depende de contrato formalizado com o clube.</p></details>
+<details><summary>Indicar amigos gera desconto agora?</summary><p>Não. O programa de indicações está em preparação. Hoje o compartilhamento é demonstrativo; descontos e regras precisam ser definidos antes da ativação.</p></details>
 <details><summary>Os dados do teste são armazenados?</summary><p>Não. Enquanto a plataforma estiver em modo de demonstração, os campos do teste não são enviados ou armazenados no servidor.</p></details>
 </div></div></section>
 </main>
@@ -514,10 +516,13 @@ form.addEventListener("submit",async e=>{
     name:$("entry-name").value.trim(),email:$("entry-email").value.trim(),phone:$("entry-phone").value.trim(),
     billAmount:Number($("entry-bill").value),rate:Number(rate.value),
     propertyType:profile.value,clubCode:"clube-demo",
+    favoriteClub:window.EnergyFan?.selectedClub?.()||"",
+    referredByCode:window.EnergyFan?.getRef?.()||"",
     consent:$("entry-consent").checked,turnstileToken:security
   })});
   const data=await r.json().catch(()=>({}));
   if(!r.ok)throw Error(data.error||"Não foi possível enviar. Tente novamente.");
+  if(data.referralCode)window.EnergyFan?.setReferralCode?.(data.referralCode);
   goToBillStep(true);
  }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
  finally{window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
