@@ -18,10 +18,15 @@ export async function onRequestPost({request,env}){
   const billAmount=Number(data.billAmount),rate=Number(data.rate);
   const propertyType=String(data.propertyType||"");
   const clubCode=String(data.clubCode||"");
+  // O time é uma preferência do visitante. A origem comercial permanece Energy Business.
+  const favoriteClub=String(data.favoriteClub||"").trim().replace(/\s+/g," ");
+  const referredByCode=String(data.referredByCode||"").trim().toUpperCase();
   const turnstileToken=String(data.turnstileToken||"");
   if(name.length<2||name.length>120||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||
     !/^\d{10,13}$/.test(phone)||!Number.isInteger(billAmount)||billAmount<50||billAmount>1000000||
     ![10,15,20].includes(rate)||!profiles.has(propertyType)||!sources.has(clubCode)||
+    favoriteClub.length>70||/[\u0000-\u001f\u007f]/.test(favoriteClub)||
+    (referredByCode&&!/^EB[A-F0-9]{16}$/.test(referredByCode))||
     data.consent!==true||turnstileToken.length<10||turnstileToken.length>4096){
     return json({error:"Revise os campos e confirme a Política de Privacidade."},400);
   }
@@ -38,8 +43,15 @@ export async function onRequestPost({request,env}){
     const duplicate=await env.DB.prepare("SELECT id FROM leads WHERE phone=? AND created_at>=datetime('now','-15 minutes') LIMIT 1").bind(phone).first();
     if(duplicate)return json({ok:true,message:"Recebemos uma solicitação recente com esse telefone."},200);
     const id=crypto.randomUUID();
-    await env.DB.prepare("INSERT INTO leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,consent_at,status) VALUES (?,?,?,?,?,?,?,?,?,datetime('now'),'novo')")
-      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26").run();
-    return json({ok:true,id,message:"Solicitação recebida. Nossa equipe poderá entrar em contato após a análise."},201);
+    // Código de convite aleatório não contém nome, telefone ou outro dado pessoal.
+    const referralCode="EB"+Array.from(crypto.getRandomValues(new Uint8Array(8)),v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();
+    let validRef=null;
+    if(referredByCode){
+      const owner=await env.DB.prepare("SELECT phone FROM leads WHERE referral_code=? LIMIT 1").bind(referredByCode).first();
+      if(owner&&owner.phone!==phone)validRef=referredByCode;
+    }
+    await env.DB.prepare("INSERT INTO leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,consent_at,status,favorite_club,referral_code,referred_by_code) VALUES (?,?,?,?,?,?,?,?,?,datetime('now'),'novo',?,?,?)")
+      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26",favoriteClub,referralCode,validRef).run();
+    return json({ok:true,id,referralCode,message:"Solicitação recebida. Nossa equipe poderá entrar em contato após a análise. O programa de indicação depende de regulamento e elegibilidade."},201);
   }catch{return json({error:"Não foi possível registrar a solicitação agora."},503)}
 }
