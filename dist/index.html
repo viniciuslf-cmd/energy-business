@@ -329,7 +329,7 @@ html{scroll-padding-top:88px}
 <p style="font-size:12px;color:#8494a6">Revise cada informação olhando a fatura original. Corrija qualquer campo que esteja incompleto ou incorreto.</p>
 <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:13px"><span class="result-tag" style="color:#2a4968;border-color:#dae4ed">Distribuidora: <b id="bill-distributor">—</b></span><span id="bill-confidence" class="result-tag" style="color:#946f34;border-color:#ead8b8">Aguardando</span></div>
 <div class="bill-grid">
-<label for="bill-name" class="full">Nome completo do titular<input id="bill-name" maxlength="130" autocomplete="off" required></label>
+<label for="bill-name" class="full">Nome completo do titular<input id="bill-name" maxlength="130" autocomplete="off" required><span id="bill-name-hint" class="bill-input-desc">Se a conta estiver em outro nome, você poderá alterar este campo.</span></label>
 <label for="bill-address" class="full">Endereço da unidade consumidora<input id="bill-address" maxlength="240" autocomplete="off" required></label>
 <label for="bill-amount">Valor total da fatura (R$)<input id="bill-amount" inputmode="decimal" autocomplete="off" placeholder="Ex.: 358,90" required><p class="bill-input-desc">Valor cobrado, não valor efetivamente pago.</p></label>
 <label for="bill-kwh">Consumo faturado (kWh)<input id="bill-kwh" inputmode="decimal" autocomplete="off" placeholder="Ex.: 320" required></label>
@@ -475,4 +475,4 @@ update();
  }catch(err){console.warn("O cadastro real ainda não está disponível.")}
 })();
 })();
-</script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js" defer></script></body></html>
+</script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261026-etapas123" defer></script></body></html>
