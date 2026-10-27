@@ -5,6 +5,20 @@
 <meta name="theme-color" content="#0e2039">
 <meta name="description" content="Energy Business: simule cenários ilustrativos de economia de energia e conheça uma nova experiência de gestão energética.">
 <title>Energy Business | Energia inteligente para o seu futuro</title>
+<script>
+// Ao abrir a página principal, ignore posições salvas pelo navegador.
+// Links explícitos para seções (#torcida etc.) continuam funcionando.
+(function(){
+ "use strict";
+ try{if("scrollRestoration" in history)history.scrollRestoration="manual"}catch(e){}
+ function beginAtTop(){
+   if(window.location.hash)return;
+   window.scrollTo({left:0,top:0,behavior:"instant"});
+ }
+ document.addEventListener("DOMContentLoaded",beginAtTop,{once:true});
+ window.addEventListener("pageshow",beginAtTop);
+})();
+</script>
 <style>
 :root{--navy:#10243d;--navy2:#0a192d;--gold:#edc573;--gold-d:#c99b45;--ink:#152640;--muted:#708095;--line:#e2e8ef;--bg:#f5f7fa;--white:#fff;--radius:24px}
 *{box-sizing:border-box}
@@ -510,8 +524,10 @@ function alignToElement(element,stageId){
  const sticky=document.querySelector(".site-header");
  const stickyHeight=sticky?sticky.getBoundingClientRect().height:0;
  const top=Math.max(0,Math.round(element.getBoundingClientRect().top+window.scrollY-stickyHeight-14));
- if(stageId){
-  try{window.history.replaceState(window.history.state,"","#"+stageId)}catch(e){}
+ // O avanço entre etapas não deve gravar um # na URL, pois isso
+ // fazia a página reabrir no meio ao recarregar ou compartilhar o site.
+ if(stageId&&window.location.hash){
+   try{window.history.replaceState(window.history.state,"",window.location.pathname+window.location.search)}catch(e){}
  }
  window.scrollTo({top,behavior:"auto"});
 }
