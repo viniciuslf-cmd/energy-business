@@ -68,6 +68,7 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 .club-caveat{font-size:11px;color:#7e8ea0;margin-top:15px}
 @media(max-width:600px){.club-login-line .btn{flex:1}.club-new>div:first-child{min-width:100%}.club-new>div:nth-child(2){flex:1}.clubs-panel{padding:18px}}
 
+.club-login[hidden],.club-test-badge[hidden]{display:none!important}.club-test-badge{display:inline-block;background:#f8e9c8;color:#7c5a21;border:1px solid #e8cc83;padding:5px 10px;border-radius:12px;font-size:10px;font-weight:800;margin-top:9px;letter-spacing:.04em}
 </style></head><body>
 <div class="shell"><aside><a class="brand" href="/"><span class="brand-icon" aria-label="Logotipo" role="img"></span>Energy Business<em>.</em></a><div class="side-label">MENU PRINCIPAL</div><nav><a href="#inicio" class="active"><span>▦</span> Visão geral</a><a href="#solicitacoes"><span>☷</span> Solicitações</a><a href="#clubes"><span>⚽</span> Clubes</a><a href="/admin/indicacoes/"><span>↗</span> Indicações</a><a href="/#simular"><span>↗</span> Simulador</a><a href="/privacidade/"><span>◇</span> Privacidade</a></nav><div class="side-foot">Energy Business<br>Painel em desenvolvimento. Informações reais continuam protegidas.</div></aside>
 <div class="workspace"><div class="topbar"><div class="breadcrumb">Energy Business / <b>Painel de gestão</b></div><div class="account"><span>Ambiente de demonstração</span><div class="avatar">EB</div></div></div>
@@ -87,7 +88,7 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Conta ilustrativa</th><th>Perfil</th><th>Origem</th><th>Status</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty"><div class="empty-icon">▤</div><h3>Nenhuma solicitação nesta seleção</h3><p>Utilize “Carregar exemplos” para visualizar o layout com registros fictícios, sem expor informações pessoais.</p></div></div><div class="tbl-foot"><span id="count-footer">0 registros</span><span>Dados reais protegidos</span></div></section>
 <section id="clubes" class="panel clubs-panel">
 <div class="panel-header"><div><h2>⚽ Gestão de clubes</h2><p>Cadastre e controle quais clubes podem aparecer na seleção do público.</p></div><span class="mini-tag" id="clubs-count">0 clubes</span></div>
-<div class="clubs-intro"><b>Acesso ao painel sem senha; edição de clubes restrita.</b><p>Visitantes podem visualizar os clubes publicados, mas para cadastrar, alterar ou ativar um clube é necessária a chave administrativa. Clube visível significa apenas opção de torcida, não parceria oficial.</p></div>
+<div class="clubs-intro"><b id="club-intro-title">Gestão de Clubes</b><p id="club-intro-desc">Para a homologação, a edição de clubes fictícios será liberada automaticamente. Na operação comercial, o painel exige acesso administrativo.</p><span id="club-test-badge" class="club-test-badge" hidden>CATÁLOGO DE TESTE · EDIÇÃO ABERTA</span></div>
 <div class="club-login" id="club-login"><label for="club-token">Chave do gestor</label><div class="club-login-line"><input id="club-token" type="password" placeholder="Chave administrativa" autocomplete="off"><button id="club-unlock" class="btn" type="button">Liberar edição</button><button class="btn alt" id="club-lock" type="button" hidden>Bloquear</button></div></div>
 <p id="club-message" role="status" aria-live="polite" class="club-message">Carregando clubes publicados...</p>
 <form id="club-new-form" class="club-new" hidden>
@@ -102,7 +103,7 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <div class="clubs-scroll"><table class="clubs-table">
 <thead><tr><th>Clube</th><th>UF</th><th>Visibilidade</th><th>Participação (%)</th><th>Mensagem ao torcedor</th><th>Convênio</th><th>Ações</th></tr></thead>
 <tbody id="club-rows"></tbody></table><p id="club-empty" class="club-empty">Nenhum clube cadastrado ou publicado.</p></div>
-<p class="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p>
+<p class="club-caveat" id="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p>
 </section>
 <div class="next-cta"><div><b>Simule economias com a identidade Energy Business</b><p>A origem é sempre a nossa empresa. Os percentuais são cenários ilustrativos.</p></div><a class="btn gold" href="/#simular">Abrir simulador ↗</a></div><div class="footer">Energy Business · Painel demonstrativo · 2026</div>
 </main></div></div>
@@ -151,4 +152,4 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
  $("refresh").onclick=async()=>{await check();render()};
  render();check();
 })();
-</script><script src="/admin/clubs.js?v=20261027-clubmanager" defer></script></body></html>
+</script><script src="/admin/clubs.js?v=20261027-test-open" defer></script></body></html>
