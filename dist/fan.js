@@ -5,10 +5,10 @@
 "use strict";
 const $=id=>document.getElementById(id), main=$("entry-club"), secondary=$("fan-team-select");
 if(!main||!secondary)return;
-const other=$("fan-team-other"),clubWrap=$("club-select-wrap");
+const clubWrap=$("club-select-wrap");
 const teamRadios=[...document.querySelectorAll('input[name="help_club"]')];
 
-if(other){other.hidden=true;other.disabled=true;other.required=false}
+
 const hint=$("club-helper"),status=$("fan-team-status");
 let activeTeams=new Map(),fetchFailed=false;
 const locationURL=new URL(location.href),incomingTeam=(locationURL.searchParams.get("time")||"").trim();
