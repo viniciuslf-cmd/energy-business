@@ -230,6 +230,10 @@ html{scroll-padding-top:88px}
 .upload-back:hover{background:#eef5fb}
 .step2-status{padding:14px 18px;border:1px solid #d3e9dd;background:#edf8f2;border-radius:12px;color:#245d42;font-size:13px;margin-bottom:22px}
 .step2-status[hidden]{display:none!important}
+.sim-step-heading{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;font-size:12px;font-weight:750;color:#4d637e}
+.sim-step-heading .form-step{margin:0}
+#simular{scroll-margin-top:0}
+#cadastro .hero-form{scroll-margin-top:0}
 @media(max-width:1020px){.intake-hero{gap:30px;padding:48px 0 65px}.hero-intro h1{font-size:clamp(38px,5vw,55px)}.intake-hero .hero-form{padding:23px}}
 @media(max-width:750px){.intake-hero{grid-template-columns:1fr;gap:24px;padding:31px 0 56px}.hero-intro h1{font-size:clamp(36px,9vw,47px);margin:13px 0 10px}.hero-intro p{font-size:14px;line-height:1.6}.intake-steps{margin-top:16px}.intake-hero .hero-trust{display:none}.intake-hero .hero-form{justify-self:stretch;max-width:none}.form-headline h2{font-size:24px}.intake-hero .intake-card .grid-two{grid-template-columns:1fr}}
 @media(max-width:440px){.intake-hero{padding-top:27px}.intake-hero .hero-form{padding:19px;border-radius:18px}.intake-hero .intake-card .field{margin-top:10px}.step-chip{font-size:11px;padding:6px 8px}.step-chip b{width:22px;height:22px}}
@@ -252,17 +256,17 @@ html{scroll-padding-top:88px}
     <div class="intake-steps" aria-label="Etapas da solicitação">
       <span class="step-chip active"><b>01</b> Seus dados</span>
       <span class="step-connector" aria-hidden="true">→</span>
-      <span class="step-chip"><b>02</b> Conta de energia</span>
+      <span class="step-chip"><b>02</b> Conta de energia</span><span class="step-connector" aria-hidden="true">→</span><span class="step-chip"><b>03</b> Simulação</span>
     </div>
     <div class="hero-trust"><span>Simples e rápido</span><span>Sem compromisso</span><span>Atendimento Energy Business</span></div>
   </div>
   <div class="intake-card hero-form">
-    <div class="form-headline"><div><span class="form-step">ETAPA 1 DE 2</span><h2>Vamos começar?</h2><p id="intake-description">Preencha os campos abaixo. Nesta fase de testes, use somente dados fictícios: o cadastro não é enviado nem armazenado.</p></div></div>
+    <div class="form-headline"><div><span class="form-step">ETAPA 1 DE 3</span><h2>Vamos começar?</h2><p id="intake-description">Preencha os campos abaixo. Nesta fase de testes, use somente dados fictícios: o cadastro não é enviado nem armazenado.</p></div></div>
     <form id="entry-form">
       <label class="field" for="entry-name">Nome completo</label>
       <input id="entry-name" name="name" required maxlength="100" minlength="3" placeholder="Nome de exemplo" autocomplete="off">
       <div class="grid-two">
-        <div><label class="field" for="entry-phone">WhatsApp com DDD</label>
+        <div><label class="field" for="entry-phone">Telefone com DDD</label>
         <input id="entry-phone" name="phone" type="tel" required pattern="[0-9 ()+\-]{10,20}" inputmode="tel" placeholder="(00) 00000-0000" autocomplete="off"></div>
         <div><label class="field" for="entry-email">E-mail</label>
         <input id="entry-email" name="email" type="email" maxlength="254" required placeholder="teste@exemplo.com" autocomplete="off"></div>
@@ -285,7 +289,7 @@ html{scroll-padding-top:88px}
 <div class="wrap benefits" aria-label="Benefícios"><div class="benefit"><span class="benefit-icon">↗</span><div><b>Economia em perspectiva</b><small>Visualize diferentes cenários.</small></div></div><div class="benefit"><span class="benefit-icon">◇</span><div><b>Experiência simplificada</b><small>Simule sem burocracia.</small></div></div><div class="benefit"><span class="benefit-icon">✳</span><div><b>Energia inteligente</b><small>Soluções conforme disponibilidade.</small></div></div></div>
 <section id="fatura" class="section"><div class="wrap">
 <div class="upload-step-header">
-  <div class="upload-step-title"><span class="form-step">ETAPA 2 DE 2</span><span class="upload-step-label">Envio da conta de energia</span></div>
+  <div class="upload-step-title"><span class="form-step">ETAPA 2 DE 3</span><span class="upload-step-label">Envio da conta de energia</span></div>
   <a class="upload-back" href="#cadastro">← Voltar aos meus dados</a>
 </div>
 <div id="step2-status" class="step2-status" role="status" aria-live="polite" hidden></div>
@@ -336,7 +340,7 @@ html{scroll-padding-top:88px}
 </form>
 </div>
 </div></section>
-<section class="section" id="simular"><div class="wrap">
+<section class="section" id="simular"><div class="wrap"><div class="sim-step-heading"><span class="form-step">ETAPA 3 DE 3</span><span>Resultado da simulação</span></div>
   <div class="section-heading"><span class="eyebrow">Simulação inteligente</span><h2>Descubra o potencial de economia da sua conta.</h2><p>Ajuste o valor mensal e compare cenários estimados em poucos segundos.</p></div>
   <div class="simulator-frame">
     <div class="simulator-input"><div class="form-heading"><span class="form-heading-icon">⚡</span><div><h3>Seus dados de consumo</h3><small>Preencha os detalhes da simulação</small></div></div>
@@ -376,6 +380,29 @@ const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BR
 const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
 const form=$("entry-form"),status=$("entry-status"),button=$("entry-submit");
 let liveMode=false,turnstileWidget=null,submissionBusy=false;
+
+function alignToElement(element,stageId){
+ if(!element)return;
+ // Sem usar location.hash = ..., que provoca uma segunda rolagem nativa.
+ // Ambos os avanços são alinhados pelo MESMO cálculo sob o cabeçalho fixo.
+ const sticky=document.querySelector(".site-header");
+ const stickyHeight=sticky?sticky.getBoundingClientRect().height:0;
+ const top=Math.max(0,Math.round(element.getBoundingClientRect().top+window.scrollY-stickyHeight-14));
+ if(stageId){
+  try{window.history.replaceState(window.history.state,"","#"+stageId)}catch(e){}
+ }
+ window.scrollTo({top,behavior:"auto"});
+}
+function navigateToStage(stage){
+ const selector=stage==="fatura"?"#fatura .upload-step-header":
+   stage==="simular"?"#simular .sim-step-heading":
+   stage==="cadastro"?"#cadastro .hero-form":null;
+ if(selector)alignToElement(document.querySelector(selector),stage);
+}
+window.EnergyFlow={navigateToStage,alignToElement};
+const backToStart=document.querySelector(".upload-back");
+if(backToStart)backToStart.addEventListener("click",e=>{e.preventDefault();navigateToStage("cadastro")});
+
 function update(){
  const value=Number(bill.value),valid=Number.isFinite(value)&&value>=50&&value<=1000000;
  bill.setCustomValidity(valid?"":"Informe um valor de R$ 50 até R$ 1.000.000.");
@@ -402,9 +429,7 @@ function goToBillStep(submitted){
  $("step2-status").textContent=message;
  $("step2-status").hidden=false;
  status.textContent=submitted?"Solicitação inicial recebida; continue com a conta.":"Etapa 1 concluída para demonstração. Nenhum dado foi enviado.";
- window.location.hash="fatura";
- const target=$("fatura");
- target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+ navigateToStage("fatura");
 }
 form.addEventListener("submit",async e=>{
  e.preventDefault();
