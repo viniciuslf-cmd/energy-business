@@ -260,7 +260,7 @@ html{scroll-padding-top:88px}
 .fan-feature>span{display:grid;place-items:center;background:#faf2e4;color:#b28747;border-radius:12px;width:37px;height:37px;font-size:13px;font-weight:850}
 .fan-feature h3{font-size:17px;letter-spacing:-.03em;margin:18px 0 8px}
 .fan-feature p{font-size:12px;color:#798ba0;margin:0;line-height:1.75}
-.fan-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:22px}
+.fan-panel-grid{display:grid;grid-template-columns:1fr;gap:17px;margin-top:22px;max-width:780px}
 .fan-panel{padding:30px;background:#fff;border:1px solid #dde6ee;border-radius:19px}
 .fan-panel-referral{background:linear-gradient(135deg,#193854,#10233c);color:#fff;border-color:#283f58}
 .fan-panel-icon{display:grid;place-items:center;background:#f9f0e0;border-radius:11px;font-size:19px;width:42px;height:42px;margin-bottom:15px}
@@ -300,6 +300,7 @@ html{scroll-padding-top:88px}
 .complete-club .complete-percent{margin-top:12px;color:#9b752f;font-weight:800}
 .complete-panel .complete-footnote{font-size:12px;color:#8393a5;margin:19px 0}
 @media(max-width:590px){.complete-panel{padding:27px 21px}.complete-section{padding:50px 0}}
+.complete-referral{max-width:780px;margin:22px auto 0}.complete-referral .fan-panel-referral{padding:30px 36px;box-shadow:0 15px 45px #10233b22}.complete-referral .fan-panel-referral h3{font-size:clamp(21px,3vw,28px)}@media(max-width:600px){.complete-referral .fan-panel-referral{padding:22px 18px}}
 </style>
 </head>
 <body>
@@ -375,10 +376,7 @@ html{scroll-padding-top:88px}
 
 <button class="btn gold fan-panel-button" type="button" id="fan-continue"><span id="fan-continue-label">Escolher time e cadastrar</span> <span aria-hidden="true">→</span></button><p id="fan-team-status" class="club-helper" role="status"></p>
 <small>Clubes listados somente como preferência. Não significa patrocínio, representação ou convênio oficial.</small></div>
-<div class="fan-panel fan-panel-referral"><div class="fan-panel-icon" aria-hidden="true">✉</div><h3>Indique amigos. Amplie as possibilidades de economia.</h3>
-<p>Convide outras pessoas a conhecer a proposta. Futuramente, indicações elegíveis que resultarem em contratos efetivados poderão gerar descontos adicionais, conforme um regulamento de bonificação.</p>
-<div class="fan-panel-buttons"><button class="btn gold" type="button" id="fan-whatsapp">Indicar pelo WhatsApp <span aria-hidden="true">↗</span></button><button class="btn fan-copy" type="button" id="fan-copy">Copiar link</button></div>
-<p id="fan-referral-status" class="fan-referral-status" role="status" aria-live="polite">O convite já pode ser compartilhado, mas indicações e bonificações ainda não são contabilizadas nesta versão.</p></div></div>
+</div>
 <p class="fan-legal"><strong>Condições da proposta:</strong> a escolha de um time não confirma parceria oficial. O percentual de participação do clube, os descontos na conta, os limites e as regras das indicações ainda serão definidos. Benefícios dependem de convênio assinado, elegibilidade e contratação; não há pagamento ou desconto automático pelo cadastro ou envio de fatura nesta demonstração.</p>
 </div></section>
 <section id="fatura" class="section"><div class="wrap">
@@ -467,6 +465,12 @@ html{scroll-padding-top:88px}
   <p id="complete-footnote" class="complete-footnote"></p>
   <button type="button" id="complete-back" class="btn outline">Voltar para o início</button>
  </div>
+ <div class="complete-referral" aria-label="Indique amigos depois da conclusão">
+<div class="fan-panel fan-panel-referral"><div class="fan-panel-icon" aria-hidden="true">✉</div><h3>Terminou seu cadastro? Convide seus amigos!</h3>
+<p>Compartilhe o link da Energy Business com amigos que também querem economizar. Os benefícios por indicação só serão contabilizados após o cadastro completo, a validação do indicado e a ativação do programa conforme regulamento.</p>
+<div class="fan-panel-buttons"><button class="btn gold" type="button" id="fan-whatsapp">Indicar pelo WhatsApp <span aria-hidden="true">↗</span></button><button class="btn fan-copy" type="button" id="fan-copy">Copiar link</button></div>
+<p id="fan-referral-status" class="fan-referral-status" role="status" aria-live="polite">O convite já pode ser compartilhado, mas indicações e bonificações ainda não são contabilizadas nesta versão.</p></div>
+ </div>
 </div></section>
 <section class="section section-alt" id="como-funciona"><div class="wrap"><div class="section-heading"><span class="eyebrow">Como funciona</span><h2>Uma jornada simples, do primeiro cálculo à análise.</h2><p>A Energy Business conecta tecnologia, informação e uma experiência de energia descomplicada.</p></div>
 <div class="process-grid"><article class="step"><span class="step-number">01</span><h3>Faça sua simulação</h3><p>Informe o valor aproximado da sua conta e visualize cenários ilustrativos de economia.</p></article><article class="step"><span class="step-number">02</span><h3>Solicite uma avaliação</h3><p>Na operação comercial, a equipe analisará a distribuidora, a fatura e a elegibilidade da unidade.</p></article><article class="step"><span class="step-number">03</span><h3>Conheça a proposta</h3><p>Após a análise, você poderá conhecer condições, disponibilidade e próximos passos antes de contratar.</p></article></div>
@@ -489,7 +493,7 @@ const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"
 const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
 const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
 const form=$("entry-form"),status=$("entry-status"),button=$("entry-submit");
-let liveMode=false,turnstileWidget=null,submissionBusy=false,step1Done=false,leadSaved=false,billReview=null;
+let liveMode=false,turnstileWidget=null,submissionBusy=false,step1Done=false,leadSaved=false,billReview=null,leadId="",completionToken="",journeySaving=false;
 
 function alignToElement(element,stageId){
  if(!element)return;
@@ -573,13 +577,18 @@ form.addEventListener("submit",async e=>{
   })});
   const data=await r.json().catch(()=>({}));
   if(!r.ok)throw Error(data.error||"Não foi possível enviar. Tente novamente.");
-  if(data.referralCode)window.EnergyFan?.setReferralCode?.(data.referralCode);
+  if(!data.id||!data.completionToken||!data.referralCode){
+   status.textContent=data.message||"O cadastro já existe. Entre em contato com nossa equipe se precisar de suporte.";
+   return;
+  }
+  leadId=data.id;completionToken=data.completionToken;
+  window.EnergyFan?.setReferralCode?.(data.referralCode);
   goToBillStep(true);
  }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
  finally{window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
 });
 
-$("finish-flow").addEventListener("click",()=>{
+$("finish-flow").addEventListener("click",async()=>{
  const alert=$("finish-status");
  if(!step1Done){
    alert.textContent="Complete primeiro a etapa 1, com os seus dados de contato.";
@@ -589,12 +598,23 @@ $("finish-flow").addEventListener("click",()=>{
    alert.textContent="Revise os quatro campos da conta de energia e clique em “Usar valor no simulador” para concluir a etapa 2.";
    navigateToStage("fatura");return;
  }
+ if(leadSaved&&leadId&&completionToken){
+  if(journeySaving)return;
+  journeySaving=true;
+  const finishButton=$("finish-flow");finishButton.disabled=true;
+  try{
+   const response=await fetch("/api/leads/complete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:leadId,token:completionToken,billReviewed:true})});
+   const data=await response.json().catch(()=>({}));
+   if(!response.ok||!data.ok)throw Error(data.error||"Não foi possível concluir o cadastro. Tente novamente.");
+  }catch(error){alert.textContent=error.message;return}
+  finally{journeySaving=false;finishButton.disabled=false}
+ }
  const chosen=window.EnergyFan?.selectedClub?.()||"";
  const details=chosen?window.EnergyFan?.clubDetails?.(chosen):null;
  $("complete-mode-label").textContent=leadSaved?"Solicitação inicial registrada":"Demonstração concluída";
  $("complete-title").textContent=leadSaved?"Obrigado! Seus dados iniciais foram recebidos.":"Você concluiu as três etapas!";
  $("complete-description").textContent=leadSaved
-   ?"Seus dados de contato foram registrados. Nossa equipe poderá entrar em contato pelo WhatsApp informado para solicitar a fatura e concluir a análise. Nesta versão, a imagem e os dados lidos da conta ainda não são enviados ao servidor."
+   ?"Você concluiu as três etapas e o cadastro foi registrado. A equipe da Energy Business poderá entrar em contato pelo WhatsApp para analisar sua solicitação. A fotografia e os dados da fatura permanecem locais neste protótipo."
    :"Este é um teste do atendimento Energy Business. Seu cadastro e sua fatura NÃO foram enviados ou armazenados. Quando a operação estiver liberada, a equipe entrará em contato pelo WhatsApp cadastrado para fazer a análise.";
  const clubBox=$("complete-club");
  clubBox.hidden=!chosen;
@@ -635,4 +655,4 @@ update();
  }catch(err){console.warn("O cadastro real ainda não está disponível.")}
 })();
 })();
-</script><script src="/fan.js?v=20261027-fan-choice-fix" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261027-flow3" defer></script></body></html>
+</script><script src="/fan.js?v=20261027-linked-referrals" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261027-linked-referrals" defer></script></body></html>
