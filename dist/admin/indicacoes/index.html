@@ -1,0 +1,124 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Indicações • Gestão Energy Business</title>
+<style>
+:root{color-scheme:light;--navy:#11273f;--gold:#ecc36b;--line:#dbe5ee;--muted:#647b93}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;color:var(--navy);background:#f2f6fb}
+header{background:#10243c;color:white;padding:22px max(24px,calc((100vw - 1120px)/2))}header a{color:#ebc577;text-decoration:none;font-weight:750}
+main{max-width:1120px;margin:32px auto;padding:0 20px 65px}
+h1{font-size:clamp(29px,4vw,43px);letter-spacing:-.04em;margin:8px 0}
+h2{font-size:21px;margin:0 0 12px;letter-spacing:-.025em}
+p{line-height:1.65;color:var(--muted)}
+.card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:20px;box-shadow:0 10px 35px #10253f08}
+.tag{display:inline-block;background:#fff0cd;padding:6px 11px;border-radius:40px;color:#835f25;font-weight:800;font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat{background:#f5f8fc;border-radius:13px;padding:14px}.stat b{display:block;font-size:24px}.stat span{font-size:12px;color:var(--muted)}
+button{cursor:pointer;font:inherit;font-weight:700;border:0;background:var(--navy);color:white;border-radius:11px;padding:12px 17px}
+button.secondary{background:#f5f8fb;border:1px solid var(--line);color:var(--navy)}
+button.gold{background:var(--gold);color:var(--navy)}
+button:disabled{opacity:.55;cursor:not-allowed}
+input,select{padding:10px 12px;border:1px solid #cedce9;border-radius:10px;font:inherit;max-width:100%}
+label{display:block;font-size:12px;font-weight:780;color:#34516b;margin:7px 0}
+.flex{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.flex>div{flex:1;min-width:110px}
+.tiers{display:grid;gap:8px;margin:14px 0}
+.tier{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;background:#f7f9fc;border:1px solid var(--line);border-radius:11px;padding:12px}
+.tier input{width:100%}.switch{display:inline-flex;gap:9px;align-items:center;font-size:13px;font-weight:700}.switch input{height:18px;width:18px}
+.scroll{overflow:auto}table{border-collapse:collapse;width:100%;min-width:820px;font-size:12px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:13px 9px;vertical-align:middle}th{color:#6b7e91;text-transform:uppercase;font-size:10px;letter-spacing:.04em}
+.status{margin-top:12px;min-height:20px;font-size:12px}.error{color:#a0382c}
+small{font-size:11px;color:#8292a2}
+.hide{display:none!important}
+@media(max-width:600px){main{padding:0 14px 40px;margin-top:22px}.card{padding:18px}.grid{grid-template-columns:1fr}.tier{grid-template-columns:1fr 1fr}.tier button{grid-column:1/-1}}
+</style></head><body>
+<header><a href="/admin/">← Painel Energy Business</a></header>
+<main>
+<span class="tag">HOMOLOGAÇÃO · SEM DESCONTO FINANCEIRO</span>
+<h1>Programa de indicações</h1><p>Configure as faixas, acompanhe indicações de teste e confirme cadastros que concluíram as três etapas. Nenhuma alteração aqui gera desconto automático em contas de energia.</p>
+<div class="card hide" id="auth"><h2>Acesso administrativo</h2><label for="token">Chave de administração</label><div class="flex"><input id="token" type="password" autocomplete="off" placeholder="Chave do gestor"><button type="button" id="unlock">Acessar</button></div></div>
+<div class="card">
+<div class="flex" style="justify-content:space-between;align-items:center"><h2>Visão geral</h2><button type="button" class="secondary" id="refresh">Atualizar</button></div>
+<div class="grid"><div class="stat"><b id="count-indic">0</b><span>Indicações identificadas</span></div><div class="stat"><b id="count-confirm">0</b><span>Cadastros confirmados</span></div><div class="stat"><b id="count-pending">0</b><span>Pendentes de análise</span></div></div>
+<p id="notice" class="status" role="status">Carregando dados…</p>
+</div>
+<div class="card"><h2>Desconto progressivo</h2><p>O número de indicações confirmadas define a maior faixa atingida. Percentuais não se somam. Em testes, a apuração é ilustrativa.</p>
+<label class="switch"><input type="checkbox" id="enabled"> Habilitar apuração das faixas (não aplica desconto real)</label>
+<div id="tiers" class="tiers"></div>
+<div class="flex"><button id="add-tier" type="button" class="secondary">+ Nova faixa</button><button id="save" type="button" class="gold">Salvar regras</button></div>
+<p id="tiers-note" class="status" role="status"></p>
+</div>
+<div class="card"><h2>Indicadores e descontos estimados</h2><div class="scroll"><table><thead><tr><th>Indicador</th><th>Código</th><th>Confirmadas</th><th>Pendentes</th><th>Faixa alcançada</th></tr></thead><tbody id="inviters"></tbody></table></div></div>
+<div class="card"><h2>Conferência de indicações</h2><p>Somente cadastros fictícios completos podem ser confirmados neste ambiente. Contatos repetidos e autoindicações são bloqueados.</p><div class="scroll"><table><thead><tr><th>Indicado</th><th>Indicador</th><th>3 etapas</th><th>Situação</th><th>Validar</th></tr></thead><tbody id="referrals"></tbody></table></div></div>
+</main><script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+let token="",dataset=null,testMode=true;
+const setStatus=(id,text,error=false)=>{const el=$(id);el.textContent=text;el.classList.toggle("error",error)};
+async function call(method,body){
+ const response=await fetch("/api/admin/referrals",{method,cache:"no-store",headers:{
+ ...(token?{Authorization:"Bearer "+token}:{}),...(body?{"Content-Type":"application/json"}:{})},
+ ...(body?{body:JSON.stringify(body)}:{})});
+ const data=await response.json().catch(()=>({}));
+ if(!response.ok)throw Error(data.error||"Falha na operação");
+ return data;
+}
+const td=(row,text)=>{const cell=document.createElement("td");cell.textContent=String(text??"—");row.append(cell);return cell};
+function makeTier(min=1,pct=0){
+ const div=document.createElement("div");div.className="tier";
+ const a=document.createElement("label");a.textContent="Indicações confirmadas";
+ const minInput=document.createElement("input");minInput.type="number";minInput.min="1";minInput.step="1";minInput.max="10000";minInput.value=min;a.append(minInput);
+ const b=document.createElement("label");b.textContent="Desconto adicional (%)";
+ const pctInput=document.createElement("input");pctInput.type="number";pctInput.min="0";pctInput.step=".01";pctInput.max="15";pctInput.value=pct;b.append(pctInput);
+ const del=document.createElement("button");del.className="secondary";del.type="button";del.textContent="Remover";del.onclick=()=>div.remove();
+ div.append(a,b,del);$("tiers").append(div);
+}
+function clear(el){el.replaceChildren()}
+function render(data){
+ dataset=data;testMode=Boolean(data.testOnly);
+ $("auth").classList.toggle("hide",testMode);
+ $("enabled").checked=Boolean(data.program.enabled);
+ clear($("tiers"));for(const x of data.program.tiers)makeTier(x.min_confirmed,x.extra_discount_pct);
+ $("count-indic").textContent=data.referrals.length;
+ $("count-confirm").textContent=data.referrals.filter(x=>x.referral_validation==="confirmado").length;
+ $("count-pending").textContent=data.referrals.filter(x=>x.referral_validation==="pendente").length;
+ clear($("inviters"));clear($("referrals"));
+ for(const x of data.inviters){
+  const tr=document.createElement("tr");td(tr,x.name);td(tr,x.referral_code);td(tr,x.confirmed);td(tr,x.pending);
+  td(tr,data.program.enabled?Number(x.eligible_extra_pct).toLocaleString("pt-BR")+"% (simulado)":"Apuração desativada");
+  $("inviters").append(tr);
+ }
+ for(const x of data.referrals){
+  const tr=document.createElement("tr");td(tr,x.name+" ("+x.email+")");td(tr,x.inviter_name);td(tr,x.journey_completed_at?"Concluído":"Pendente");td(tr,x.referral_validation);
+  const controls=document.createElement("td");const options=document.createElement("select");
+  for(const [value,label] of [["pendente","Pendente"],["confirmado","Confirmar"],["rejeitado","Rejeitar"]]){
+   const opt=new Option(label,value);options.add(opt);
+  }
+  options.value=x.referral_validation;
+  const save=document.createElement("button");save.textContent="Salvar";save.className="secondary";save.style.marginLeft="7px";
+  save.onclick=async()=>{
+   save.disabled=true;
+   try{const r=await call("PATCH",{id:x.id,decision:options.value});setStatus("notice",r.message);await refresh()}
+   catch(e){setStatus("notice",e.message,true)}finally{save.disabled=false}
+  };
+  controls.append(options,save);tr.append(controls);$("referrals").append(tr);
+ }
+ if(!data.referrals.length){const row=document.createElement("tr");const col=td(row,"Nenhuma indicação cadastrada. Conclua dois cadastros fictícios usando o link do primeiro.");col.colSpan=5;$("referrals").append(row)}
+ if(!data.inviters.length){const row=document.createElement("tr");const col=td(row,"Nenhum indicador com convite usado ainda.");col.colSpan=5;$("inviters").append(row)}
+ setStatus("notice",testMode?"Homologação ativa: dados fictícios isolados de clientes.":"Ambiente de operação comercial.");
+}
+async function refresh(){
+ try{const data=await call("GET");render(data)}
+ catch(e){setStatus("notice",e.message,true);$("auth").classList.remove("hide")}
+}
+$("unlock").onclick=async()=>{token=$("token").value.trim();$("token").value="";await refresh()};
+$("refresh").onclick=refresh;
+$("add-tier").onclick=()=>makeTier();
+$("save").onclick=async()=>{
+ const tiers=[...document.querySelectorAll(".tier")].map(div=>({
+  min_confirmed:Number(div.querySelectorAll("input")[0].value),
+  extra_discount_pct:Number(div.querySelectorAll("input")[1].value)
+ }));
+ try{const r=await call("POST",{enabled:$("enabled").checked,tiers});setStatus("tiers-note",r.message);await refresh()}
+ catch(e){setStatus("tiers-note",e.message,true)}
+};
+refresh();
+})();
+</script></body></html>
