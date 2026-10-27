@@ -5,8 +5,9 @@
 "use strict";
 const $=id=>document.getElementById(id), main=$("entry-club"), secondary=$("fan-team-select");
 if(!main||!secondary)return;
-const custom=$("entry-club-custom"),other=$("fan-team-other");
-if(custom){custom.hidden=true;custom.disabled=true;custom.required=false}
+const other=$("fan-team-other"),clubWrap=$("club-select-wrap");
+const teamRadios=[...document.querySelectorAll('input[name="help_club"]')];
+
 if(other){other.hidden=true;other.disabled=true;other.required=false}
 const hint=$("club-helper"),status=$("fan-team-status");
 let activeTeams=new Map(),fetchFailed=false;
@@ -21,20 +22,35 @@ if(referredByCode&&notice){
  notice.hidden=false;
  notice.textContent="Você acessou um convite Energy Business. O programa de bonificações ainda não está ativo.";
 }
-function safeSelection(value){return activeTeams.has(value)?value:value==="sem_clube"?"sem_clube":""}
+function safeSelection(value){return activeTeams.has(value)?value:""}
 function fillSelect(el,selected){
  el.replaceChildren();
  const placeholder=new Option("Escolha seu time",""),none=new Option("Prefiro não escolher um time","sem_clube");
  el.add(placeholder);
- for(const [name,state] of activeTeams){
-  el.add(new Option(name+(state?" ("+state+")":""),name));
+ for(const [name,details] of activeTeams){
+  el.add(new Option(name+(details.state?" ("+details.state+")":""),name));
  }
- el.add(none);
+ if(el===secondary)el.add(none);
  el.value=safeSelection(selected);
 }
-function sync(from,to){to.value=safeSelection(from.value)}
-main.addEventListener("change",()=>sync(main,secondary));
-secondary.addEventListener("change",()=>sync(secondary,main));
+function helpChoice(){return teamRadios.find(r=>r.checked)?.value||""}
+function setHelpChoice(choice){
+ const option=teamRadios.find(r=>r.value===choice);
+ if(option)option.checked=true;
+ toggleClubInput();
+}
+function toggleClubInput(){
+ const yes=helpChoice()==="sim";
+ if(clubWrap)clubWrap.hidden=!yes;
+ main.disabled=!yes;main.required=yes;
+ if(!yes){main.value="";secondary.value=""}
+}
+teamRadios.forEach(r=>r.addEventListener("change",toggleClubInput));
+main.addEventListener("change",()=>{secondary.value=safeSelection(main.value)});
+secondary.addEventListener("change",()=>{
+ if(secondary.value==="sem_clube"){setHelpChoice("nao");return}
+ if(activeTeams.has(secondary.value)){setHelpChoice("sim");main.value=secondary.value}
+});
 async function loadClubs(){
  const old=main.value,oldSecondary=secondary.value;
  try{
@@ -43,13 +59,21 @@ async function loadClubs(){
   const data=await response.json();
   if(!Array.isArray(data.clubs))throw Error("Lista indisponível");
   const entries=data.clubs.filter(c=>c&&typeof c.name==="string"&&c.name.length<=80&&
-    typeof c.id==="string").map(c=>[c.name,c.state||""]);
+    typeof c.id==="string").map(c=>[c.name,{
+      state:c.state||"",
+      partner_confirmed:c.partner_confirmed===1,
+      club_share_percent:c.club_share_percent,
+      support_message:c.support_message||""
+    }]);
   activeTeams=new Map(entries);
   fetchFailed=false;
   const prefer=activeTeams.has(incomingTeam)?incomingTeam:old;
   fillSelect(main,prefer);
   fillSelect(secondary,oldSecondary||prefer);
-  if(activeTeams.has(incomingTeam)&&!old&&(!oldSecondary||oldSecondary===""))secondary.value=incomingTeam;
+  if(activeTeams.has(incomingTeam)&&!old&&(!oldSecondary||oldSecondary==="")){
+    secondary.value=incomingTeam;main.value=incomingTeam;setHelpChoice("sim");
+  }
+  toggleClubInput();
   if(hint)hint.textContent=activeTeams.size
    ?"Times disponibilizados pelo painel Energy Business. A seleção não comprova parceria oficial."
    :"Nenhum clube habilitado no painel ainda. Você pode continuar sem escolher um time.";
@@ -63,8 +87,9 @@ async function loadClubs(){
 }
 function selectedClub(){
  const club=main.value;
- return activeTeams.has(club)?club:"";
+ return helpChoice()==="sim"&&activeTeams.has(club)?club:"";
 }
+function clubDetails(name){return activeTeams.get(name)||null}
 function referralLink(){
  const link=new URL("/",location.origin);
  if(myReferralCode)link.searchParams.set("ref",myReferralCode);
@@ -80,7 +105,7 @@ function setReferralCode(code){
  const s=$("fan-referral-status");
  if(s)s.textContent="O código de convite está pronto. O programa de descontos por indicação ainda não foi ativado.";
 }
-window.EnergyFan={selectedClub,getRef:()=>referredByCode,setReferralCode,reloadClubs:loadClubs};
+window.EnergyFan={selectedClub,clubDetails,getRef:()=>referredByCode,setReferralCode,reloadClubs:loadClubs};
 const learn=$("fan-hero-link");
 if(learn)learn.addEventListener("click",e=>{
  if(!window.EnergyFlow?.alignToElement)return;
@@ -92,7 +117,8 @@ $("fan-continue").addEventListener("click",()=>{
   secondary.focus();return;
  }
  if(status)status.textContent="";
- sync(secondary,main);
+ if(secondary.value==="sem_clube")setHelpChoice("nao");
+ else {setHelpChoice("sim");main.value=secondary.value}
  if(window.EnergyFlow?.navigateToStage)window.EnergyFlow.navigateToStage("cadastro");
  else $("cadastro").scrollIntoView({block:"start",behavior:"auto"});
  $("entry-name")?.focus({preventScroll:true});
@@ -117,5 +143,6 @@ $("fan-copy").addEventListener("click",async()=>{
    :"Link copiado. Indicações ainda não são contabilizadas.");
  }catch{feedback("Não foi possível copiar automaticamente. Compartilhe este link: "+link)}
 });
+toggleClubInput();
 loadClubs();
 })();
