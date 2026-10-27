@@ -22,7 +22,7 @@ if(referredByCode&&notice){
  notice.hidden=false;
  notice.textContent="Você acessou um convite Energy Business. O programa de bonificações ainda não está ativo.";
 }
-function safeSelection(value){return activeTeams.has(value)?value:""}
+function safeSelection(value,allowNone=false){return activeTeams.has(value)?value:(allowNone&&value==="sem_clube"?"sem_clube":"")}
 function fillSelect(el,selected){
  el.replaceChildren();
  const placeholder=new Option("Escolha seu time",""),none=new Option("Prefiro não escolher um time","sem_clube");
@@ -31,25 +31,50 @@ function fillSelect(el,selected){
   el.add(new Option(name+(details.state?" ("+details.state+")":""),name));
  }
  if(el===secondary)el.add(none);
- el.value=safeSelection(selected);
+ el.value=safeSelection(selected,el===secondary);
 }
 function helpChoice(){return teamRadios.find(r=>r.checked)?.value||""}
+const continueLabel=$("fan-continue-label");
+function updateContinueLabel(){
+ if(continueLabel)continueLabel.textContent=secondary.value==="sem_clube"
+   ?"Fazer cadastro"
+   :"Escolher time e cadastrar";
+}
+function toggleClubInput(){
+ const choice=helpChoice(),yes=choice==="sim";
+ if(clubWrap)clubWrap.hidden=!yes;
+ main.disabled=!yes;main.required=yes;
+ if(!yes){
+  main.value="";
+  // Mantém o caminho "sem time" selecionado mesmo após navegar entre seções.
+  secondary.value=choice==="nao"?"sem_clube":"";
+ }else if(activeTeams.has(secondary.value)){
+  main.value=secondary.value;
+ }
+ updateContinueLabel();
+}
 function setHelpChoice(choice){
  const option=teamRadios.find(r=>r.value===choice);
  if(option)option.checked=true;
  toggleClubInput();
 }
-function toggleClubInput(){
- const yes=helpChoice()==="sim";
- if(clubWrap)clubWrap.hidden=!yes;
- main.disabled=!yes;main.required=yes;
- if(!yes){main.value="";secondary.value=""}
-}
 teamRadios.forEach(r=>r.addEventListener("change",toggleClubInput));
-main.addEventListener("change",()=>{secondary.value=safeSelection(main.value)});
+main.addEventListener("change",()=>{
+ secondary.value=safeSelection(main.value);
+ updateContinueLabel();
+});
 secondary.addEventListener("change",()=>{
- if(secondary.value==="sem_clube"){setHelpChoice("nao");return}
- if(activeTeams.has(secondary.value)){setHelpChoice("sim");main.value=secondary.value}
+ const selection=secondary.value;
+ if(selection==="sem_clube"){
+  setHelpChoice("nao");
+ }else if(activeTeams.has(selection)){
+  setHelpChoice("sim");
+  main.value=selection;
+ }else{
+  teamRadios.forEach(r=>{r.checked=false});
+  toggleClubInput();
+ }
+ updateContinueLabel();
 });
 async function loadClubs(){
  const old=main.value,oldSecondary=secondary.value;
@@ -117,8 +142,15 @@ $("fan-continue").addEventListener("click",()=>{
   secondary.focus();return;
  }
  if(status)status.textContent="";
- if(secondary.value==="sem_clube")setHelpChoice("nao");
- else {setHelpChoice("sim");main.value=secondary.value}
+ if(secondary.value==="sem_clube"){
+  setHelpChoice("nao");
+ }else if(activeTeams.has(secondary.value)){
+  setHelpChoice("sim");
+  main.value=secondary.value;
+ }else{
+  if(status)status.textContent="Escolha um clube cadastrado para continuar.";
+  return;
+ }
  if(window.EnergyFlow?.navigateToStage)window.EnergyFlow.navigateToStage("cadastro");
  else $("cadastro").scrollIntoView({block:"start",behavior:"auto"});
  $("entry-name")?.focus({preventScroll:true});
