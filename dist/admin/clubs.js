@@ -42,7 +42,11 @@ function render(){
   const tr=document.createElement("tr");tr.dataset.id=club.id;
   if(!editable){
    const name=document.createElement("b");name.textContent=club.name;cell(tr,name);
-   cell(tr,club.state||"—");cell(tr,publishLabel(Boolean(club.is_active)));
+   cell(tr,club.state||"—");
+   cell(tr,publishLabel(Boolean(club.is_active)));
+   cell(tr,club.partner_confirmed?String(club.club_share_percent??0)+"%":"Não divulgado");
+   cell(tr,club.partner_confirmed?(club.support_message||"Conforme contrato"):"Parceria ainda não confirmada");
+   cell(tr,club.partner_confirmed?"Formalizada":"Não confirmada");
    const info=document.createElement("span");info.textContent="Somente leitura";cell(tr,info);
   }else{
    const name=control("text",club.name,"name",80);
@@ -55,13 +59,24 @@ function render(){
    const checked=document.createElement("input");checked.type="checkbox";checked.checked=Boolean(club.is_active);
    stateWrapper.append(checked,document.createTextNode(" Visível no site"));
    cell(tr,stateWrapper);
+   const share=control("number",String(club.club_share_percent??0),"share club-share-input",8);
+   share.min="0";share.max="100";share.step="0.01";share.required=true;
+   cell(tr,share);
+   const support=document.createElement("textarea");
+   support.className="club-table-message";support.maxLength=650;support.rows=3;
+   support.value=club.support_message||"";
+   cell(tr,support);
+   const partnerLabel=document.createElement("label");partnerLabel.className="club-partner-label";
+   const partnerCheck=document.createElement("input");partnerCheck.type="checkbox";partnerCheck.checked=Boolean(club.partner_confirmed);
+   partnerLabel.append(partnerCheck,document.createTextNode(" Formalizada"));
+   cell(tr,partnerLabel);
    const save=document.createElement("button");save.type="button";save.className="btn";save.textContent="Salvar";
    save.disabled=busy;
    save.onclick=async()=>{
-    if(!name.reportValidity()||!uf.reportValidity())return;
+    if(!name.reportValidity()||!uf.reportValidity()||!share.reportValidity())return;
     save.disabled=true;
     try{
-     await updateClub({id:club.id,name:name.value.trim(),state:uf.value.trim().toUpperCase(),is_active:checked.checked});
+     await updateClub({id:club.id,name:name.value.trim(),state:uf.value.trim().toUpperCase(),is_active:checked.checked,club_share_percent:Number(share.value),support_message:support.value.trim(),partner_confirmed:partnerCheck.checked});
      message("Clube atualizado. A lista pública refletirá a alteração na próxima atualização.");
     }catch(err){message(err.message,true)}
     finally{save.disabled=false}
@@ -123,7 +138,10 @@ form.addEventListener("submit",async e=>{
  const input={
   name:$("club-name").value.trim(),
   state:$("club-state").value.trim().toUpperCase(),
-  is_active:$("club-active").checked
+  is_active:$("club-active").checked,
+  club_share_percent:Number($("club-share").value),
+  support_message:$("club-support-message").value.trim(),
+  partner_confirmed:$("club-partner-confirmed").checked
  };
  try{
   const data=await api("/api/admin/clubs",{method:"POST",body:JSON.stringify(input)});
