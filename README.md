@@ -21,3 +21,14 @@ Cloudflare Pages conectado ao branch main do GitHub, saída dist, sem comando de
 Finalizar política LGPD e identificação da empresa, proteção Cloudflare Turnstile, integração da fornecedora, homologação e login de usuário individual para acesso a informações reais. Somente depois alterar LEADS_ENABLED para true.
 
 Clubes de futebol não fazem parte da seleção pública nesta versão. A fonte inicial de todos os cadastros será a Energy Business.
+## Leitor de faturas - #fatura
+
+Protótipo de leitura local de foto ou PDF para extrair titular, endereço da unidade consumidora, total da fatura e kWh mensal. Usa Tesseract.js no navegador e pdfjs-dist para PDFs. Suporta revisão de todos os campos, texto de evidência, seleção de amostra fictícia, preenchimento manual e cópia apenas após confirmação.
+
+Não há armazenamento ou envio de fatura ou de OCR para nossa API. O arquivo é processado localmente; bibliotecas e modelos externos são baixados quando o usuário inicia o OCR. LEADS_ENABLED continua false. A ligação com cadastro real ou envio de faturas exigirá LGPD completa, consentimento, autenticação administrativa e armazenamento privado com política de retenção.
+
+Modelos estudados: Celesc, Copel, Cemig, CPFL/RGE, Enel, Neoenergia, Equatorial, Energisa, EDP, Light, Amazonas e Roraima Energia. As diferenças são tratadas por variantes de etiquetas e não por coordenadas rígidas. A leitura pode falhar ou confundir valores; a conferência humana é obrigatória. Não se deve interpretar valor da conta como comprovante de pagamento.
+
+Fontes: https://www.celesc.com.br/images/2._Segunda_via_PDF.pdf ; https://www.enel.com.br/pt/Para_Voce/entenda_sua_conta.html ; https://www.cemig.com.br/faturas/entenda-sua-conta/ ; https://www.cpfl.com.br/entenda-sua-conta ; https://www.energisa.com.br/entenda-sua-conta ; https://www.neoenergia.com/entenda-sua-conta-de-luz .
+
+Testes do motor: node tests/fatura-parser-test.js
