@@ -14,8 +14,11 @@ async function authorized(request,env){
 function validClub(data){
  if(!data||typeof data!=="object"||Array.isArray(data))return null;
  const name=normalized(data.name),state=normalized(data.state||"").toUpperCase();
- if(name.length<2||name.length>80||/[<>\/\\\x00-\x1F\x7F]/.test(name)||/\d{6}/.test(name)||!/^$|^[A-Z]{2}$/.test(state)||typeof data.is_active!=="boolean")return null;
- return {name,state,is_active:data.is_active?1:0};
+ const share=Number(data.club_share_percent??0);
+ const support=normalized(data.support_message||"");
+ const partnered=data.partner_confirmed===true;
+ if(name.length<2||name.length>80||/[<>\/\\\x00-\x1F\x7F]/.test(name)||/\d{6}/.test(name)||!/^$|^[A-Z]{2}$/.test(state)||typeof data.is_active!=="boolean"||!Number.isFinite(share)||share<0||share>100||Math.round(share*100)!==Math.round(share*100*100)/100||support.length>650||typeof data.partner_confirmed!=="boolean")return null;
+ return {name,state,is_active:data.is_active?1:0,club_share_percent:Math.round(share*100)/100,support_message:support,partner_confirmed:partnered?1:0};
 }
 function originOkay(request){
  const origin=request.headers.get("origin");
@@ -25,7 +28,7 @@ export async function onRequestGet({request,env}){
  if(!(await authorized(request,env)))return respond({error:"Autorização administrativa obrigatória."},401);
  if(!env.DB)return respond({error:"Banco de clubes indisponível."},503);
  try{
-  const q=await env.DB.prepare("SELECT id,name,state,is_active,created_at,updated_at FROM clubs ORDER BY name COLLATE NOCASE ASC LIMIT 500").all();
+  const q=await env.DB.prepare("SELECT id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at FROM clubs ORDER BY name COLLATE NOCASE ASC LIMIT 500").all();
   return respond({clubs:q.results||[]});
  }catch{return respond({error:"Não foi possível consultar os clubes."},503)}
 }
@@ -40,7 +43,7 @@ export async function onRequestPost({request,env}){
  if(!club)return respond({error:"Informe um nome válido, UF de duas letras e visibilidade."},400);
  try{
   const id=crypto.randomUUID();
-  const row=await env.DB.prepare("INSERT INTO clubs (id,name,state,is_active) VALUES(?,?,?,?) RETURNING id,name,state,is_active,created_at,updated_at").bind(id,club.name,club.state,club.is_active).first();
+  const row=await env.DB.prepare("INSERT INTO clubs (id,name,state,is_active,club_share_percent,support_message,partner_confirmed) VALUES(?,?,?,?,?,?,?) RETURNING id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at").bind(id,club.name,club.state,club.is_active,club.club_share_percent,club.support_message,club.partner_confirmed).first();
   return respond({club:row},201);
  }catch(err){
   if(/UNIQUE/i.test(String(err)))return respond({error:"Esse clube já está cadastrado."},409);
@@ -57,7 +60,7 @@ export async function onRequestPatch({request,env}){
  const club=validClub(data),id=String(data?.id||"");
  if(!club||!/^[0-9a-f-]{36}$/i.test(id))return respond({error:"Campos inválidos."},400);
  try{
-  const row=await env.DB.prepare("UPDATE clubs SET name=?,state=?,is_active=?,updated_at=datetime('now') WHERE id=? RETURNING id,name,state,is_active,created_at,updated_at").bind(club.name,club.state,club.is_active,id).first();
+  const row=await env.DB.prepare("UPDATE clubs SET name=?,state=?,is_active=?,club_share_percent=?,support_message=?,partner_confirmed=?,updated_at=datetime('now') WHERE id=? RETURNING id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at").bind(club.name,club.state,club.is_active,club.club_share_percent,club.support_message,club.partner_confirmed,id).first();
   if(!row)return respond({error:"Clube não encontrado."},404);
   return respond({club:row});
  }catch(err){
