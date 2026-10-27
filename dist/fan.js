@@ -11,10 +11,13 @@ const teamRadios=[...document.querySelectorAll('input[name="help_club"]')];
 
 const hint=$("club-helper"),status=$("fan-team-status");
 let activeTeams=new Map(),fetchFailed=false;
-const locationURL=new URL(location.href),incomingTeam=(locationURL.searchParams.get("time")||"").trim();
+const locationURL=new URL(location.href);
 const allowedRef=/^EB[A-F0-9]{16}$/;
 const incomingRef=(locationURL.searchParams.get("ref")||"").toUpperCase();
 const referredByCode=allowedRef.test(incomingRef)?incomingRef:"";
+// Um convite é vinculado ao indicador, nunca ao time dele.
+// Inclusive links antigos com ?ref=...&time=... devem abrir SEM time escolhido.
+const incomingTeam=referredByCode?"":(locationURL.searchParams.get("time")||"").trim();
 let myReferralCode="";
 const notice=$("referral-arrival");
 if(referredByCode&&notice){
@@ -117,8 +120,8 @@ function clubDetails(name){return activeTeams.get(name)||null}
 function referralLink(){
  const link=new URL("/",location.origin);
  if(myReferralCode)link.searchParams.set("ref",myReferralCode);
- const name=selectedClub();
- if(name)link.searchParams.set("time",name);
+ // O código de indicação identifica apenas quem compartilhou.
+ // O clube sempre será escolhido pelo novo visitante.
  return link.href;
 }
 function setReferralCode(code){
@@ -156,9 +159,8 @@ $("fan-continue").addEventListener("click",()=>{
 });
 const feedback=s=>{const el=$("fan-referral-status");if(el)el.textContent=s};
 $("fan-whatsapp").addEventListener("click",()=>{
- const club=selectedClub();
  const link=referralLink();
- const message="Conheça a proposta da Energy Business: descubra a possibilidade de economizar na conta de energia e apoiar o futebol"+(club?" ("+club+")":"")+". Condições sujeitas a parcerias, elegibilidade e regulamento. "+link;
+ const message="Conheça a Energy Business! Você pode descobrir possibilidades de economia na conta de energia e, se quiser, escolher o seu próprio time do coração. Condições sujeitas a análise, parcerias, elegibilidade e regulamento. "+link;
  window.open("https://wa.me/?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
  feedback(myReferralCode
   ?"Seu convite foi preparado. Benefícios dependem das regras comerciais, ainda não ativadas."
