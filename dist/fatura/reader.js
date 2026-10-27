@@ -77,6 +77,7 @@ $("bill-rotate").onclick=()=>{
 function renderResult(text,filename="",confidence=0){
  rawText=String(text||"");
  const result=reader.extract(rawText);
+ $("bill-results").hidden=false;
  form.hidden=false;
  $("bill-distributor").textContent=result.distributor;
  $("bill-name").value=result.name.value||"";
@@ -93,8 +94,10 @@ function renderResult(text,filename="",confidence=0){
  $("bill-copy").disabled=false;
  $("bill-apply").disabled=false;
  finalized=true;
- const found=[result.name,result.address,result.amount,result.kwh].filter(x=>x.value!==null).length;
- notify("Leitura concluída: "+found+" de 4 campos identificados. Confira os valores diretamente na imagem; o reconhecimento não confirma pagamento nem titularidade.",
+ const fields=[["Nome completo",result.name],["Endereço",result.address],["Valor",result.amount],["Consumo kWh",result.kwh]];
+ const missing=fields.filter(([,x])=>x.value===null).map(([label])=>label);
+ const found=fields.length-missing.length;
+ notify("Leitura concluída: "+found+" de 4 campos identificados."+(missing.length?" Não identificado(s): "+missing.join(", ")+".":"")+" Confira os quatro valores na fatura. O reconhecimento não confirma pagamento.",
  found===4?"ok":"warn");
  $("bill-results").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
@@ -128,7 +131,7 @@ async function imageCanvas(selected){
  }
  const naturalW=image.width,naturalH=image.height;
  if(!naturalW||!naturalH)throw Error("Imagem sem dimensões válidas.");
- const scale=Math.min(1,2500/Math.max(naturalW,naturalH));
+ const scale=Math.min(2,3000/Math.max(naturalW,naturalH));
  const w=Math.max(1,Math.round(naturalW*scale)),h=Math.max(1,Math.round(naturalH*scale));
  const portraitSide=rotation%180===0;
  const canvas=document.createElement("canvas");
@@ -163,6 +166,20 @@ async function pdfCanvases(selected){
  }finally{await doc.destroy()}
  return arr;
 }
+
+function enhanceRegion(canvas,from,to){
+ const y=Math.round(canvas.height*from),height=Math.max(1,Math.round(canvas.height*(to-from)));
+ const scale=Math.min(2.15,3200/Math.max(canvas.width,height));
+ const result=document.createElement("canvas");
+ result.width=Math.max(1,Math.round(canvas.width*scale));
+ result.height=Math.max(1,Math.round(height*scale));
+ const ctx=result.getContext("2d");
+ if(!ctx)throw Error("Não foi possível ampliar o texto da fatura.");
+ ctx.fillStyle="#fff";ctx.fillRect(0,0,result.width,result.height);
+ ctx.filter="contrast(1.22)";
+ ctx.drawImage(canvas,0,y,canvas.width,height,0,0,result.width,result.height);
+ return result;
+}
 async function run(){
  if(running||!file)return;
  running=true;resetResults();updateButtons();
@@ -184,9 +201,29 @@ async function run(){
    notify("Lendo "+(i+1)+" de "+targets.length+" página(s) localmente...");
    const data=await ocrWorker.recognize(targets[i]);
    if(data&&data.data&&data.data.text)pieces.push(data.data.text);
-   targets[i].width=targets[i].height=1;
   }
   if(!pieces.length||pieces.join("").trim().length<15)throw Error("Não encontrei texto legível. Tente uma foto sem reflexo, com a conta inteira visível.");
+
+  // Em faturas tabulares (Celesc e similares), o OCR integral frequentemente
+  // perde a coluna da medição ou o endereço. Reler recortes ampliados somente
+  // se algum dos quatro campos estiver ausente.
+  const initial=reader.extract(pieces.join("\n"));
+  const missingTop=!initial.name.value||!initial.address.value||!initial.amount.value;
+  const missingConsumption=!initial.kwh.value;
+  if(targets.length&& (missingTop||missingConsumption)){
+    const regions=[];
+    if(missingTop)regions.push([0.04,0.40,"dados do titular e valor"]);
+    if(missingConsumption)regions.push([0.28,0.70,"quadro de medição e consumo"]);
+    for(const [from,to,label] of regions){
+      notify("Aprimorando a leitura: "+label+"…");
+      const zoom=enhanceRegion(targets[0],from,to);
+      try{
+        const result=await ocrWorker.recognize(zoom);
+        if(result?.data?.text)pieces.push(result.data.text);
+      }finally{zoom.width=1;zoom.height=1}
+    }
+  }
+  for(const target of targets){target.width=1;target.height=1}
   renderResult(pieces.join("\n"),file.name);
  }catch(err){
   notify((err&&err.message)||"Falha durante a leitura. Tente outra imagem.", "error");
