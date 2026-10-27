@@ -51,3 +51,16 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 - Tabela D1: `clubs`; DDL em `clubs.sql`. Migration já executada no D1 produção. Clubes inativos permanecem no banco para futuras reativações.
 - O cadastro de interessados continua com origem comercial Energy Business e, quando futuramente habilitado, somente aceita `favorite_club` correspondente a clube visível no painel.
 - O recebimento de leads ainda está desativado (`LEADS_ENABLED=false`); edição de clubes pode funcionar independentemente desse controle.
+
+
+## Jornada condicional (27/10/2026)
+
+- Texto de abertura aprovado: “Quer economizar na sua conta de energia e ainda ajudar seu time do coração? Faça seu cadastro e envie sua conta para análise.”
+- Etapa 1: pergunta obrigatória Sim/Não "Quer ajudar seu time do coração?". A opção Sim habilita o seletor de clubes publicados pelo painel; Não oculta e limpa a escolha, seguindo o cadastro normalmente.
+- Etapa 2: leitura de foto/PDF no próprio navegador, conferência obrigatória de titular, endereço, valor e consumo e botão para avançar com os valores revisados.
+- Etapa 3: simulação ilustrativa e botão "Concluir as 3 etapas". A conclusão só aparece depois da etapa 1 e da conferência da etapa 2.
+- Fim: instrução clara sobre contato via WhatsApp; no **modo demonstração** o cadastro e a fatura não são enviados nem armazenados e o site não promete contato individual automático. Quando o formulário real estiver habilitado por LGPD/Turnstile, o cadastro inicial é persistido no D1, mas a foto e os dados da fatura continuam locais.
+- Para quem escolheu um time: exibe nome do clube e mensagem de apoio definida no painel. Percentual de participação só é divulgado se `partner_confirmed=1`.
+- Painel: `club_share_percent` (0–100, duas casas), `support_message` (máximo 650 caracteres) e `partner_confirmed` ("Parceria formalizada", marcar apenas quando houver contrato). O percentual é a fração sobre a **economia elegível do torcedor** utilizada para base de participação do clube, não um desconto adicional ao consumidor.
+- Migração Cloudflare D1 executada para as três colunas acima. DDL atualizado em `clubs.sql`.
+- A tela administrativa continua exigindo chave para editar informações comerciais de clubes, mesmo que a visualização do painel seja aberta.
