@@ -25,6 +25,7 @@ function clearObject(){
  $("bill-pdf-label").hidden=true;
 }
 function resetResults(){
+ $("bill-results").hidden=true;
  form.reset();form.hidden=true;rawText="";finalized=false;
  $("bill-copy").disabled=true;$("bill-apply").disabled=true;
  $("bill-ocr-text").textContent="";$("bill-evidence").textContent="";
@@ -195,6 +196,7 @@ async function run(){
  }
 }
 $("bill-read").onclick=run;
+$("bill-manual").onclick=()=>{if(running)return;resetResults();renderResult("");notify("Preenchimento manual habilitado. Confira os dados na fatura.","warn")};
 function normalizedMoney(input){
  const value=String(input||"").trim();
  if(!value)return null;
