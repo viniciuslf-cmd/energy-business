@@ -17,7 +17,7 @@ function validClub(data){
  const share=Number(data.club_share_percent??0);
  const support=normalized(data.support_message||"");
  const partnered=data.partner_confirmed===true;
- if(name.length<2||name.length>80||/[<>\/\\\x00-\x1F\x7F]/.test(name)||/\d{6}/.test(name)||!/^$|^[A-Z]{2}$/.test(state)||typeof data.is_active!=="boolean"||!Number.isFinite(share)||share<0||share>100||Math.round(share*100)!==Math.round(share*100*100)/100||support.length>650||typeof data.partner_confirmed!=="boolean")return null;
+ if(name.length<2||name.length>80||/[<>\/\\\x00-\x1F\x7F]/.test(name)||/\d{6}/.test(name)||!/^$|^[A-Z]{2}$/.test(state)||typeof data.is_active!=="boolean"||!Number.isFinite(share)||share<0||share>100||Math.abs(share*100-Math.round(share*100))>0.000001||support.length>650||typeof data.partner_confirmed!=="boolean")return null;
  return {name,state,is_active:data.is_active?1:0,club_share_percent:Math.round(share*100)/100,support_message:support,partner_confirmed:partnered?1:0};
 }
 function originOkay(request){
