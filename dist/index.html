@@ -238,21 +238,62 @@ html{scroll-padding-top:88px}
 @media(max-width:750px){.intake-hero{grid-template-columns:1fr;gap:24px;padding:31px 0 56px}.hero-intro h1{font-size:clamp(36px,9vw,47px);margin:13px 0 10px}.hero-intro p{font-size:14px;line-height:1.6}.intake-steps{margin-top:16px}.intake-hero .hero-trust{display:none}.intake-hero .hero-form{justify-self:stretch;max-width:none}.form-headline h2{font-size:24px}.intake-hero .intake-card .grid-two{grid-template-columns:1fr}}
 @media(max-width:440px){.intake-hero{padding-top:27px}.intake-hero .hero-form{padding:19px;border-radius:18px}.intake-hero .intake-card .field{margin-top:10px}.step-chip{font-size:11px;padding:6px 8px}.step-chip b{width:22px;height:22px}}
 
+
+.fan-hero-promo{display:flex;gap:15px;align-items:center;padding:15px 16px;margin-top:22px;border:1px solid #ffffff37;background:#ffffff15;border-radius:15px;max-width:510px;color:#fff}
+.fan-hero-promo:hover{background:#ffffff28}
+.fan-hero-ball{display:grid;place-items:center;width:44px;height:44px;flex:none;font-size:23px;background:#ffffff20;border-radius:12px}
+.fan-hero-promo strong{display:block;font-size:13px;line-height:1.3}
+.fan-hero-promo small{display:block;color:#c4d2e4;font-size:11px;margin-top:5px}
+.fan-hero-arrow{margin-left:auto;color:var(--gold);font-size:20px}
+.club-helper{font-size:10px!important;line-height:1.5!important;margin:5px 0!important;color:#7a889a!important}
+#entry-club-custom[hidden],#fan-team-other[hidden],#referral-arrival[hidden]{display:none!important}
+#entry-club-custom,#fan-team-other{margin-top:8px}
+.referral-arrival{border:1px solid #d4e7f7;background:#eef7ff;padding:10px 12px;border-radius:10px;color:#45627f;font-size:11px;margin-top:12px}
+.fan-section{background:#f0f4f8;padding:84px 0 92px}
+.fan-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:28px}
+.fan-heading h2{font-size:clamp(31px,3.5vw,45px);letter-spacing:-.05em;line-height:1.15;margin:13px 0}
+.fan-heading p{font-size:14px;color:#73849a;line-height:1.75;max-width:770px}
+.fan-status{flex:none;align-self:center;background:#fff8e7;border:1px solid #eedcb3;color:#8e6c32;border-radius:12px;padding:12px 16px;font-size:10px;letter-spacing:.07em;font-weight:800;text-align:center}
+.fan-status span{display:block;color:#948061;font-size:10px;letter-spacing:0;font-weight:650}
+.fan-explain{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.fan-feature{background:#fff;border:1px solid #dde6ef;padding:24px;border-radius:17px}
+.fan-feature>span{display:grid;place-items:center;background:#faf2e4;color:#b28747;border-radius:12px;width:37px;height:37px;font-size:13px;font-weight:850}
+.fan-feature h3{font-size:17px;letter-spacing:-.03em;margin:18px 0 8px}
+.fan-feature p{font-size:12px;color:#798ba0;margin:0;line-height:1.75}
+.fan-panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:22px}
+.fan-panel{padding:30px;background:#fff;border:1px solid #dde6ee;border-radius:19px}
+.fan-panel-referral{background:linear-gradient(135deg,#193854,#10233c);color:#fff;border-color:#283f58}
+.fan-panel-icon{display:grid;place-items:center;background:#f9f0e0;border-radius:11px;font-size:19px;width:42px;height:42px;margin-bottom:15px}
+.fan-panel-referral .fan-panel-icon{background:#ffffff1e}
+.fan-panel h3{font-size:22px;letter-spacing:-.04em;line-height:1.2;margin:0 0 10px}
+.fan-panel p{font-size:12px;line-height:1.75;color:#7c8b9b}
+.fan-panel-referral p{color:#becfdf}
+.fan-panel label{display:block;font-weight:750;font-size:12px;margin:18px 0 7px}
+.fan-panel-button{width:100%;margin:17px 0 10px}
+.fan-panel small{color:#8798a9;font-size:10px;display:block;line-height:1.6}
+.fan-panel-buttons{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 10px}
+.fan-copy{background:transparent;color:white;border-color:#ffffff69}
+.fan-panel .fan-referral-status{font-size:11px;color:#d1c5a8;margin:14px 0 0}
+.fan-legal{font-size:11px;color:#74859a;line-height:1.75;margin:19px 0 0}
+@media(max-width:800px){.fan-heading{display:block}.fan-status{display:inline-block;margin-top:13px}.fan-explain,.fan-panel-grid{grid-template-columns:1fr}.fan-section{padding:62px 0}}
+@media(max-width:480px){.fan-panel{padding:21px}.fan-panel-buttons .btn{flex:1}.fan-feature{padding:19px}.fan-hero-promo{margin-top:17px}.fan-heading h2{font-size:30px}}
+
 </style>
 </head>
 <body>
 <div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação.</div>
 <header class="site-header"><div class="wrap header-inner">
   <a class="brand" href="/" aria-label="Energy Business, início"><span class="brand-icon" role="img" aria-label="Logotipo da empresa"></span>Energy Business<span class="dot">.</span></a>
-  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a></nav>
+  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#torcida">Seu time</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a></nav>
   <a class="btn sm" href="#cadastro">Começar cadastro <span aria-hidden="true">↗</span></a>
 </div></header>
 <main>
 <section class="hero-shell" id="cadastro"><div class="wrap hero intake-hero">
   <div class="hero-intro">
     <div class="eyebrow">Energy Business · Seu primeiro passo</div>
-    <h1>Economizar energia começa <span>aqui.</span></h1>
-    <p>Preencha seus dados e, na próxima etapa, envie uma foto da sua conta de luz. Um caminho simples, direto e feito para celular.</p>
+    <h1>Ajude seu time do coração e descubra como <span>economizar energia.</span></h1>
+    <p>Quer ajudar seu time do coração e ainda buscar desconto na fatura de energia? Escolha seu time, faça seu cadastro e envie sua conta para análise.</p>
+<a href="#torcida" class="fan-hero-promo" id="fan-hero-link"><span class="fan-hero-ball" aria-hidden="true">⚽</span><span><strong>Como meu time pode ganhar com minha conta de luz?</strong><small>Veja como funcionam a proposta e as indicações de amigos</small></span><span class="fan-hero-arrow" aria-hidden="true">↗</span></a>
     <div class="intake-steps" aria-label="Etapas da solicitação">
       <span class="step-chip active"><b>01</b> Seus dados</span>
       <span class="step-connector" aria-hidden="true">→</span>
@@ -271,7 +312,12 @@ html{scroll-padding-top:88px}
         <div><label class="field" for="entry-email">E-mail</label>
         <input id="entry-email" name="email" type="email" maxlength="254" required placeholder="teste@exemplo.com" autocomplete="off"></div>
       </div>
-      <label class="field" for="entry-bill">Valor aproximado da conta por mês</label>
+      <label class="field" for="entry-club">Seu time do coração</label>
+<select id="entry-club" name="club" required aria-describedby="club-helper"><option value="">Escolha seu time</option><option value="sem_clube">Prefiro não escolher um time</option><option value="outro">Outro clube</option></select>
+<input id="entry-club-custom" type="text" maxlength="70" placeholder="Digite o nome do clube" aria-label="Nome de outro clube" hidden>
+<p class="club-helper" id="club-helper">Preferência do torcedor. Não indica parceria oficial com o clube.</p>
+<div id="referral-arrival" class="referral-arrival" hidden>Você chegou por uma indicação. O acompanhamento de indicações ainda não está ativo nesta demonstração.</div>
+<label class="field" for="entry-bill">Valor aproximado da conta por mês</label>
       <select id="entry-bill" name="bill" required>
         <option value="">Selecione a faixa de consumo</option>
         <option value="200">Até R$ 300</option><option value="500">R$ 301 a R$ 600</option>
@@ -287,6 +333,27 @@ html{scroll-padding-top:88px}
   </div>
 </div></section>
 <div class="wrap benefits" aria-label="Benefícios"><div class="benefit"><span class="benefit-icon">↗</span><div><b>Economia em perspectiva</b><small>Visualize diferentes cenários.</small></div></div><div class="benefit"><span class="benefit-icon">◇</span><div><b>Experiência simplificada</b><small>Simule sem burocracia.</small></div></div><div class="benefit"><span class="benefit-icon">✳</span><div><b>Energia inteligente</b><small>Soluções conforme disponibilidade.</small></div></div></div>
+<section id="torcida" class="fan-section"><div class="wrap">
+<div class="fan-heading"><div><span class="eyebrow">Torcida + energia</span><h2>Seu clube pode ganhar com a sua energia. E você também.</h2>
+<p>O projeto da Energy Business aproxima torcedores e clubes de uma oportunidade de economia. Com convênios formalizados, uma adesão elegível pode gerar desconto ao consumidor e participação financeira ao clube.</p></div>
+<div class="fan-status">PROJETO EM PREPARAÇÃO<span>Sem clubes parceiros anunciados</span></div></div>
+<div class="fan-explain">
+<article class="fan-feature"><span>01</span><h3>Escolha seu clube</h3><p>Diga para qual time você torce. Essa seleção representa interesse na campanha, sem confirmar vínculo oficial.</p></article>
+<article class="fan-feature"><span>02</span><h3>Envie sua conta</h3><p>O leitor identifica os dados da fatura para conferência. A elegibilidade depende de análise comercial.</p></article>
+<article class="fan-feature"><span>03</span><h3>Benefícios para ambos</h3><p>Se houver parceria e contratação, o clube poderá receber um percentual de participação e você poderá obter desconto, conforme a proposta.</p></article>
+</div>
+<div class="fan-panel-grid">
+<div class="fan-panel"><div class="fan-panel-icon" aria-hidden="true">⚽</div><h3>Qual é seu time do coração?</h3><p>Escolha seu time e continue o cadastro na Energy Business.</p>
+<label for="fan-team-select">Meu time</label><select id="fan-team-select"><option value="">Escolha seu time</option></select>
+<input id="fan-team-other" type="text" maxlength="70" placeholder="Nome do seu clube" aria-label="Nome de outro clube" hidden>
+<button class="btn gold fan-panel-button" type="button" id="fan-continue">Escolher time e cadastrar <span aria-hidden="true">→</span></button>
+<small>Clubes listados somente como preferência. Não significa patrocínio, representação ou convênio oficial.</small></div>
+<div class="fan-panel fan-panel-referral"><div class="fan-panel-icon" aria-hidden="true">✉</div><h3>Indique amigos. Amplie as possibilidades de economia.</h3>
+<p>Convide outras pessoas a conhecer a proposta. Futuramente, indicações elegíveis que resultarem em contratos efetivados poderão gerar descontos adicionais, conforme um regulamento de bonificação.</p>
+<div class="fan-panel-buttons"><button class="btn gold" type="button" id="fan-whatsapp">Indicar pelo WhatsApp <span aria-hidden="true">↗</span></button><button class="btn fan-copy" type="button" id="fan-copy">Copiar link</button></div>
+<p id="fan-referral-status" class="fan-referral-status" role="status" aria-live="polite">O convite já pode ser compartilhado, mas indicações e bonificações ainda não são contabilizadas nesta versão.</p></div></div>
+<p class="fan-legal"><strong>Condições da proposta:</strong> a escolha de um time não confirma parceria oficial. O percentual de participação do clube, os descontos na conta, os limites e as regras das indicações ainda serão definidos. Benefícios dependem de convênio assinado, elegibilidade e contratação; não há pagamento ou desconto automático pelo cadastro ou envio de fatura nesta demonstração.</p>
+</div></section>
 <section id="fatura" class="section"><div class="wrap">
 <div class="upload-step-header">
   <div class="upload-step-title"><span class="form-step">ETAPA 2 DE 3</span><span class="upload-step-label">Envio da conta de energia</span></div>
@@ -370,7 +437,7 @@ html{scroll-padding-top:88px}
 <details><summary>Os dados do teste são armazenados?</summary><p>Não. Enquanto a plataforma estiver em modo de demonstração, os campos do teste não são enviados ou armazenados no servidor.</p></details>
 </div></div></section>
 </main>
-<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulação</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
+<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#torcida">Seu time</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulação</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
 <script>
 (function(){
 "use strict";
@@ -475,4 +542,4 @@ update();
  }catch(err){console.warn("O cadastro real ainda não está disponível.")}
 })();
 })();
-</script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261026-etapas123" defer></script></body></html>
+</script><script src="/fan.js?v=20261026-team-referral" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261026-etapas123" defer></script></body></html>
