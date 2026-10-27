@@ -25,6 +25,7 @@ function clearObject(){
  $("bill-pdf-label").hidden=true;
 }
 function resetResults(){
+ window.EnergyFlow?.invalidateBillReview?.();
  $("bill-results").hidden=true;
  form.reset();form.hidden=true;rawText="";finalized=false;
  $("bill-copy").disabled=true;$("bill-apply").disabled=true;
@@ -271,6 +272,8 @@ function reviewValues(){
  }
  return {name,address,amount,kwh,distributor:$("bill-distributor").textContent};
 }
+form.addEventListener("input",()=>window.EnergyFlow?.invalidateBillReview?.());
+form.addEventListener("change",()=>window.EnergyFlow?.invalidateBillReview?.());
 $("bill-copy").onclick=async()=>{
  const values=reviewValues();if(!values)return;
  const text=["Distribuidora: "+values.distributor,"Titular: "+values.name,"Endereço da unidade: "+values.address,"Total da fatura: "+fmtAmount(values.amount)+" R$","Consumo mensal: "+values.kwh+" kWh","Origem: Energy Business","Informações conferidas manualmente; valor faturado não confirma quitação."].join("\n");
@@ -284,6 +287,7 @@ $("bill-apply").onclick=()=>{
   bill.value=String(values.amount);
   if(range&&values.amount>=Number(range.min)&&values.amount<=Number(range.max))range.value=String(values.amount);
   bill.dispatchEvent(new Event("input",{bubbles:true}));
+  window.EnergyFlow?.setBillReview?.(values);
   notify("Valor da fatura aplicado ao simulador. O consumo em kWh foi preservado na conferência; desconto segue ilustrativo.","ok");
   if(window.EnergyFlow?.navigateToStage)window.EnergyFlow.navigateToStage("simular");
   else $("simular").scrollIntoView({behavior:"auto",block:"start"});
