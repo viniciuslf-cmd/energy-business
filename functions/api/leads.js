@@ -42,6 +42,11 @@ export async function onRequestPost({request,env}){
   try{
     const duplicate=await env.DB.prepare("SELECT id FROM leads WHERE phone=? AND created_at>=datetime('now','-15 minutes') LIMIT 1").bind(phone).first();
     if(duplicate)return json({ok:true,message:"Recebemos uma solicitação recente com esse telefone."},200);
+    // Somente clubes habilitados no painel podem ser selecionados em novos cadastros.
+    if(favoriteClub){
+      const allowed=await env.DB.prepare("SELECT id FROM clubs WHERE name=? COLLATE NOCASE AND is_active=1 LIMIT 1").bind(favoriteClub).first();
+      if(!allowed)return json({error:"O clube selecionado não está habilitado. Atualize a página e escolha outra opção."},400);
+    }
     const id=crypto.randomUUID();
     // Código de convite aleatório não contém nome, telefone ou outro dado pessoal.
     const referralCode="EB"+Array.from(crypto.getRandomValues(new Uint8Array(8)),v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();
