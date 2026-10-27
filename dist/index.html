@@ -199,65 +199,100 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 @media(max-width:900px){#fatura .bill-layout{grid-template-columns:1fr}}
 @media(max-width:600px){#fatura .bill-card,#fatura .bill-helper-card{padding:20px}#fatura .bill-results{padding:19px}#fatura .bill-results .bill-grid{grid-template-columns:1fr}#fatura .bill-chooser{min-height:215px}#fatura .bill-actions .btn{flex:1}}
 
+
+/* Jornada de cadastro e leitura — destaque para início rápido */
+html{scroll-padding-top:88px}
+.intake-hero{grid-template-columns:.91fr 1.09fr;gap:58px;padding:58px 0 70px;align-items:center}
+.hero-intro h1{font-size:clamp(38px,4.7vw,67px);margin:16px 0 19px}
+.hero-intro p{font-size:16px;line-height:1.7;max-width:490px}
+.intake-steps{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:27px}
+.step-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid #ffffff35;border-radius:100px;padding:8px 12px;font-size:12px;color:#d0dfef;font-weight:650}
+.step-chip b{display:grid;place-items:center;height:25px;width:25px;border-radius:50%;background:#ffffff15;color:#f4d392;font-size:10px}
+.step-chip.active{background:#ffffff1c;color:white;border-color:#ffffff5d}
+.step-connector{color:#a8b8cc}
+.intake-hero .hero-trust{margin-top:25px;gap:13px;font-size:11px}
+.intake-hero .hero-form{box-shadow:0 26px 80px #0004;border:1px solid #ffffff9e;border-radius:22px;padding:27px 30px;max-width:560px;width:100%;justify-self:end}
+.form-headline h2{color:var(--navy);font-size:27px;letter-spacing:-.045em;margin:5px 0 6px;line-height:1.2}
+.form-headline p{color:#718195;font-size:12px;line-height:1.6;max-width:none}
+.form-step{font-size:10px;letter-spacing:.13em;font-weight:850;color:#aa7d36;display:block}
+.intake-hero .intake-card .field{margin:12px 0 5px}
+.intake-hero .intake-card .grid-two{gap:10px}
+.intake-hero .intake-card input,.intake-hero .intake-card select{background:#f9fbfe;border-color:#dce5ee;min-height:43px;font-size:13px;padding:10px 11px}
+.intake-hero .intake-card .checklabel input{min-height:16px;width:16px;margin-top:2px}
+.intake-hero .intake-card .btn{min-height:49px;margin-top:15px;font-size:13px}
+.intake-footnote{color:#96a4b4;font-size:10px!important;text-align:center;margin:5px 0 0!important}
+.intake-hero .status{margin:9px 0 0;line-height:1.5;min-height:0;font-size:12px}
+#fatura{scroll-margin-top:86px}
+.upload-step-header{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:15px}
+.upload-step-title{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.upload-step-label{color:#4d637e;font-size:12px;font-weight:750}
+.upload-back{border:1px solid #d9e3ec;padding:8px 12px;border-radius:9px;background:#fff;color:#4a6078;font-weight:700;font-size:11px}
+.upload-back:hover{background:#eef5fb}
+.step2-status{padding:14px 18px;border:1px solid #d3e9dd;background:#edf8f2;border-radius:12px;color:#245d42;font-size:13px;margin-bottom:22px}
+.step2-status[hidden]{display:none!important}
+@media(max-width:1020px){.intake-hero{gap:30px;padding:48px 0 65px}.hero-intro h1{font-size:clamp(38px,5vw,55px)}.intake-hero .hero-form{padding:23px}}
+@media(max-width:750px){.intake-hero{grid-template-columns:1fr;gap:24px;padding:31px 0 56px}.hero-intro h1{font-size:clamp(36px,9vw,47px);margin:13px 0 10px}.hero-intro p{font-size:14px;line-height:1.6}.intake-steps{margin-top:16px}.intake-hero .hero-trust{display:none}.intake-hero .hero-form{justify-self:stretch;max-width:none}.form-headline h2{font-size:24px}.intake-hero .intake-card .grid-two{grid-template-columns:1fr}}
+@media(max-width:440px){.intake-hero{padding-top:27px}.intake-hero .hero-form{padding:19px;border-radius:18px}.intake-hero .intake-card .field{margin-top:10px}.step-chip{font-size:11px;padding:6px 8px}.step-chip b{width:22px;height:22px}}
+
 </style>
 </head>
 <body>
 <div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação.</div>
 <header class="site-header"><div class="wrap header-inner">
   <a class="brand" href="/" aria-label="Energy Business, início"><span class="brand-icon" role="img" aria-label="Logotipo da empresa"></span>Energy Business<span class="dot">.</span></a>
-  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#simular">Simulador</a><a href="#fatura">Ler fatura</a><a href="#duvidas">Dúvidas</a></nav>
-  <a class="btn sm" href="#simular">Simular economia <span aria-hidden="true">↗</span></a>
+  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a></nav>
+  <a class="btn sm" href="#cadastro">Começar cadastro <span aria-hidden="true">↗</span></a>
 </div></header>
 <main>
-<section class="hero-shell"><div class="wrap hero">
-  <div>
-    <div class="eyebrow">Inteligência em energia</div>
-    <h1>Mais economia.<br>Mais energia para o <span>seu futuro.</span></h1>
-    <p>Explore o potencial de economia na sua conta de luz com a Energy Business. Uma experiência digital simples, transparente e feita para você.</p>
-    <div class="hero-ctas"><a class="btn gold" href="#simular">Calcular minha economia <span aria-hidden="true">↗</span></a><a class="text-link" href="#como-funciona">Entenda como funciona →</a></div>
-    <div class="hero-trust"><span>Simulação gratuita</span><span>Sem compromisso</span><span>100% digital</span></div>
-  </div>
-  <div class="hero-preview" aria-label="Prévia ilustrativa da simulação">
-    <div class="halo"></div>
-    <div class="preview-card">
-      <div class="preview-top"><div><span class="mini-label">Visão de economia</span><br><strong>Sua projeção energética</strong></div><span class="live-tag">● Simulação</span></div>
-      <div class="preview-main"><h3>Economia anual estimada</h3><div class="preview-value"><span id="hero-saving">R$ 1.200</span><small>/ ano</small></div>
-      <div class="preview-chart"><svg viewBox="0 0 460 145" role="img" aria-label="Gráfico decorativo mostrando uma projeção crescente">
-      <defs><linearGradient id="chartfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#d9aa55" stop-opacity=".22"/><stop offset="100%" stop-color="#d9aa55" stop-opacity="0"/></linearGradient></defs>
-      <path d="M0 29H460 M0 75H460 M0 121H460" fill="none" stroke="#e7edf3" stroke-width="1"/>
-      <path d="M3 114C36 111 62 113 90 97S142 91 175 78 236 94 273 59 337 67 364 39 426 36 457 12V143H3Z" fill="url(#chartfill)"/>
-      <path d="M3 114C36 111 62 113 90 97S142 91 175 78 236 94 273 59 337 67 364 39 426 36 457 12" fill="none" stroke="#d4a34e" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="457" cy="12" r="6" fill="#d4a34e" stroke="#fff" stroke-width="3"/></svg></div>
-      </div><div class="preview-foot"><div><small>Economia mensal</small><b id="hero-month">R$ 100,00</b></div><div><small>Canal de origem</small><b>Energy Business</b></div></div>
+<section class="hero-shell" id="cadastro"><div class="wrap hero intake-hero">
+  <div class="hero-intro">
+    <div class="eyebrow">Energy Business · Seu primeiro passo</div>
+    <h1>Economizar energia começa <span>aqui.</span></h1>
+    <p>Preencha seus dados e, na próxima etapa, envie uma foto da sua conta de luz. Um caminho simples, direto e feito para celular.</p>
+    <div class="intake-steps" aria-label="Etapas da solicitação">
+      <span class="step-chip active"><b>01</b> Seus dados</span>
+      <span class="step-connector" aria-hidden="true">→</span>
+      <span class="step-chip"><b>02</b> Conta de energia</span>
     </div>
+    <div class="hero-trust"><span>Simples e rápido</span><span>Sem compromisso</span><span>Atendimento Energy Business</span></div>
+  </div>
+  <div class="intake-card hero-form">
+    <div class="form-headline"><div><span class="form-step">ETAPA 1 DE 2</span><h2>Vamos começar?</h2><p id="intake-description">Preencha os campos abaixo. Nesta fase de testes, use somente dados fictícios: o cadastro não é enviado nem armazenado.</p></div></div>
+    <form id="entry-form">
+      <label class="field" for="entry-name">Nome completo</label>
+      <input id="entry-name" name="name" required maxlength="100" minlength="3" placeholder="Nome de exemplo" autocomplete="off">
+      <div class="grid-two">
+        <div><label class="field" for="entry-phone">WhatsApp com DDD</label>
+        <input id="entry-phone" name="phone" type="tel" required pattern="[0-9 ()+\-]{10,20}" inputmode="tel" placeholder="(00) 00000-0000" autocomplete="off"></div>
+        <div><label class="field" for="entry-email">E-mail</label>
+        <input id="entry-email" name="email" type="email" maxlength="254" required placeholder="teste@exemplo.com" autocomplete="off"></div>
+      </div>
+      <label class="field" for="entry-bill">Valor aproximado da conta por mês</label>
+      <select id="entry-bill" name="bill" required>
+        <option value="">Selecione a faixa de consumo</option>
+        <option value="200">Até R$ 300</option><option value="500">R$ 301 a R$ 600</option>
+        <option value="800">R$ 601 a R$ 1.000</option><option value="1500">R$ 1.001 a R$ 2.000</option>
+        <option value="3000">Acima de R$ 2.000</option>
+      </select>
+      <label class="checklabel"><input type="checkbox" id="entry-consent" required><span>Compreendo que esta versão é demonstrativa e usarei apenas dados fictícios.</span></label>
+      <div id="turnstile-slot"></div>
+      <button class="btn gold" type="submit" id="entry-submit">Continuar para enviar a conta <span aria-hidden="true">→</span></button>
+      <p class="status" role="status" aria-live="polite" id="entry-status"></p>
+      <p class="intake-footnote">Origem: <strong>Energy Business</strong> · Nenhuma contratação automática</p>
+    </form>
   </div>
 </div></section>
 <div class="wrap benefits" aria-label="Benefícios"><div class="benefit"><span class="benefit-icon">↗</span><div><b>Economia em perspectiva</b><small>Visualize diferentes cenários.</small></div></div><div class="benefit"><span class="benefit-icon">◇</span><div><b>Experiência simplificada</b><small>Simule sem burocracia.</small></div></div><div class="benefit"><span class="benefit-icon">✳</span><div><b>Energia inteligente</b><small>Soluções conforme disponibilidade.</small></div></div></div>
-<section class="section" id="simular"><div class="wrap">
-  <div class="section-heading"><span class="eyebrow">Simulação inteligente</span><h2>Descubra o potencial de economia da sua conta.</h2><p>Ajuste o valor mensal e compare cenários estimados em poucos segundos.</p></div>
-  <div class="simulator-frame">
-    <div class="simulator-input"><div class="form-heading"><span class="form-heading-icon">⚡</span><div><h3>Seus dados de consumo</h3><small>Preencha os detalhes da simulação</small></div></div>
-      <div class="channel"><small>Origem da simulação</small><strong>Energy Business · canal oficial da plataforma</strong></div>
-      <label class="field" for="bill">Valor médio da conta de luz por mês</label><input id="bill" type="number" min="50" max="1000000" step="1" value="500" inputmode="decimal" required>
-      <input id="range" aria-label="Ajustar valor da conta" type="range" min="100" max="3000" step="50" value="500">
-      <div class="grid-two"><div><label class="field" for="rate">Cenário de desconto</label><select id="rate"><option value="10">10% · ilustrativo</option><option value="15">15% · ilustrativo</option><option value="20" selected>20% · ilustrativo</option></select></div><div><label class="field" for="profile">Perfil de consumo</label><select id="profile"><option>Residência</option><option>Empresa</option><option>Condomínio</option></select></div></div>
-      <p class="helper">O desconto é apenas uma simulação matemática sobre o valor informado. A análise real depende da distribuidora, consumo compensável, tarifas, impostos e condições contratuais.</p>
-    </div>
-    <div class="simulator-result" aria-live="polite"><div class="result-top"><span class="eyebrow" style="color:var(--gold)">Resultado estimado</span><span class="result-tag">Cenário ilustrativo</span></div>
-      <p class="result-title">Você poderia economizar por ano</p><div class="result-savings" id="year">R$ 1.200,00</div><p class="result-sub">Um novo jeito de olhar para seus gastos com energia.</p>
-      <ul class="result-details"><li><span>Economia mensal</span><b id="month">R$ 100,00</b></li><li><span>Nova conta estimada</span><b id="after">R$ 400,00</b></li><li><span>Origem</span><b>Energy Business</b></li></ul>
-      <a class="btn gold" href="#solicitar">Continuar para análise <span>↗</span></a><div class="result-caption">Simulação sem oferta comercial ou garantia de desconto.</div>
-    </div>
-  </div>
-  <div class="projections" id="projections" aria-live="polite"></div>
-  <p class="helper" style="text-align:center">Projeções sem juros ou reajustes, com valores de conta e percentuais constantes ao longo do período.</p>
-</div></section>
-
 <section id="fatura" class="section"><div class="wrap">
-<div class="section-heading"><span class="eyebrow">Leitura de faturas</span><h2>Leia a foto da sua conta.<br>Confira os dados facilmente.</h2><p>Leitor experimental de contas de energia brasileiras. Aceita formatos de diferentes distribuidoras e permite revisão antes de qualquer uso dos dados.</p></div>
+<div class="upload-step-header">
+  <div class="upload-step-title"><span class="form-step">ETAPA 2 DE 2</span><span class="upload-step-label">Envio da conta de energia</span></div>
+  <a class="upload-back" href="#cadastro">← Voltar aos meus dados</a>
+</div>
+<div id="step2-status" class="step2-status" role="status" aria-live="polite" hidden></div>
+<div class="section-heading"><span class="eyebrow">Leitura de faturas</span><h2>Leia a foto da sua conta.<br>Confira os dados facilmente.</h2><p>Escolha uma foto ou PDF da sua conta de energia. O leitor tentará preencher automaticamente os dados para você conferir.</p></div>
 <div class="bill-layout">
 <div class="bill-card">
-<h3>Selecione sua fatura</h3><p>Foto em JPG/PNG/WebP ou documento PDF. Máximo de 15 MB. Use imagens nítidas, sem cortes nem reflexos.</p>
+<h3>Envie sua conta de energia</h3><p>Tire uma foto ou selecione um PDF. Máximo de 15 MB. Deixe os dados da conta bem visíveis.</p>
 <div id="bill-drop" class="bill-chooser">
  <div id="bill-placeholder"><span class="bill-placeholder-icon" aria-hidden="true">▧</span><b>Arraste a fatura para cá</b><small>Ou escolha uma imagem / PDF no seu dispositivo</small>
  <label class="btn gold" for="bill-file">Selecionar foto ou PDF ↗</label></div>
@@ -301,18 +336,29 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 </form>
 </div>
 </div></section>
+<section class="section" id="simular"><div class="wrap">
+  <div class="section-heading"><span class="eyebrow">Simulação inteligente</span><h2>Descubra o potencial de economia da sua conta.</h2><p>Ajuste o valor mensal e compare cenários estimados em poucos segundos.</p></div>
+  <div class="simulator-frame">
+    <div class="simulator-input"><div class="form-heading"><span class="form-heading-icon">⚡</span><div><h3>Seus dados de consumo</h3><small>Preencha os detalhes da simulação</small></div></div>
+      <div class="channel"><small>Origem da simulação</small><strong>Energy Business · canal oficial da plataforma</strong></div>
+      <label class="field" for="bill">Valor médio da conta de luz por mês</label><input id="bill" type="number" min="50" max="1000000" step="1" value="500" inputmode="decimal" required>
+      <input id="range" aria-label="Ajustar valor da conta" type="range" min="100" max="3000" step="50" value="500">
+      <div class="grid-two"><div><label class="field" for="rate">Cenário de desconto</label><select id="rate"><option value="10">10% · ilustrativo</option><option value="15">15% · ilustrativo</option><option value="20" selected>20% · ilustrativo</option></select></div><div><label class="field" for="profile">Perfil de consumo</label><select id="profile"><option>Residência</option><option>Empresa</option><option>Condomínio</option></select></div></div>
+      <p class="helper">O desconto é apenas uma simulação matemática sobre o valor informado. A análise real depende da distribuidora, consumo compensável, tarifas, impostos e condições contratuais.</p>
+    </div>
+    <div class="simulator-result" aria-live="polite"><div class="result-top"><span class="eyebrow" style="color:var(--gold)">Resultado estimado</span><span class="result-tag">Cenário ilustrativo</span></div>
+      <p class="result-title">Você poderia economizar por ano</p><div class="result-savings" id="year">R$ 1.200,00</div><p class="result-sub">Um novo jeito de olhar para seus gastos com energia.</p>
+      <ul class="result-details"><li><span>Economia mensal</span><b id="month">R$ 100,00</b></li><li><span>Nova conta estimada</span><b id="after">R$ 400,00</b></li><li><span>Origem</span><b>Energy Business</b></li></ul>
+      <a class="btn gold" href="#cadastro">Começar cadastro <span>↗</span></a><div class="result-caption">Simulação sem oferta comercial ou garantia de desconto.</div>
+    </div>
+  </div>
+  <div class="projections" id="projections" aria-live="polite"></div>
+  <p class="helper" style="text-align:center">Projeções sem juros ou reajustes, com valores de conta e percentuais constantes ao longo do período.</p>
+</div></section>
+
 <section class="section section-alt" id="como-funciona"><div class="wrap"><div class="section-heading"><span class="eyebrow">Como funciona</span><h2>Uma jornada simples, do primeiro cálculo à análise.</h2><p>A Energy Business conecta tecnologia, informação e uma experiência de energia descomplicada.</p></div>
 <div class="process-grid"><article class="step"><span class="step-number">01</span><h3>Faça sua simulação</h3><p>Informe o valor aproximado da sua conta e visualize cenários ilustrativos de economia.</p></article><article class="step"><span class="step-number">02</span><h3>Solicite uma avaliação</h3><p>Na operação comercial, a equipe analisará a distribuidora, a fatura e a elegibilidade da unidade.</p></article><article class="step"><span class="step-number">03</span><h3>Conheça a proposta</h3><p>Após a análise, você poderá conhecer condições, disponibilidade e próximos passos antes de contratar.</p></article></div>
 </div></section>
-<section class="action-section" id="solicitar"><div class="wrap action-card"><div><span class="eyebrow" style="color:var(--gold)">Seu próximo passo</span><h2>Comece sua jornada com a Energy Business.</h2><p>Estamos preparando a experiência completa de cadastro e análise da conta de energia. Nesta fase, você pode testar a navegação e a simulação sem enviar informações pessoais.</p><div class="simple-strip"><span><b>01</b> Simular</span><span>→</span><span><b>02</b> Analisar</span><span>→</span><span><b>03</b> Conhecer proposta</span></div></div>
-<div class="intake-card"><h3>Faça um teste do cadastro</h3><p id="intake-description">Use dados fictícios. Nenhuma informação é enviada enquanto o recebimento estiver desativado.</p>
-<form id="entry-form">
-<label class="field" for="entry-name">Nome</label><input id="entry-name" required maxlength="100" placeholder="Nome fictício" autocomplete="off">
-<div class="grid-two"><div><label class="field" for="entry-email">E-mail</label><input id="entry-email" type="email" required placeholder="teste@exemplo.com" autocomplete="off"></div><div><label class="field" for="entry-phone">Celular com DDD</label><input id="entry-phone" type="tel" required pattern="[0-9 ()+\-]{10,20}" placeholder="(00) 00000-0000" autocomplete="off"></div></div>
-<label class="field" for="entry-bill">Faixa de conta mensal</label><select id="entry-bill" required><option value="">Selecione uma faixa</option><option value="200">Até R$ 300</option><option value="500">R$ 301 a R$ 600</option><option value="800">R$ 601 a R$ 1.000</option><option value="1500">R$ 1.001 a R$ 2.000</option><option value="3000">Acima de R$ 2.000</option></select>
-<label class="checklabel"><input type="checkbox" id="entry-consent" required><span>Estou usando informações fictícias e compreendo que esta etapa é apenas uma demonstração.</span></label>
-<div id="turnstile-slot"></div><button class="btn gold" type="submit" id="entry-submit">Testar minha simulação ↗</button><p class="status" role="status" id="entry-status"></p>
-</form></div></div></section>
 <section class="section" id="duvidas" style="padding-top:35px"><div class="wrap faq-grid"><div><span class="eyebrow">Transparência</span><h2>Informação clara em cada etapa.</h2><p>Reunimos respostas para você entender o que já está disponível nesta plataforma.</p></div><div>
 <details><summary>O desconto mostrado é uma oferta válida?</summary><p>Não. Os percentuais de 10%, 15% e 20% são cenários matemáticos ilustrativos. Uma oferta real depende de análise e condições de um fornecedor.</p></details>
 <details><summary>Preciso instalar um aplicativo?</summary><p>Não. A plataforma funciona diretamente no navegador, no computador e no celular.</p></details>
@@ -320,78 +366,88 @@ details p{font-size:13px;color:#718296;line-height:1.8;margin:12px 26px 0 0}
 <details><summary>Os dados do teste são armazenados?</summary><p>Não. Enquanto a plataforma estiver em modo de demonstração, os campos do teste não são enviados ou armazenados no servidor.</p></details>
 </div></div></section>
 </main>
-<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#simular">Simulação</a><a href="#fatura">Leitor de faturas</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
+<footer class="footer"><div class="wrap"><div class="footer-grid"><div><a href="/" class="brand"><span class="brand-icon" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<span class="dot">.</span></a><p>Energia inteligente, possibilidades maiores. Uma plataforma digital para transformar a relação com sua conta de luz.</p></div><div class="footer-links"><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulação</a><a href="#como-funciona">Como funciona</a><a href="/privacidade/">Privacidade</a><a href="/admin/">Painel de gestão</a></div></div><div class="footer-bottom">© 2026 Energy Business · Plataforma em desenvolvimento · Simulações ilustrativas</div></div></footer>
 <script>
 (function(){
-  const $=id=>document.getElementById(id);
-  const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-  const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
-  const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
-  function update(){
-    const value=Number(bill.value),valid=Number.isFinite(value)&&value>=50&&value<=1000000;
-    bill.setCustomValidity(valid?"":"Informe um valor de R$ 50 até R$ 1.000.000.");
-    const saving=valid?value*Number(rate.value)/100:0;
-    $("year").textContent=valid?money(saving*12):"—";
-    $("month").textContent=valid?money(saving):"—";
-    $("after").textContent=valid?money(value-saving):"—";
-    $("hero-saving").textContent=valid?numbers(saving*12):"—";
-    $("hero-month").textContent=valid?money(saving):"—";
-    $("projections").innerHTML=[1,2,5,10,15].map(y=>'<article class="projection-item"><span>Em '+y+(y===1?' ano':' anos')+'</span><strong>'+(valid?money(saving*12*y):'—')+'</strong><div class="progress"><i style="width:'+Math.round(y/15*100)+'%"></i></div></article>').join("");
-  }
-  bill.addEventListener("input",()=>{const v=Number(bill.value);if(Number.isFinite(v)&&v>=100&&v<=3000)range.value=String(v);update()});
-  range.addEventListener("input",()=>{bill.value=range.value;update()});
-  rate.addEventListener("change",update);
-  profile.addEventListener("change",update);
-  $("entry-form").addEventListener("submit",function(e){
-    if(this.dataset.live==="true")return;
-    e.preventDefault();
-    bill.value=$("entry-bill").value;
-    const n=Number(bill.value);if(n>=100&&n<=3000)range.value=String(n);
-    update();
-    $("entry-status").textContent="Teste concluído. Sua simulação foi atualizada acima. Nenhuma informação foi enviada.";
-    this.reset();
-    $("simular").scrollIntoView({behavior:"smooth"});
-  });
+"use strict";
+const $=id=>document.getElementById(id);
+const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
+const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
+const form=$("entry-form"),status=$("entry-status"),button=$("entry-submit");
+let liveMode=false,turnstileWidget=null,submissionBusy=false;
+function update(){
+ const value=Number(bill.value),valid=Number.isFinite(value)&&value>=50&&value<=1000000;
+ bill.setCustomValidity(valid?"":"Informe um valor de R$ 50 até R$ 1.000.000.");
+ const saving=valid?value*Number(rate.value)/100:0;
+ $("year").textContent=valid?money(saving*12):"—";
+ $("month").textContent=valid?money(saving):"—";
+ $("after").textContent=valid?money(value-saving):"—";
+ $("projections").innerHTML=[1,2,5,10,15].map(y=>'<article class="projection-item"><span>Em '+y+(y===1?' ano':' anos')+'</span><strong>'+(valid?money(saving*12*y):'—')+'</strong><div class="progress"><i style="width:'+Math.round(y/15*100)+'%"></i></div></article>').join("");
+}
+bill.addEventListener("input",()=>{const v=Number(bill.value);if(Number.isFinite(v)&&v>=100&&v<=3000)range.value=String(v);update()});
+range.addEventListener("input",()=>{bill.value=range.value;update()});
+rate.addEventListener("change",update);
+profile.addEventListener("change",update);
+function goToBillStep(submitted){
+ const n=Number($("entry-bill").value);
+ if(n>=50&&n<=1000000){
+  bill.value=String(n);
+  if(n>=Number(range.min)&&n<=Number(range.max))range.value=String(n);
   update();
-  (async()=>{
-    try{
-      const r=await fetch("/api/config",{cache:"no-store"});if(!r.ok)return;
-      const config=await r.json();
-      if(!config.acceptingLeads||!config.turnstileSiteKey)return;
-      $("intake-description").textContent="Preencha os seus dados para solicitar uma avaliação de disponibilidade. O atendimento depende de análise.";
-      $("entry-name").placeholder="Seu nome completo";$("entry-name").autocomplete="name";
-      $("entry-email").placeholder="seu@email.com";$("entry-email").autocomplete="email";
-      $("entry-phone").placeholder="(00) 00000-0000";$("entry-phone").autocomplete="tel";
-      document.querySelector(".checklabel span").innerHTML='Li a <a href="/privacidade/" target="_blank" rel="noopener" style="text-decoration:underline">Política de Privacidade</a> e autorizo o contato para análise da solicitação.';
-      $("entry-submit").textContent="Solicitar uma análise ↗";
-      let widget=null;
-      const script=document.createElement("script");
-      script.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-      script.async=true;
-      script.onload=()=>{widget=window.turnstile.render("#turnstile-slot",{sitekey:config.turnstileSiteKey})};
-      script.onerror=()=>{$("entry-status").textContent="A verificação de segurança está indisponível."};
-      document.head.appendChild(script);
-      $("entry-form").dataset.live="true";
-      $("entry-form").addEventListener("submit",async e=>{
-        e.preventDefault();
-        const button=$("entry-submit"),status=$("entry-status");
-        if(widget===null||!window.turnstile){status.textContent="Conclua a verificação de segurança.";return}
-        const security=turnstile.getResponse(widget);
-        if(!security){status.textContent="Conclua a verificação de segurança.";return}
-        button.disabled=true;status.textContent="Enviando solicitação...";
-        try{
-          const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
-            name:$("entry-name").value,email:$("entry-email").value,phone:$("entry-phone").value,
-            billAmount:Number($("entry-bill").value),rate:Number(rate.value),
-            propertyType:profile.value,clubCode:"clube-demo",
-            consent:$("entry-consent").checked,turnstileToken:security
-          })});
-          const d=await r.json().catch(()=>({}));
-          if(!r.ok)throw new Error(d.error||"Não foi possível enviar.");
-          status.textContent=d.message||"Solicitação recebida.";e.currentTarget.reset();
-        }catch(err){status.textContent=err.message}finally{turnstile.reset(widget);button.disabled=false}
-      });
-    }catch(err){console.warn("Cadastro público indisponível nesta fase.")}
-  })();
+ }
+ const message=submitted
+  ?"Solicitação inicial recebida. Próximo passo: selecione sua conta de energia e confira a leitura. A foto ainda não é enviada ao servidor."
+  :"Etapa 1 preenchida no navegador. Agora selecione sua conta de energia. Nesta versão de testes, seus dados e a foto não são enviados nem armazenados.";
+ $("step2-status").textContent=message;
+ $("step2-status").hidden=false;
+ status.textContent=submitted?"Solicitação inicial recebida; continue com a conta.":"Etapa 1 concluída para demonstração. Nenhum dado foi enviado.";
+ window.location.hash="fatura";
+ const target=$("fatura");
+ target.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+}
+form.addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(submissionBusy||!form.reportValidity())return;
+ if(!liveMode){
+  goToBillStep(false);
+  return;
+ }
+ if(turnstileWidget===null||!window.turnstile){status.textContent="Conclua a verificação de segurança antes de prosseguir.";return}
+ const security=window.turnstile.getResponse(turnstileWidget);
+ if(!security){status.textContent="Conclua a verificação de segurança.";return}
+ submissionBusy=true;button.disabled=true;status.textContent="Registrando sua solicitação...";
+ try{
+  const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+    name:$("entry-name").value.trim(),email:$("entry-email").value.trim(),phone:$("entry-phone").value.trim(),
+    billAmount:Number($("entry-bill").value),rate:Number(rate.value),
+    propertyType:profile.value,clubCode:"clube-demo",
+    consent:$("entry-consent").checked,turnstileToken:security
+  })});
+  const data=await r.json().catch(()=>({}));
+  if(!r.ok)throw Error(data.error||"Não foi possível enviar. Tente novamente.");
+  goToBillStep(true);
+ }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
+ finally{window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
+});
+update();
+(async()=>{
+ try{
+  const r=await fetch("/api/config",{cache:"no-store"});if(!r.ok)return;
+  const config=await r.json();
+  if(!config.acceptingLeads||!config.turnstileSiteKey)return;
+  liveMode=true;
+  $("intake-description").textContent="Informe seus dados para começar a análise. Depois, você poderá ler e conferir sua conta de energia.";
+  $("entry-name").placeholder="Seu nome completo";$("entry-name").autocomplete="name";
+  $("entry-phone").autocomplete="tel";$("entry-email").placeholder="seu@email.com";$("entry-email").autocomplete="email";
+  document.querySelector(".checklabel span").innerHTML='Li a <a href="/privacidade/" target="_blank" rel="noopener" style="text-decoration:underline">Política de Privacidade</a> e autorizo o contato para análise da solicitação.';
+  button.textContent="Enviar e continuar para a conta →";
+  const js=document.createElement("script");
+  js.src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";js.async=true;
+  js.onload=()=>{turnstileWidget=window.turnstile.render("#turnstile-slot",{sitekey:config.turnstileSiteKey})};
+  js.onerror=()=>{status.textContent="Não foi possível carregar a verificação de segurança."};
+  document.head.appendChild(js);
+ }catch(err){console.warn("O cadastro real ainda não está disponível.")}
+})();
 })();
 </script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js" defer></script></body></html>
