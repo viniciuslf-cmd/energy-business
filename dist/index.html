@@ -489,7 +489,7 @@ const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"
 const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
 const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
 const form=$("entry-form"),status=$("entry-status"),button=$("entry-submit");
-let liveMode=false,turnstileWidget=null,submissionBusy=false;
+let liveMode=false,turnstileWidget=null,submissionBusy=false,step1Done=false,leadSaved=false,billReview=null;
 
 function alignToElement(element,stageId){
  if(!element)return;
@@ -506,10 +506,16 @@ function alignToElement(element,stageId){
 function navigateToStage(stage){
  const selector=stage==="fatura"?"#fatura .upload-step-header":
    stage==="simular"?"#simular .sim-step-heading":
-   stage==="cadastro"?"#cadastro .hero-form":null;
+   stage==="cadastro"?"#cadastro .hero-form":
+   stage==="conclusao"?"#conclusao .complete-panel":null;
  if(selector)alignToElement(document.querySelector(selector),stage);
 }
-window.EnergyFlow={navigateToStage,alignToElement};
+window.EnergyFlow={
+ navigateToStage,alignToElement,
+ setBillReview(values){billReview={...values}},
+ invalidateBillReview(){billReview=null},
+ hasStepOne(){return step1Done}
+};
 const backToStart=document.querySelector(".upload-back");
 if(backToStart)backToStart.addEventListener("click",e=>{e.preventDefault();navigateToStage("cadastro")});
 
@@ -527,6 +533,10 @@ range.addEventListener("input",()=>{bill.value=range.value;update()});
 rate.addEventListener("change",update);
 profile.addEventListener("change",update);
 function goToBillStep(submitted){
+ step1Done=true;
+ leadSaved=Boolean(submitted);
+ billReview=null;
+ $("conclusao").hidden=true;
  const n=Number($("entry-bill").value);
  if(n>=50&&n<=1000000){
   bill.value=String(n);
@@ -568,6 +578,43 @@ form.addEventListener("submit",async e=>{
  }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
  finally{window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
 });
+
+$("finish-flow").addEventListener("click",()=>{
+ const alert=$("finish-status");
+ if(!step1Done){
+   alert.textContent="Complete primeiro a etapa 1, com os seus dados de contato.";
+   navigateToStage("cadastro");return;
+ }
+ if(!billReview){
+   alert.textContent="Revise os quatro campos da conta de energia e clique em “Usar valor no simulador” para concluir a etapa 2.";
+   navigateToStage("fatura");return;
+ }
+ const chosen=window.EnergyFan?.selectedClub?.()||"";
+ const details=chosen?window.EnergyFan?.clubDetails?.(chosen):null;
+ $("complete-mode-label").textContent=leadSaved?"Solicitação inicial registrada":"Demonstração concluída";
+ $("complete-title").textContent=leadSaved?"Obrigado! Seus dados iniciais foram recebidos.":"Você concluiu as três etapas!";
+ $("complete-description").textContent=leadSaved
+   ?"Seus dados de contato foram registrados. Nossa equipe poderá entrar em contato pelo WhatsApp informado para solicitar a fatura e concluir a análise. Nesta versão, a imagem e os dados lidos da conta ainda não são enviados ao servidor."
+   :"Este é um teste do atendimento Energy Business. Seu cadastro e sua fatura NÃO foram enviados ou armazenados. Quando a operação estiver liberada, a equipe entrará em contato pelo WhatsApp cadastrado para fazer a análise.";
+ const clubBox=$("complete-club");
+ clubBox.hidden=!chosen;
+ if(chosen){
+   $("complete-club-title").textContent="Seu time do coração: "+chosen;
+   $("complete-club-message").textContent=details?.partner_confirmed
+     ?(details.support_message||"Ao participar de uma campanha elegível, sua economia de energia pode contribuir financeiramente com o clube, conforme as condições da parceria.")
+     :"Sua escolha demonstra interesse em apoiar esse clube. Um eventual repasse só acontecerá após a formalização de parceria e contratação elegível.";
+   const validShare=details?.partner_confirmed&&Number.isFinite(Number(details.club_share_percent))&&Number(details.club_share_percent)>0;
+   $("complete-club-percent").hidden=!validShare;
+   if(validShare)$("complete-club-percent").textContent="Participação prevista para o clube: "+Number(details.club_share_percent).toLocaleString("pt-BR",{maximumFractionDigits:2})+"% calculados sobre a economia elegível do torcedor, conforme contrato. Nenhum repasse ocorre apenas pelo cadastro.";
+ }
+ $("complete-footnote").textContent=leadSaved
+   ?"A contratação, o desconto e qualquer participação do clube dependem de análise e condições comerciais."
+   :"Demonstração sem recebimento de documentos, compromisso comercial, bonificação ou repasse ao clube.";
+ $("conclusao").hidden=false;
+ alert.textContent="";
+ navigateToStage("conclusao");
+});
+$("complete-back").addEventListener("click",()=>navigateToStage("cadastro"));
 update();
 (async()=>{
  try{
