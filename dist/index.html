@@ -601,7 +601,7 @@ $("finish-flow").addEventListener("click",()=>{
  if(chosen){
    $("complete-club-title").textContent="Seu time do coração: "+chosen;
    $("complete-club-message").textContent=details?.partner_confirmed
-     ?(details.support_message||"Ao participar de uma campanha elegível, sua economia de energia pode contribuir financeiramente com o clube, conforme as condições da parceria.")
+     ?(details.support_message||"Sua economia também pode jogar pelo seu time: ao aderir a uma solução de energia elegível, você pode pagar menos na conta de luz e contribuir para que o clube receba recursos, conforme as condições da parceria.")
      :"Sua escolha demonstra interesse em apoiar esse clube. Um eventual repasse só acontecerá após a formalização de parceria e contratação elegível.";
    const validShare=details?.partner_confirmed&&Number.isFinite(Number(details.club_share_percent))&&Number(details.club_share_percent)>0;
    $("complete-club-percent").hidden=!validShare;
@@ -635,4 +635,4 @@ update();
  }catch(err){console.warn("O cadastro real ainda não está disponível.")}
 })();
 })();
-</script><script src="/fan.js?v=20261026-team-referral" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261026-etapas123" defer></script></body></html>
+</script><script src="/fan.js?v=20261027-flow3" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261027-flow3" defer></script></body></html>
