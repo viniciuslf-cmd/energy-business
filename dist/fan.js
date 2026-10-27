@@ -1,135 +1,121 @@
-/* Energy Business - preferência de clube e compartilhamento de convites.
-   O convite é meramente informativo até a ativação do programa comercial.
-   Nomes de clubes nesta lista NÃO significam convênios ou apoio oficial. */
+/* Clubes exibidos exclusivamente pelo cadastro do painel Energy Business.
+   Ser selecionável não significa ser parceiro, patrocinado ou conveniado.
+   Convites ainda são demonstrativos; nenhuma bonificação é concedida. */
 (function(){
 "use strict";
-const $=id=>document.getElementById(id);
-const main=$("entry-club"),secondary=$("fan-team-select");
-const learnMore=$("fan-hero-link");
-if(learnMore)learnMore.addEventListener("click",e=>{
- const flow=window.EnergyFlow;
- if(!flow?.alignToElement)return;
- e.preventDefault();
- flow.alignToElement(document.querySelector("#torcida .fan-heading"),"torcida");
-});
+const $=id=>document.getElementById(id), main=$("entry-club"), secondary=$("fan-team-select");
 if(!main||!secondary)return;
-const teams=[
- "América-MG","Athletico-PR","Atlético-GO","Atlético-MG","Avaí","Bahia","Botafogo","Ceará","Chapecoense",
- "Corinthians","Coritiba","Cruzeiro","Cuiabá","Figueirense","Flamengo","Fluminense","Fortaleza","Goiás",
- "Grêmio","Internacional","Juventude","Náutico","Palmeiras","Paysandu","Ponte Preta","Red Bull Bragantino",
- "Remo","Santos","São Paulo","Sport","Vasco da Gama","Vitória"
-];
-const ordered=teams.sort((a,b)=>a.localeCompare(b,"pt-BR"));
-for(const name of ordered){
- const option=document.createElement("option");option.value=name;option.textContent=name;
- main.insertBefore(option,main.querySelector('option[value="sem_clube"]'));
-}
-secondary.replaceChildren();
-for(const option of main.options){secondary.add(option.cloneNode(true))}
-const custom=$("entry-club-custom"),customOther=$("fan-team-other");
-function otherVisibility(){
- const needs=main.value==="outro",secondaryNeeds=secondary.value==="outro";
- custom.hidden=!needs;custom.required=needs;
- customOther.hidden=!secondaryNeeds;
- customOther.required=false;
-}
-function syncFromMain(){
- secondary.value=main.value;
- if(main.value==="outro")customOther.value=custom.value;
- otherVisibility();
-}
-function syncFromFan(){
- main.value=secondary.value;
- if(secondary.value==="outro")custom.value=customOther.value;
- otherVisibility();
-}
-main.addEventListener("change",syncFromMain);
-secondary.addEventListener("change",syncFromFan);
-custom.addEventListener("input",()=>{if(main.value==="outro")customOther.value=custom.value});
-customOther.addEventListener("input",()=>{if(secondary.value==="outro")custom.value=customOther.value});
+const custom=$("entry-club-custom"),other=$("fan-team-other");
+if(custom){custom.hidden=true;custom.disabled=true;custom.required=false}
+if(other){other.hidden=true;other.disabled=true;other.required=false}
+const hint=$("club-helper"),status=$("fan-team-status");
+let activeTeams=new Map(),fetchFailed=false;
+const locationURL=new URL(location.href),incomingTeam=(locationURL.searchParams.get("time")||"").trim();
 const allowedRef=/^EB[A-F0-9]{16}$/;
-const url=new URL(location.href);
-const incomingRef=(url.searchParams.get("ref")||"").toUpperCase();
-const referralCode=allowedRef.test(incomingRef)?incomingRef:"";
-const arrival=$("referral-arrival");
-if(referralCode&&arrival){
- arrival.hidden=false;
- arrival.textContent="Você acessou um convite da Energy Business. O programa de bonificações ainda depende de aprovação e regulamentação.";
-}
+const incomingRef=(locationURL.searchParams.get("ref")||"").toUpperCase();
+const referredByCode=allowedRef.test(incomingRef)?incomingRef:"";
 let myReferralCode="";
-try{
- const saved=sessionStorage.getItem("ebReferralCode")||"";
- if(allowedRef.test(saved))myReferralCode=saved;
-}catch(e){}
-const incomingTeam=(url.searchParams.get("time")||"").trim();
-if(incomingTeam&&ordered.includes(incomingTeam)){
- main.value=incomingTeam;syncFromMain();
+try{const saved=sessionStorage.getItem("ebReferralCode")||"";if(allowedRef.test(saved))myReferralCode=saved}catch(e){}
+const notice=$("referral-arrival");
+if(referredByCode&&notice){
+ notice.hidden=false;
+ notice.textContent="Você acessou um convite Energy Business. O programa de bonificações ainda não está ativo.";
+}
+function safeSelection(value){return activeTeams.has(value)?value:value==="sem_clube"?"sem_clube":""}
+function fillSelect(el,selected){
+ el.replaceChildren();
+ const placeholder=new Option("Escolha seu time",""),none=new Option("Prefiro não escolher um time","sem_clube");
+ el.add(placeholder);
+ for(const [name,state] of activeTeams){
+  el.add(new Option(name+(state?" ("+state+")":""),name));
+ }
+ el.add(none);
+ el.value=safeSelection(selected);
+}
+function sync(from,to){to.value=safeSelection(from.value)}
+main.addEventListener("change",()=>sync(main,secondary));
+secondary.addEventListener("change",()=>sync(secondary,main));
+async function loadClubs(){
+ const old=main.value,oldSecondary=secondary.value;
+ try{
+  const response=await fetch("/api/clubs",{cache:"no-store"});
+  if(!response.ok)throw Error("Não foi possível consultar a lista");
+  const data=await response.json();
+  if(!Array.isArray(data.clubs))throw Error("Lista indisponível");
+  const entries=data.clubs.filter(c=>c&&typeof c.name==="string"&&c.name.length<=80&&
+    typeof c.id==="string").map(c=>[c.name,c.state||""]);
+  activeTeams=new Map(entries);
+  fetchFailed=false;
+  const prefer=activeTeams.has(incomingTeam)?incomingTeam:old;
+  fillSelect(main,prefer);
+  fillSelect(secondary,oldSecondary||prefer);
+  if(activeTeams.has(incomingTeam)&&!old&&(!oldSecondary||oldSecondary===""))secondary.value=incomingTeam;
+  if(hint)hint.textContent=activeTeams.size
+   ?"Times disponibilizados pelo painel Energy Business. A seleção não comprova parceria oficial."
+   :"Nenhum clube habilitado no painel ainda. Você pode continuar sem escolher um time.";
+  if(status)status.textContent=activeTeams.size?"":"A lista de clubes será preenchida pelo painel de gestão.";
+ }catch(e){
+  activeTeams.clear();fetchFailed=true;
+  fillSelect(main,"");fillSelect(secondary,"");
+  if(hint)hint.textContent="Não foi possível carregar os clubes. Você pode continuar sem escolher um time.";
+  if(status)status.textContent="A lista está temporariamente indisponível.";
+ }
 }
 function selectedClub(){
- if(main.value==="outro")return custom.value.trim().replace(/\s+/g," ").slice(0,70);
- if(main.value==="sem_clube"||!main.value)return "";
- return main.value;
+ const club=main.value;
+ return activeTeams.has(club)?club:"";
 }
-function setReferralCode(code){
- const upper=String(code||"").toUpperCase();
- if(!allowedRef.test(upper))return;
- myReferralCode=upper;
- try{sessionStorage.setItem("ebReferralCode",upper)}catch(e){}
- const status=$("fan-referral-status");
- if(status)status.textContent="Seu link individual está pronto. Indicações serão consideradas somente conforme os critérios comerciais e o regulamento quando o programa for ativado.";
-}
-window.EnergyFan={
- selectedClub,
- getRef:()=>referralCode,
- setReferralCode
-};
-$("fan-continue").addEventListener("click",()=>{
- if(!secondary.value){secondary.focus();const msg=$("fan-team-status");if(msg)msg.textContent="Escolha seu time para continuar.";return}
- if(secondary.value==="outro"&&!customOther.value.trim()){
-  const msg=$("fan-team-status");if(msg)msg.textContent="Escreva o nome do seu clube.";
-  customOther.focus();
-  return;
- }
- const msg=$("fan-team-status");if(msg)msg.textContent="";
- syncFromFan();
- const flow=window.EnergyFlow;
- if(flow?.navigateToStage)flow.navigateToStage("cadastro");
- else $("cadastro").scrollIntoView({block:"start",behavior:"auto"});
- const input=$("entry-name");
- if(input)input.focus({preventScroll:true});
-});
-function inviteLink(){
+function referralLink(){
  const link=new URL("/",location.origin);
  if(myReferralCode)link.searchParams.set("ref",myReferralCode);
- const club=selectedClub();
- if(club&&ordered.includes(club))link.searchParams.set("time",club);
+ const name=selectedClub();
+ if(name)link.searchParams.set("time",name);
  return link.href;
 }
-const referralStatus=$("fan-referral-status");
-function feedback(text){if(referralStatus)referralStatus.textContent=text}
+function setReferralCode(code){
+ const normalized=String(code||"").toUpperCase();
+ if(!allowedRef.test(normalized))return;
+ myReferralCode=normalized;
+ try{sessionStorage.setItem("ebReferralCode",normalized)}catch(e){}
+ const s=$("fan-referral-status");
+ if(s)s.textContent="O código de convite está pronto. O programa de descontos por indicação ainda não foi ativado.";
+}
+window.EnergyFan={selectedClub,getRef:()=>referredByCode,setReferralCode,reloadClubs:loadClubs};
+const learn=$("fan-hero-link");
+if(learn)learn.addEventListener("click",e=>{
+ if(!window.EnergyFlow?.alignToElement)return;
+ e.preventDefault();window.EnergyFlow.alignToElement(document.querySelector("#torcida .fan-heading"),"torcida");
+});
+$("fan-continue").addEventListener("click",()=>{
+ if(!secondary.value){
+  if(status)status.textContent="Escolha um time cadastrado ou a opção de continuar sem time.";
+  secondary.focus();return;
+ }
+ if(status)status.textContent="";
+ sync(secondary,main);
+ if(window.EnergyFlow?.navigateToStage)window.EnergyFlow.navigateToStage("cadastro");
+ else $("cadastro").scrollIntoView({block:"start",behavior:"auto"});
+ $("entry-name")?.focus({preventScroll:true});
+});
+const feedback=s=>{const el=$("fan-referral-status");if(el)el.textContent=s};
 $("fan-whatsapp").addEventListener("click",()=>{
- const link=inviteLink();
  const club=selectedClub();
- const message="Conheça a proposta da Energy Business: veja como você pode economizar energia e demonstrar interesse em ajudar seu time"+(club?" ("+club+")":"")+". Campanhas, descontos e benefícios estão sujeitos a elegibilidade, convênios e regulamento. "+link;
+ const link=referralLink();
+ const message="Conheça a proposta da Energy Business: descubra a possibilidade de economizar na conta de energia e apoiar o futebol"+(club?" ("+club+")":"")+". Condições sujeitas a parcerias, elegibilidade e regulamento. "+link;
  window.open("https://wa.me/?text="+encodeURIComponent(message),"_blank","noopener,noreferrer");
  feedback(myReferralCode
-  ?"Convite com seu código preparado. O programa e eventuais bônus dependem das condições comerciais."
-  :"Convite preparado. Ainda não há código individual de indicação nem contagem de bonificações nesta demonstração.");
+  ?"Seu convite foi preparado. Benefícios dependem das regras comerciais, ainda não ativadas."
+  :"Convite preparado. Ainda não há contabilização de indicações ou benefícios nesta demonstração.");
 });
 $("fan-copy").addEventListener("click",async()=>{
- const link=inviteLink();
+ const link=referralLink();
  try{
-  if(navigator.clipboard?.writeText)await navigator.clipboard.writeText(link);
-  else{
-   const temp=document.createElement("textarea");temp.value=link;document.body.appendChild(temp);temp.select();
-   const ok=document.execCommand("copy");temp.remove();if(!ok)throw Error("Sem permissão");
-  }
+  if(!navigator.clipboard?.writeText)throw Error("Permissão indisponível");
+  await navigator.clipboard.writeText(link);
   feedback(myReferralCode
-   ?"Seu link individual foi copiado. Os benefícios dependerão do regulamento."
-   :"Link da apresentação copiado. Nenhuma indicação será contabilizada neste modo.");
- }catch{
-  feedback("Não foi possível copiar automaticamente. Compartilhe o endereço do site: "+link);
- }
+   ?"Link individual copiado. Eventuais benefícios dependem de regulamento."
+   :"Link copiado. Indicações ainda não são contabilizadas.");
+ }catch{feedback("Não foi possível copiar automaticamente. Compartilhe este link: "+link)}
 });
-otherVisibility();
+loadClubs();
 })();
