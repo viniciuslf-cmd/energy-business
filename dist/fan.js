@@ -16,7 +16,6 @@ const allowedRef=/^EB[A-F0-9]{16}$/;
 const incomingRef=(locationURL.searchParams.get("ref")||"").toUpperCase();
 const referredByCode=allowedRef.test(incomingRef)?incomingRef:"";
 let myReferralCode="";
-try{const saved=sessionStorage.getItem("ebReferralCode")||"";if(allowedRef.test(saved))myReferralCode=saved}catch(e){}
 const notice=$("referral-arrival");
 if(referredByCode&&notice){
  notice.hidden=false;
@@ -126,7 +125,7 @@ function setReferralCode(code){
  const normalized=String(code||"").toUpperCase();
  if(!allowedRef.test(normalized))return;
  myReferralCode=normalized;
- try{sessionStorage.setItem("ebReferralCode",normalized)}catch(e){}
+
  const s=$("fan-referral-status");
  if(s)s.textContent="O código de convite está pronto. O programa de descontos por indicação ainda não foi ativado.";
 }
