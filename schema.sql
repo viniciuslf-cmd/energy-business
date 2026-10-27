@@ -13,7 +13,13 @@ CREATE TABLE IF NOT EXISTS leads (
   consent_version TEXT NOT NULL,
   consent_at TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'novo',
-  notes TEXT NOT NULL DEFAULT ''
+  notes TEXT NOT NULL DEFAULT '',
+  favorite_club TEXT NOT NULL DEFAULT '',
+  referral_code TEXT,
+  referred_by_code TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_leads_created ON leads(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status,created_at DESC);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_leads_referral_code ON leads(referral_code);
+CREATE INDEX IF NOT EXISTS idx_leads_referred_by ON leads(referred_by_code);
