@@ -80,7 +80,16 @@ function renderResult(text,filename="",confidence=0){
  $("bill-results").hidden=false;
  form.hidden=false;
  $("bill-distributor").textContent=result.distributor;
- $("bill-name").value=result.name.value||"";
+ const nameFromStep1=($("entry-name")?.value||"").trim();
+ // Usar nome do contato só quando o OCR não encontrou titular.
+ // O campo continua editável porque o titular da fatura pode ser outra pessoa.
+ $("bill-name").value=result.name.value||nameFromStep1;
+ const hint=$("bill-name-hint");
+ if(hint)hint.textContent=result.name.value
+   ?"Titular identificado na conta. Confira e altere se necessário."
+   :nameFromStep1
+     ?"Nome sugerido a partir da etapa 1. Se a conta estiver em outro nome, altere aqui."
+     :"Informe o nome do titular conforme a conta de energia.";
  $("bill-address").value=result.address.value||"";
  $("bill-amount").value=result.amount.value!==null?fmtAmount(result.amount.value):"";
  $("bill-kwh").value=result.kwh.value!==null?String(result.kwh.value):"";
@@ -99,7 +108,8 @@ function renderResult(text,filename="",confidence=0){
  const found=fields.length-missing.length;
  notify("Leitura concluída: "+found+" de 4 campos identificados."+(missing.length?" Não identificado(s): "+missing.join(", ")+".":"")+" Confira os quatro valores na fatura. O reconhecimento não confirma pagamento.",
  found===4?"ok":"warn");
- $("bill-results").scrollIntoView({behavior:"smooth",block:"nearest"});
+ if(window.EnergyFlow?.alignToElement)window.EnergyFlow.alignToElement($("bill-results"));
+ else $("bill-results").scrollIntoView({behavior:"auto",block:"start"});
 }
 function loadOCR(){
  return new Promise((resolve,reject)=>{
@@ -233,7 +243,16 @@ async function run(){
  }
 }
 $("bill-read").onclick=run;
-$("bill-manual").onclick=()=>{if(running)return;resetResults();renderResult("");notify("Preenchimento manual habilitado. Confira os dados na fatura.","warn")};
+$("bill-manual").onclick=()=>{
+ if(running)return;
+ resetResults();
+ renderResult("");
+ const reused=($("entry-name")?.value||"").trim();
+ notify(reused
+  ?"Preenchimento manual aberto. O nome da etapa 1 foi sugerido; você pode modificá-lo se a conta estiver em outro nome."
+  :"Preenchimento manual aberto. Informe o nome do titular conforme a fatura.",
+ "warn");
+};
 function normalizedMoney(input){
  const value=String(input||"").trim();
  if(!value)return null;
@@ -266,7 +285,8 @@ $("bill-apply").onclick=()=>{
   if(range&&values.amount>=Number(range.min)&&values.amount<=Number(range.max))range.value=String(values.amount);
   bill.dispatchEvent(new Event("input",{bubbles:true}));
   notify("Valor da fatura aplicado ao simulador. O consumo em kWh foi preservado na conferência; desconto segue ilustrativo.","ok");
-  $("simular").scrollIntoView({behavior:"smooth"});
+  if(window.EnergyFlow?.navigateToStage)window.EnergyFlow.navigateToStage("simular");
+  else $("simular").scrollIntoView({behavior:"auto",block:"start"});
  }
 };
 $("bill-example").onclick=()=>{
