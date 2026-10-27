@@ -100,8 +100,9 @@ function extractAddress(lines){
    // Algumas distribuidoras (incluindo a Celesc) omitem "Rua" no endereço.
    // O rótulo ENDEREÇO e um número no logradouro têm prioridade sobre endereço genérico.
    const tail=n.replace(label,"").trim();
+   const rawLabel=/^\s*(?:ENDERE[CÇ]O(?:\s+(?:DE FORNECIMENTO|DA UNIDADE CONSUMIDORA|DE CONSUMO|DA INSTALA[CÇ][AÃ]O|DO LOCAL|DE ENTREGA))?|LOCAL DE CONSUMO|END\.?\s*(?:CONSUMO|FORNECIMENTO))\b\s*[:\-]?\s*/i;
    if(containsAddress(tail)){
-    let value=raw.replace(label,"").trim();
+    let value=raw.replace(rawLabel,"").trim();
     const continued=[lines[i+1],lines[i+2]].filter(Boolean);
     for(const row of continued){if(isContinuation(row))value+=" · "+row.trim();else break}
     candidates.push({value,score:i<90?104:84,line:i,evidence:raw});
