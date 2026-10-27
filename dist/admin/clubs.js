@@ -5,11 +5,12 @@
 const $=id=>document.getElementById(id);
 const rows=$("club-rows"),form=$("club-new-form"),tokenField=$("club-token");
 if(!rows||!form)return;
-let token="",clubs=[],editable=false,busy=false;
+let token="",clubs=[],editable=false,busy=false,testClubsMode=false;
 const message=(text,error=false)=>{
  const el=$("club-message");el.textContent=text;el.classList.toggle("error",error);
 };
 function stateLabels(){
+ $("club-login").hidden=testClubsMode;
  $("club-lock").hidden=!editable;
  $("club-unlock").hidden=editable;
  tokenField.hidden=editable;
@@ -88,7 +89,8 @@ function render(){
 }
 async function api(path,opts={}){
  const headers={...(token?{Authorization:"Bearer "+token}:{}),...(opts.body?{"Content-Type":"application/json"}:{})};
- const r=await fetch(path,{...opts,headers,cache:"no-store"});
+ const target=testClubsMode?path.replace("/api/admin/clubs","/api/test/clubs"):path;
+ const r=await fetch(target,{...opts,headers,cache:"no-store"});
  let data={};try{data=await r.json()}catch{}
  if(!r.ok)throw Error(data.error||"Falha de comunicação");
  return data;
@@ -155,10 +157,27 @@ form.addEventListener("submit",async e=>{
 $("refresh")?.addEventListener("click",async()=>{
  try{await getClubs()}catch(err){message(err.message,true)}
 });
-stateLabels();
-getClubs().then(()=>{
- message(clubs.length
-  ?"Clubes habilitados publicados no site. Para cadastrar ou editar, use a chave do gestor."
-  :"Nenhum clube visível ainda. Cadastre no painel e habilite os que deseja exibir.");
-}).catch(()=>message("Não foi possível carregar a lista. Confira sua conexão.",true));
+async function beginManager(){
+ try{
+  const response=await fetch("/api/config",{cache:"no-store"});
+  const settings=response.ok?await response.json():{};
+  if(settings.testingEnabled){
+   testClubsMode=true;editable=true;
+   $("club-intro-title").textContent="Edição liberada sem senha para homologação";
+   $("club-intro-desc").textContent="Cadastre e edite times fictícios com seus sócios. Alterações feitas aqui não modificam os clubes da operação comercial.";
+   $("club-test-badge").hidden=false;
+   $("club-caveat").textContent="Somente TESTE: percentuais, mensagens e parceria simulada não representam acordos oficiais. Nenhum repasse ou benefício real é criado. O catálogo definitivo permanece protegido.";
+   const partnerCheck=$("club-partner-confirmed");
+   if(partnerCheck?.parentElement)partnerCheck.parentElement.lastChild.textContent=" Parceria simulada";
+  }
+ }catch(e){console.warn("Não foi possível identificar o ambiente de testes.")}
+ stateLabels();
+ try{
+  await getClubs();
+  message(testClubsMode
+   ?"Modo de homologação: clubes fictícios podem ser cadastrados e editados sem chave. Habilite “Visível no site” para aparecer na escolha do torcedor."
+   :"Cadastro definitivo protegido. Informe a chave administrativa para editar.");
+ }catch(e){message(e.message||"Não foi possível carregar os clubes.",true)}
+}
+beginManager();
 })();
