@@ -24,3 +24,19 @@ const bad=p.extract("FATURA\nHISTORICO DE CONSUMO\nSET 180 kWh\nAGO 220 kWh\nTOT
 assert.equal(bad.kwh.value,null,"Historico nao pode ser consumo do mes");
 assert.equal(bad.amount.value,null,"Imposto nao pode ser total da fatura");
 console.log("OK: "+cases.length+" layout-tests; ambiguities rejected.");
+
+
+const celesc=[
+ {label:"Celesc tabela de medição",text:"CELESC DISTRIBUICAO\nNOME: PESSOA EXEMPLO COMPLETO\nENDEREÇO: ALBERTO FERREIRA 240 AP 31 - BAIRRO\nCENTRO - FNS\nCEP: 88000-000 CIDADE: FLORIANOPOLIS SC\nREFERENCIA VENCIMENTO TOTAL A PAGAR\n10/2026 10/11/2026 R$ 466,85\nMEDIDOR GRANDEZA POSTOS HORARIOS LEITURA ANTERIOR LEITURA ATUAL CONSTANTE PERDAS TOTAL APURADO\n5000011 Energia Unico 1.077 1.554 1,000000 0,00 477",kwh:477},
+ {label:"Celesc com grupos de consumo TE/TUSD",text:"CELESC\nNOME: CLIENTE TESTE DE OLIVEIRA\nENDERECO: ALBERTO FERREIRA 240\nTOTAL A PAGAR R$ 466,85\n(OP) Consumo TE KWH 150,000\n(OP) Consumo TE KWH 327,000\n(OS) Consumo TUSD KWH 150,000\n(OS) Consumo TUSD KWH 327,000",kwh:477},
+ {label:"Celesc Total Apurado direto",text:"CELESC\nNOME: CLIENTE MODELO DE SOUZA\nENDEREÇO: JOSE RIBEIRO 120\nTOTAL A PAGAR R$ 466,85\nTotal Apurado 477",kwh:477}
+];
+for(const example of celesc){
+ const r=p.extract(example.text);
+ assert.equal(r.kwh.value,example.kwh,example.label+": consumo");
+ assert.equal(r.amount.value,466.85,example.label+": valor total");
+ assert.ok(r.name.value&&r.address.value,example.label+": titular e endereço");
+ assert.ok(!r.address.value.toUpperCase().startsWith("ENDERE"),example.label+": prefixo do endereço");
+}
+const historyOnly=p.extract("CELESC\nHISTORICO DE CONSUMO\nOUT/26 477 kWh\nSET/26 406 kWh");
+assert.equal(historyOnly.kwh.value,null,"Não aceitar histórico como consumo mensal");
