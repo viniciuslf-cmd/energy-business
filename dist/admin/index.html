@@ -38,6 +38,18 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 .club-new{display:flex;flex-wrap:wrap;align-items:end;gap:12px;background:#f9fbfd;border:1px solid #e1e8f0;border-radius:12px;padding:16px;margin:14px 0 19px}
 .club-new>div:first-child{flex:2;min-width:190px}
 .club-new>div:nth-child(2){width:80px}
+.club-new>div:nth-child(3){width:160px}
+.club-new .club-support-field{flex-basis:100%;flex-grow:1}
+.club-new textarea,.club-table-message{font:inherit;color:#233c5b;background:#fafbfd;border:1px solid #d6e1ed;border-radius:10px;padding:10px 12px}
+.club-new textarea{width:100%;min-height:78px;resize:vertical}
+.club-table-message{width:250px;min-height:70px;resize:vertical;font-size:12px}
+.clubs-table{min-width:1050px}
+.club-new input[type=number]{width:100%}
+.club-status-text{font-size:11px;max-width:170px}
+.club-share-input{min-width:75px!important;width:85px!important}
+.club-partner-label{display:flex;align-items:center;gap:7px;font-size:11px;white-space:nowrap}
+.club-partner-label input{width:17px;height:17px}
+
 .club-new input{width:100%}
 .club-active-check{display:flex!important;gap:9px;align-items:center;padding-bottom:11px;white-space:nowrap}
 .club-active-check input{width:16px;height:16px;min-height:0}
@@ -81,13 +93,16 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <form id="club-new-form" class="club-new" hidden>
   <div><label for="club-name">Nome do clube</label><input id="club-name" maxlength="80" minlength="2" required placeholder="Nome do clube"></div>
   <div><label for="club-state">UF (opcional)</label><input id="club-state" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SC"></div>
+  <div><label for="club-share">Participação do clube (%) sobre a economia</label><input id="club-share" type="number" step="0.01" min="0" max="100" value="0" required></div>
+  <div class="club-support-field"><label for="club-support-message">Como o torcedor ajuda o clube</label><textarea id="club-support-message" maxlength="650" rows="3" placeholder="Ao escolher seu clube e aderir a uma solução elegível, você pode transformar parte da economia de energia em apoio financeiro ao time, conforme as condições da parceria."></textarea></div>
   <label class="club-active-check"><input type="checkbox" id="club-active"> Visível no site</label>
+  <label class="club-active-check"><input type="checkbox" id="club-partner-confirmed"> Parceria formalizada</label>
   <button type="submit" class="btn gold">+ Cadastrar clube</button>
 </form>
 <div class="clubs-scroll"><table class="clubs-table">
-<thead><tr><th>Nome do clube</th><th>UF</th><th>Publicação</th><th>Alteração</th></tr></thead>
+<thead><tr><th>Clube</th><th>UF</th><th>Visibilidade</th><th>Participação (%)</th><th>Mensagem ao torcedor</th><th>Convênio</th><th>Ações</th></tr></thead>
 <tbody id="club-rows"></tbody></table><p id="club-empty" class="club-empty">Nenhum clube cadastrado ou publicado.</p></div>
-<p class="club-caveat">Somente clubes visíveis aparecem no site do cliente. Mudar a visibilidade não formaliza convênio. Não cadastre logotipos de clubes sem autorização de uso.</p>
+<p class="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p>
 </section>
 <div class="next-cta"><div><b>Simule economias com a identidade Energy Business</b><p>A origem é sempre a nossa empresa. Os percentuais são cenários ilustrativos.</p></div><a class="btn gold" href="/#simular">Abrir simulador ↗</a></div><div class="footer">Energy Business · Painel demonstrativo · 2026</div>
 </main></div></div>
