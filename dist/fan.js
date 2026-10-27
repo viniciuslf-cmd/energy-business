@@ -17,6 +17,7 @@ for(const name of ordered){
  const option=document.createElement("option");option.value=name;option.textContent=name;
  main.insertBefore(option,main.querySelector('option[value="sem_clube"]'));
 }
+secondary.replaceChildren();
 for(const option of main.options){secondary.add(option.cloneNode(true))}
 const custom=$("entry-club-custom"),customOther=$("fan-team-other");
 function otherVisibility(){
@@ -76,11 +77,13 @@ window.EnergyFan={
  setReferralCode
 };
 $("fan-continue").addEventListener("click",()=>{
- if(!secondary.value){secondary.focus();$("fan-referral-status").textContent="Escolha um time antes de continuar o cadastro.";return}
+ if(!secondary.value){secondary.focus();const msg=$("fan-team-status");if(msg)msg.textContent="Escolha seu time para continuar.";return}
  if(secondary.value==="outro"&&!customOther.value.trim()){
+  const msg=$("fan-team-status");if(msg)msg.textContent="Escreva o nome do seu clube.";
   customOther.focus();
   return;
  }
+ const msg=$("fan-team-status");if(msg)msg.textContent="";
  syncFromFan();
  const flow=window.EnergyFlow;
  if(flow?.navigateToStage)flow.navigateToStage("cadastro");
