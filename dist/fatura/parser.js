@@ -61,6 +61,34 @@ function scorePick(candidates){
  }
  return [...unique.values()].sort((a,b)=>b.score-a.score||a.line-b.line)[0]||null;
 }
+
+/* O OCR de contas em colunas pode juntar à direita dados fiscais que NÃO
+ * pertencem ao titular ou ao endereço. Cortar por marcadores conhecidos,
+ * preservando o texto válido anterior ao marcador e a evidência original.
+ * Cuidado para não remover "JD ATLANTICO - FNS" ou o complemento "AP 801BTR3".
+ */
+const stopName=/\b(?:RESERVAD[OA]\s+AO\s+FISCO|NOTA\s+FISCAL|UNIDADE\s+CONSUMIDORA|CPF\s*(?:\/\s*CNPJ)?|CNPJ|ENDERE[CÇ]O|DATA\s+(?:DE\s+)?EMISS[AÃ]O|PROTOCOLO\s+DE\s+AUTORIZA[CÇ][AÃ]O|CHAVE\s+DE\s+ACESSO|C[OÓ]DIGO\s+(?:DA\s+)?INSTALA[CÇ][AÃ]O)\b/i;
+const stopAddress=/\b(?:NOTA\s+FISCAL|RESERVAD[OA]\s+AO\s+FISCO|S[EÉ]RIE\s*[:=]?\s*(?:\d|N[Oº°.]?\s*\d)|DATA\s+(?:DE\s+)?EMISS[AÃ]O|CHAVE\s+DE\s+ACESSO|PROTOCOLO\s+DE\s+AUTORIZA[CÇ][AÃ]O|UNIDADE\s+CONSUMIDORA|Q\s*R\s*CODE)\b/i;
+function stopAtMarker(raw,marker){
+ let value=String(raw||"");
+ const match=marker.exec(value);
+ if(match)value=value.slice(0,match.index);
+ return value.replace(/\s+/g," ").replace(/[\s,;|.:-]+$/g,"").trim();
+}
+function cleanName(raw){
+ let value=stopAtMarker(raw,stopName);
+ // Ex.: "MARIA SOUZA TTT Reservado ao Fisco": TTT é um artefato do OCR.
+ value=value.replace(/\s+([A-ZÀ-Ú])\1{2,4}$/i,"").trim();
+ return value.replace(/[\s,;|.:-]+$/g,"").trim();
+}
+function cleanAddress(raw){
+ let value=stopAtMarker(raw,stopAddress);
+ // " - JD . PL 7 NOTA FISCAL ..." = fragmento OCR da área fiscal
+ // ao lado do endereço, não complemento real da unidade.
+ value=value.replace(/\s*[.,;]\s*PL\s*\d{1,3}\s*$/i,"");
+ return value.replace(/\s{2,}/g," ").replace(/[\s,;|.:-]+$/g,"").trim();
+}
+
 function extractName(lines){
  const c=[];
  const labeled=/^(?:NOME(?:(?: COMPLETO)?(?: DO| DA)? (?:CLIENTE|TITULAR|CONSUMIDOR))?|TITULAR(?: DA CONTA)?|NOME(?: DO)? PAGADOR|PAGADOR|DESTINATARIO|RESPONSAVEL(?: PELA UNIDADE)?|CLIENTE)\s*[:\-]?\s*/;
@@ -70,11 +98,12 @@ function extractName(lines){
   const m=n.match(labeled);
   if(m){
    const tail=lines[i].slice(lines[i].length-(n.length-m[0].length)).trim().replace(/^[:;\- ]+/,"");
-   if(personValid(tail))c.push({value:tail,score:95,line:i,evidence:lines[i]});
-   for(let d=1;d<=2;d++)if(lines[i+d]&&personValid(lines[i+d]))c.push({value:lines[i+d],score:90-d*7,line:i+d,evidence:lines[i+d]});
+   const normalizedTail=cleanName(tail);
+   if(personValid(normalizedTail))c.push({value:normalizedTail,score:95,line:i,evidence:lines[i]});
+   for(let d=1;d<=2;d++){const suggestion=cleanName(lines[i+d]);if(personValid(suggestion))c.push({value:suggestion,score:90-d*7,line:i+d,evidence:lines[i+d]});}
   }
-  if(i<23&&personValid(lines[i])&&lines[i+1]&&reasonableAddr(lines[i+1]))
-   c.push({value:lines[i],score:76,line:i,evidence:lines[i]});
+  if(i<23&&personValid(cleanName(lines[i]))&&lines[i+1]&&reasonableAddr(lines[i+1]))
+   c.push({value:cleanName(lines[i]),score:76,line:i,evidence:lines[i]});
  }
  return scorePick(c);
 }
@@ -99,20 +128,20 @@ function extractAddress(lines){
   if(label.test(n)&&n.length<195){
    // Algumas distribuidoras (incluindo a Celesc) omitem "Rua" no endereço.
    // O rótulo ENDEREÇO e um número no logradouro têm prioridade sobre endereço genérico.
-   const tail=n.replace(label,"").trim();
+   const tail=cleanAddress(n.replace(label,"")).trim();
    const rawLabel=/^\s*(?:ENDERE[CÇ]O(?:\s+(?:DE FORNECIMENTO|DA UNIDADE CONSUMIDORA|DE CONSUMO|DA INSTALA[CÇ][AÃ]O|DO LOCAL|DE ENTREGA))?|LOCAL DE CONSUMO|END\.?\s*(?:CONSUMO|FORNECIMENTO))\b\s*[:\-]?\s*/i;
    if(containsAddress(tail)){
-    let value=raw.replace(rawLabel,"").trim();
+    let value=cleanAddress(raw.replace(rawLabel,""));
     const continued=[lines[i+1],lines[i+2]].filter(Boolean);
-    for(const row of continued){if(isContinuation(row))value+=" · "+row.trim();else break}
-    candidates.push({value,score:i<90?104:84,line:i,evidence:raw});
+    for(const row of continued){if(isContinuation(row))value+=" · "+cleanAddress(row);else break}
+    candidates.push({value:cleanAddress(value),score:i<90?104:84,line:i,evidence:raw});
    }
    for(let d=1;d<=3;d++){
     if(!lines[i+d])break;
-    if(containsAddress(lines[i+d])){
-      let value=lines[i+d].trim();
+    if(containsAddress(cleanAddress(lines[i+d]))){
+      let value=cleanAddress(lines[i+d]);
       if(isContinuation(lines[i+d+1]||""))value+=" · "+lines[i+d+1].trim();
-      candidates.push({value,score:(i<90?98:78)-d*4,line:i+d,evidence:lines[i+d]});
+      candidates.push({value:cleanAddress(value),score:(i<90?98:78)-d*4,line:i+d,evidence:lines[i+d]});
       break;
     }
    }
@@ -122,7 +151,7 @@ function extractAddress(lines){
     const near=clean(lines.slice(Math.max(0,i-5),i).join(" "));
     const penalty=/DADOS DE MEDICAO|TRIBUTOS|PIS COFINS/.test(near)?15:0;
     if(isContinuation(lines[i+1]||""))value+=" · "+lines[i+1].trim();
-    candidates.push({value:(value),score:(i<30?75:55)-penalty,line:i,evidence:raw});
+    candidates.push({value:cleanAddress(value),score:(i<30?75:55)-penalty,line:i,evidence:raw});
   }
  }
  return scorePick(candidates);
