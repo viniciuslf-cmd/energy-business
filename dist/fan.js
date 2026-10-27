@@ -5,6 +5,13 @@
 "use strict";
 const $=id=>document.getElementById(id);
 const main=$("entry-club"),secondary=$("fan-team-select");
+const learnMore=$("fan-hero-link");
+if(learnMore)learnMore.addEventListener("click",e=>{
+ const flow=window.EnergyFlow;
+ if(!flow?.alignToElement)return;
+ e.preventDefault();
+ flow.alignToElement(document.querySelector("#torcida .fan-heading"),"torcida");
+});
 if(!main||!secondary)return;
 const teams=[
  "América-MG","Athletico-PR","Atlético-GO","Atlético-MG","Avaí","Bahia","Botafogo","Ceará","Chapecoense",
