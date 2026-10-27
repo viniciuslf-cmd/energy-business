@@ -7,6 +7,9 @@ CREATE TABLE IF NOT EXISTS clubs (
  name TEXT NOT NULL COLLATE NOCASE UNIQUE,
  state TEXT NOT NULL DEFAULT '',
  is_active INTEGER NOT NULL DEFAULT 0 CHECK(is_active IN (0,1)),
+ club_share_percent REAL NOT NULL DEFAULT 0,
+ support_message TEXT NOT NULL DEFAULT '',
+ partner_confirmed INTEGER NOT NULL DEFAULT 0 CHECK(partner_confirmed IN (0,1)),
  created_at TEXT NOT NULL DEFAULT (datetime('now')),
  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
