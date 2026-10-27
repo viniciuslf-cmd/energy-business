@@ -40,3 +40,18 @@ for(const example of celesc){
 }
 const historyOnly=p.extract("CELESC\nHISTORICO DE CONSUMO\nOUT/26 477 kWh\nSET/26 406 kWh");
 assert.equal(historyOnly.kwh.value,null,"Não aceitar histórico como consumo mensal");
+
+
+const fiscalLeaks=[
+ {label:"Celesc colunas misturadas em nome e endereço",raw:"CELESC\nNOME: MARIA CAROLINA FERREIRA TTT Reservado ao Fisco\nENDEREÇO: MARCILIO DIAS 265 AP 801BTR3 - JD . PL 7 NOTA FISCAL Nº 111447279 SERIE:001 DATA EMISSÃO: 26/10/2026\nATLANTICO - FNS\nCEP: 88095-000 CIDADE: FLORIANOPOLIS SC\nTOTAL A PAGAR R$ 466,85\nTOTAL APURADO 477",
+  name:"MARIA CAROLINA FERREIRA",address:"MARCILIO DIAS 265 AP 801BTR3 - JD · ATLANTICO - FNS · CEP: 88095-000 CIDADE: FLORIANOPOLIS SC"},
+ {label:"Celesc reserva fiscal sem artefato no nome",raw:"CELESC\nNOME: JOSE MARIA DE SOUZA Reservado ao Fisco\nENDEREÇO: RUA CASTELO 250 NOTA FISCAL N° 123 SERIE 001\nCONSUMO FATURADO 250 kWh\nTOTAL A PAGAR R$ 250,00",
+  name:"JOSE MARIA DE SOUZA",address:"RUA CASTELO 250"},
+ {label:"Endereço preserva acentos e complemento",raw:"ENEL\nNOME DO CLIENTE: ANA LUIZA DE OLIVEIRA\nENDERECO DE CONSUMO\nAVENIDA DAS NAÇÕES 1500 AP 54\nVENCIMENTO TOTAL A PAGAR\n10/2026 R$ 313,11\nCONSUMO FATURADO 280 KWH",
+  name:"ANA LUIZA DE OLIVEIRA",address:"AVENIDA DAS NAÇÕES 1500 AP 54"}
+];
+for(const tc of fiscalLeaks){
+ const result=p.extract(tc.raw);
+ assert.equal(result.name.value,tc.name,tc.label+" nome limpo");
+ assert.equal(result.address.value,tc.address,tc.label+" endereço limpo");
+}
