@@ -332,7 +332,7 @@ html{scroll-padding-top:88px}
     <form id="entry-form">
       <div id="partner-test" class="partner-test" hidden>
         <strong>Ambiente de homologação dos sócios</strong>
-        <p>Use somente informações fictícias. O sistema grava apenas registros de teste. Não utilize CPF, nome, telefone ou e-mail reais.</p>
+        <p>Use somente informações fictícias. O sistema grava registros de homologação e vincula indicações entre esses testes, sem criar descontos reais. Não utilize CPF, nome, telefone ou e-mail reais.</p><p>Como testar: preencha os dados de exemplo, conclua a fatura na etapa 2, finalize a simulação e compartilhe o link gerado com outro sócio. As indicações podem ser validadas no <a href="/admin/indicacoes/" style="color:#785522;text-decoration:underline">painel de testes</a>.</p>
         <button type="button" id="partner-fake" class="btn outline">Preencher dados fictícios automaticamente</button>
       </div>
       <label class="field" for="entry-name">Nome completo</label>
@@ -560,7 +560,7 @@ function goToBillStep(submitted){
   :"Etapa 1 preenchida no navegador. Agora selecione sua conta de energia. Nesta versão de testes, seus dados e a foto não são enviados nem armazenados.";
  $("step2-status").textContent=message;
  $("step2-status").hidden=false;
- status.textContent=submitted?"Solicitação inicial recebida; continue com a conta.":"Etapa 1 concluída para demonstração. Nenhum dado foi enviado.";
+ status.textContent=submitted?(testMode?"Dados fictícios de teste registrados; continue com a conta.":"Solicitação inicial recebida; continue com a conta."):"Etapa 1 concluída para demonstração. Nenhum dado foi enviado.";
  navigateToStage("fatura");
 }
 form.addEventListener("submit",async e=>{
