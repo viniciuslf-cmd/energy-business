@@ -40,3 +40,14 @@ A seleção inclui clubes conhecidos, Outro clube e Prefiro não escolher. O men
 Convites podem ser enviados pelo WhatsApp e o link pode ser copiado. Em demonstração, os links não são rastreados nem geram descontos.
 A base D1 já tem favorite_club, referral_code e referred_by_code. A API (quando ativa) poderá registrar a origem do convite e gerar um código individual seguro.
 Recompensas por indicação ainda NÃO estão implementadas. Bonificações exigirão regulamento, limites, elegibilidade, combate a fraudes, controle de contratos ativos e cumprimento da LGPD.
+
+
+## Cadastro de clubes pelo painel de gestão (2026-10-27)
+
+- Os clubes NÃO são mais escritos diretamente no código. Cadastro: `https://energy-business.pages.dev/admin/#clubes`.
+- O painel é visível sem senha, mas cadastro, edição e publicação exigem a chave administrativa configurada como segredo `ADMIN_TOKEN` no Cloudflare. Nunca colocar a chave no código ou divulgar em convites.
+- Campos: nome, UF e visibilidade (visível/oculto). Clube criado oculto por padrão. Não há declaração de parceria oficial pelo simples cadastro, nem porcentagens de repasse ativadas.
+- Os clubes visíveis são lidos no endpoint público `GET /api/clubs`; o painel usa `GET/POST/PATCH /api/admin/clubs` autenticados. O formulário da homepage e a seção de torcida leem somente a lista publicada. Se não houver clubes ativos, fica disponível a opção de continuar sem escolher time.
+- Tabela D1: `clubs`; DDL em `clubs.sql`. Migration já executada no D1 produção. Clubes inativos permanecem no banco para futuras reativações.
+- O cadastro de interessados continua com origem comercial Energy Business e, quando futuramente habilitado, somente aceita `favorite_club` correspondente a clube visível no painel.
+- O recebimento de leads ainda está desativado (`LEADS_ENABLED=false`); edição de clubes pode funcionar independentemente desse controle.
