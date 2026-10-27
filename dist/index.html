@@ -301,6 +301,9 @@ html{scroll-padding-top:88px}
 .complete-panel .complete-footnote{font-size:12px;color:#8393a5;margin:19px 0}
 @media(max-width:590px){.complete-panel{padding:27px 21px}.complete-section{padding:50px 0}}
 .complete-referral{max-width:780px;margin:22px auto 0}.complete-referral .fan-panel-referral{padding:30px 36px;box-shadow:0 15px 45px #10233b22}.complete-referral .fan-panel-referral h3{font-size:clamp(21px,3vw,28px)}@media(max-width:600px){.complete-referral .fan-panel-referral{padding:22px 18px}}
+.partner-test{border:1px solid #ead39f;border-radius:13px;background:#fff8e9;padding:14px 16px;margin:15px 0 6px;color:#463c2e}
+.partner-test[hidden]{display:none!important}.partner-test strong{font-size:13px}.partner-test p{font-size:11px;line-height:1.7;color:#745f3b;margin:7px 0}
+.partner-test button{font-size:11px;padding:9px 12px;min-height:36px}
 </style>
 </head>
 <body>
@@ -327,6 +330,11 @@ html{scroll-padding-top:88px}
   <div class="intake-card hero-form">
     <div class="form-headline"><div><span class="form-step">ETAPA 1 DE 3</span><h2>Vamos começar?</h2><p id="intake-description">Preencha os campos abaixo. Nesta fase de testes, use somente dados fictícios: o cadastro não é enviado nem armazenado.</p></div></div>
     <form id="entry-form">
+      <div id="partner-test" class="partner-test" hidden>
+        <strong>Ambiente de homologação dos sócios</strong>
+        <p>Use somente informações fictícias. O sistema grava apenas registros de teste. Não utilize CPF, nome, telefone ou e-mail reais.</p>
+        <button type="button" id="partner-fake" class="btn outline">Preencher dados fictícios automaticamente</button>
+      </div>
       <label class="field" for="entry-name">Nome completo</label>
       <input id="entry-name" name="name" required maxlength="100" minlength="3" placeholder="Nome de exemplo" autocomplete="off">
       <div class="grid-two">
@@ -493,7 +501,7 @@ const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"
 const numbers=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL",maximumFractionDigits:0});
 const bill=$("bill"),range=$("range"),rate=$("rate"),profile=$("profile");
 const form=$("entry-form"),status=$("entry-status"),button=$("entry-submit");
-let liveMode=false,turnstileWidget=null,submissionBusy=false,step1Done=false,leadSaved=false,billReview=null,leadId="",completionToken="",journeySaving=false;
+let liveMode=false,testMode=false,turnstileWidget=null,submissionBusy=false,step1Done=false,leadSaved=false,billReview=null,leadId="",completionToken="",journeySaving=false;
 
 function alignToElement(element,stageId){
  if(!element)return;
@@ -548,7 +556,7 @@ function goToBillStep(submitted){
   update();
  }
  const message=submitted
-  ?"Solicitação inicial recebida. Próximo passo: selecione sua conta de energia e confira a leitura. A foto ainda não é enviada ao servidor."
+  ?(testMode?"Cadastro fictício registrado. Agora faça a leitura de uma fatura de exemplo; a imagem não será armazenada.":"Solicitação inicial recebida. Próximo passo: selecione sua conta de energia e confira a leitura. A foto ainda não é enviada ao servidor.")
   :"Etapa 1 preenchida no navegador. Agora selecione sua conta de energia. Nesta versão de testes, seus dados e a foto não são enviados nem armazenados.";
  $("step2-status").textContent=message;
  $("step2-status").hidden=false;
@@ -558,16 +566,16 @@ function goToBillStep(submitted){
 form.addEventListener("submit",async e=>{
  e.preventDefault();
  if(submissionBusy||!form.reportValidity())return;
- if(!liveMode){
+ if(!liveMode&&!testMode){
   goToBillStep(false);
   return;
  }
- if(turnstileWidget===null||!window.turnstile){status.textContent="Conclua a verificação de segurança antes de prosseguir.";return}
- const security=window.turnstile.getResponse(turnstileWidget);
- if(!security){status.textContent="Conclua a verificação de segurança.";return}
+ if(liveMode&&(turnstileWidget===null||!window.turnstile)){status.textContent="Conclua a verificação de segurança antes de prosseguir.";return}
+ const security=liveMode?window.turnstile.getResponse(turnstileWidget):"test-only";
+ if(liveMode&&!security){status.textContent="Conclua a verificação de segurança.";return}
  submissionBusy=true;button.disabled=true;status.textContent="Registrando sua solicitação...";
  try{
-  const r=await fetch("/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
+  const r=await fetch(testMode?"/api/test/leads":"/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
     name:$("entry-name").value.trim(),email:$("entry-email").value.trim(),phone:$("entry-phone").value.trim(),
     billAmount:Number($("entry-bill").value),rate:Number(rate.value),
     propertyType:profile.value,clubCode:"clube-demo",
@@ -585,7 +593,7 @@ form.addEventListener("submit",async e=>{
   window.EnergyFan?.setReferralCode?.(data.referralCode);
   goToBillStep(true);
  }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
- finally{window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
+ finally{if(liveMode&&window.turnstile&&turnstileWidget!==null)window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
 });
 
 $("finish-flow").addEventListener("click",async()=>{
@@ -603,7 +611,7 @@ $("finish-flow").addEventListener("click",async()=>{
   journeySaving=true;
   const finishButton=$("finish-flow");finishButton.disabled=true;
   try{
-   const response=await fetch("/api/leads/complete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:leadId,token:completionToken,billReviewed:true})});
+   const response=await fetch(testMode?"/api/test/leads/complete":"/api/leads/complete",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:leadId,token:completionToken,billReviewed:true})});
    const data=await response.json().catch(()=>({}));
    if(!response.ok||!data.ok)throw Error(data.error||"Não foi possível concluir o cadastro. Tente novamente.");
   }catch(error){alert.textContent=error.message;return}
@@ -611,9 +619,9 @@ $("finish-flow").addEventListener("click",async()=>{
  }
  const chosen=window.EnergyFan?.selectedClub?.()||"";
  const details=chosen?window.EnergyFan?.clubDetails?.(chosen):null;
- $("complete-mode-label").textContent=leadSaved?"Solicitação inicial registrada":"Demonstração concluída";
- $("complete-title").textContent=leadSaved?"Obrigado! Seus dados iniciais foram recebidos.":"Você concluiu as três etapas!";
- $("complete-description").textContent=leadSaved
+ $("complete-mode-label").textContent=testMode?"Cadastro fictício finalizado":leadSaved?"Solicitação inicial registrada":"Demonstração concluída";
+ $("complete-title").textContent=testMode?"Teste concluído com sucesso!":leadSaved?"Obrigado! Seus dados iniciais foram recebidos.":"Você concluiu as três etapas!";
+ $("complete-description").textContent=testMode?"Seu cadastro fictício foi registrado para homologação. Compartilhe seu link individual com outro sócio e teste a indicação. Nenhum WhatsApp será enviado, nenhum cliente real será contatado e nenhuma fatura foi armazenada.":leadSaved
    ?"Você concluiu as três etapas e o cadastro foi registrado. A equipe da Energy Business poderá entrar em contato pelo WhatsApp para analisar sua solicitação. A fotografia e os dados da fatura permanecem locais neste protótipo."
    :"Este é um teste do atendimento Energy Business. Seu cadastro e sua fatura NÃO foram enviados ou armazenados. Quando a operação estiver liberada, a equipe entrará em contato pelo WhatsApp cadastrado para fazer a análise.";
  const clubBox=$("complete-club");
@@ -627,7 +635,7 @@ $("finish-flow").addEventListener("click",async()=>{
    $("complete-club-percent").hidden=!validShare;
    if(validShare)$("complete-club-percent").textContent="Participação prevista para o clube: "+Number(details.club_share_percent).toLocaleString("pt-BR",{maximumFractionDigits:2})+"% calculados sobre a economia elegível do torcedor, conforme contrato. Nenhum repasse ocorre apenas pelo cadastro.";
  }
- $("complete-footnote").textContent=leadSaved
+ $("complete-footnote").textContent=testMode?"Teste de homologação: benefícios progressivos são apenas calculados para conferência, sem aplicação financeira.":leadSaved
    ?"A contratação, o desconto e qualquer participação do clube dependem de análise e condições comerciais."
    :"Demonstração sem recebimento de documentos, compromisso comercial, bonificação ou repasse ao clube.";
  $("conclusao").hidden=false;
@@ -640,6 +648,28 @@ update();
  try{
   const r=await fetch("/api/config",{cache:"no-store"});if(!r.ok)return;
   const config=await r.json();
+  if(config.testingEnabled&&!config.acceptingLeads){
+   testMode=true;
+   $("partner-test").hidden=false;
+   $("intake-description").textContent="Cadastro de teste dos sócios. Use dados fictícios para experimentar indicações, leitura e simulação.";
+   button.textContent="Registrar cadastro fictício e continuar →";
+   const helper=$("partner-fake");
+   helper.onclick=()=>{
+    const bytes=crypto.getRandomValues(new Uint16Array(1));
+    const suffix=String(bytes[0]%10000).padStart(4,"0");
+    $("entry-name").value="TESTE SOCIO";
+    $("entry-phone").value="1199999"+suffix;
+    $("entry-email").value="socio"+suffix+"@example.com";
+    $("entry-bill").value="500";
+    $("entry-consent").checked=true;
+    if(!document.querySelector('input[name="help_club"]:checked')){
+      const no=document.querySelector('input[name="help_club"][value="nao"]');
+      no.checked=true;no.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+    status.textContent="Dados fictícios gerados; você pode testar a leitura da conta com o exemplo disponível na etapa 2.";
+   };
+   return;
+  }
   if(!config.acceptingLeads||!config.turnstileSiteKey)return;
   liveMode=true;
   $("intake-description").textContent="Informe seus dados para começar a análise. Depois, você poderá ler e conferir sua conta de energia.";
