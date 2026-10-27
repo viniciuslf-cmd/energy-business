@@ -48,15 +48,17 @@ export async function onRequestPost({request,env}){
       if(!allowed)return json({error:"O clube selecionado não está habilitado. Atualize a página e escolha outra opção."},400);
     }
     const id=crypto.randomUUID();
+    const completionToken=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,"0")).join("");
+    const completionHash=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(completionToken))),b=>b.toString(16).padStart(2,"0")).join("");
     // Código de convite aleatório não contém nome, telefone ou outro dado pessoal.
     const referralCode="EB"+Array.from(crypto.getRandomValues(new Uint8Array(8)),v=>v.toString(16).padStart(2,"0")).join("").toUpperCase();
     let validRef=null;
     if(referredByCode){
-      const owner=await env.DB.prepare("SELECT phone FROM leads WHERE referral_code=? LIMIT 1").bind(referredByCode).first();
-      if(owner&&owner.phone!==phone)validRef=referredByCode;
+      const owner=await env.DB.prepare("SELECT phone,email FROM leads WHERE referral_code=? LIMIT 1").bind(referredByCode).first();
+      if(owner&&owner.phone!==phone&&owner.email!==email)validRef=referredByCode;
     }
-    await env.DB.prepare("INSERT INTO leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,consent_at,status,favorite_club,referral_code,referred_by_code) VALUES (?,?,?,?,?,?,?,?,?,datetime('now'),'novo',?,?,?)")
-      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26",favoriteClub,referralCode,validRef).run();
-    return json({ok:true,id,referralCode,message:"Solicitação recebida. Nossa equipe poderá entrar em contato após a análise. O programa de indicação depende de regulamento e elegibilidade."},201);
+    await env.DB.prepare("INSERT INTO leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,consent_at,status,favorite_club,referral_code,referred_by_code,journey_token_hash) VALUES (?,?,?,?,?,?,?,?,?,datetime('now'),'novo',?,?,?,?)")
+      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26",favoriteClub,referralCode,validRef,completionHash).run();
+    return json({ok:true,id,referralCode,completionToken,message:"Solicitação recebida. Nossa equipe poderá entrar em contato após a análise. O programa de indicação depende de regulamento e elegibilidade."},201);
   }catch{return json({error:"Não foi possível registrar a solicitação agora."},503)}
 }
