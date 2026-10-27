@@ -63,7 +63,7 @@ function scorePick(candidates){
 }
 function extractName(lines){
  const c=[];
- const labeled=/^(?:NOME(?: COMPLETO)?(?: DO| DA)? (?:CLIENTE|TITULAR|CONSUMIDOR)|TITULAR(?: DA CONTA)?|NOME(?: DO)? PAGADOR|PAGADOR|DESTINATARIO|RESPONSAVEL(?: PELA UNIDADE)?|CLIENTE)\s*[:\-]?\s*/;
+ const labeled=/^(?:NOME(?:(?: COMPLETO)?(?: DO| DA)? (?:CLIENTE|TITULAR|CONSUMIDOR))?|TITULAR(?: DA CONTA)?|NOME(?: DO)? PAGADOR|PAGADOR|DESTINATARIO|RESPONSAVEL(?: PELA UNIDADE)?|CLIENTE)\s*[:\-]?\s*/;
  for(let i=0;i<lines.length;i++){
   const n=clean(lines[i]);
   if(/\b(N[Oº°.]|NUMERO|CODIGO|CONTA|REFERENCIA)\s+(?:DO\s+)?CLIENTE\b/.test(n))continue;
@@ -80,26 +80,48 @@ function extractName(lines){
 }
 function extractAddress(lines){
  const candidates=[];
- const addrMarker=/(?:ENDERECO (?:DE FORNECIMENTO|DA UNIDADE CONSUMIDORA|DE CONSUMO|DA INSTALACAO|DO LOCAL|DE ENTREGA)|LOCAL DE CONSUMO|END\.? CONSUMO|END\.? FORNECIMENTO|ENDERECO)/;
+ const label=/^(?:ENDERECO(?:\s+(?:DE FORNECIMENTO|DA UNIDADE CONSUMIDORA|DE CONSUMO|DA INSTALACAO|DO LOCAL|DE ENTREGA))?|LOCAL DE CONSUMO|END\.?\s*(?:CONSUMO|FORNECIMENTO))\b\s*[:\-]?\s*/i;
+ const containsAddress=s=>{
+  const n=clean(s);
+  return n.length>=9 && n.length<=180 &&
+    (reasonableAddr(s)||(/^[A-Z][A-Z .'-]{5,75}\s+\d{1,6}\b/.test(n)&&
+     !/(?:FATURA|CNPJ|CPF|VENCIMENTO|CONSUMO|VALOR TOTAL|LEITURA|CLIENTE|CELESC|DISTRIBUICAO|ENERGIA ELETRICA)/.test(n)));
+ };
+ const isContinuation=s=>{
+  const t=clean(s);
+  return t.length>=3&&t.length<75&&
+   (/^(?:CEP|CIDADE|BAIRRO|COMPLEMENTO)\b/.test(t) ||
+   (/^[A-Z ]{4,45}\s*[-\/]\s*[A-Z]{2,4}$/.test(t))) &&
+   !/^(?:VALOR|TOTAL|CONSUMO|LEITURA|CLASSIFICACAO|CPF|CNPJ)/.test(t);
+ };
  for(let i=0;i<lines.length;i++){
-  const n=clean(lines[i]);
-  const isMarker=addrMarker.test(n)&&n.length<135;
-  if(isMarker){
-   const tail=lines[i].replace(/^.*?(?:ENDERE[CÇ]O(?: DE CONSUMO| DE FORNECIMENTO| DA UNIDADE CONSUMIDORA| DA INSTALA[CÇ][AÃ]O| DE ENTREGA)?|LOCAL DE CONSUMO)\s*[:\-]?\s*/i,"").trim();
-   if(reasonableAddr(tail))candidates.push({value:tail,score:/CONSUMO|FORNECIMENTO|INSTALACAO/.test(n)?98:84,line:i,evidence:lines[i]});
+  const raw=lines[i],n=clean(raw);
+  if(label.test(n)&&n.length<195){
+   // Algumas distribuidoras (incluindo a Celesc) omitem "Rua" no endereço.
+   // O rótulo ENDEREÇO e um número no logradouro têm prioridade sobre endereço genérico.
+   const tail=n.replace(label,"").trim();
+   if(containsAddress(tail)){
+    let value=raw.replace(label,"").trim();
+    const continued=[lines[i+1],lines[i+2]].filter(Boolean);
+    for(const row of continued){if(isContinuation(row))value+=" · "+row.trim();else break}
+    candidates.push({value,score:i<90?104:84,line:i,evidence:raw});
+   }
    for(let d=1;d<=3;d++){
-    const row=lines[i+d];if(!row)break;
-    if(reasonableAddr(row))candidates.push({value:row,score:(/CONSUMO|FORNECIMENTO|INSTALACAO/.test(n)?94:80)-d*4,line:i+d,evidence:row});
+    if(!lines[i+d])break;
+    if(containsAddress(lines[i+d])){
+      let value=lines[i+d].trim();
+      if(isContinuation(lines[i+d+1]||""))value+=" · "+lines[i+d+1].trim();
+      candidates.push({value,score:(i<90?98:78)-d*4,line:i+d,evidence:lines[i+d]});
+      break;
+    }
    }
   }
-  if(reasonableAddr(lines[i])){
-   const upper=clean(lines.slice(Math.max(0,i-5),i).join(" "));
-   const beforeTax=/\b(DADOS DE MEDICAO|DISCRIMINACAO|TRIBUTOS|PIS COFINS)\b/.test(upper);
-   const score=(i<26?76:56)+(beforeTax?-15:0);
-   let value=lines[i].trim();
-   const next=lines[i+1]||"";
-   if(next&&(/(?:\b\d{5}-?\d{3}\b)|(?:\b[A-ZÀ-Ú][A-ZÀ-Ú ]+\s*-\s*[A-Z]{2}\b)/i.test(next))&&next.length<85)value+=" · "+next.trim();
-   candidates.push({value,score,line:i,evidence:lines[i]});
+  if(reasonableAddr(raw)){
+    let value=raw.trim();
+    const near=clean(lines.slice(Math.max(0,i-5),i).join(" "));
+    const penalty=/DADOS DE MEDICAO|TRIBUTOS|PIS COFINS/.test(near)?15:0;
+    if(isContinuation(lines[i+1]||""))value+=" · "+lines[i+1].trim();
+    candidates.push({value:(value),score:(i<30?75:55)-penalty,line:i,evidence:raw});
   }
  }
  return scorePick(candidates);
@@ -150,33 +172,81 @@ function extractConsumption(lines){
  const candidates=[];
  const best=/CONSUMO TOTAL FATURADO|CONSUMO FATURADO(?: NO MES)?|TOTAL FATURADO(?: EM KWH)?|CONSUMO NO MES|CONSUMO DO MES|CONSUMO MES|CONSUMO MEDIDO/;
  const second=/CONSUMO\s*(?:ATIVO|ENERGIA ELETRICA|DE ENERGIA|MENSAL)?\s*(?:\(?KWH\)?)?\s*[:=]?|ENERGIA ELETRICA\s*\(?KWH\)?/;
+ const asInteger=x=>{
+  const v=String(x||"").trim().replace(/\s/g,"");
+  if(!/^\d{1,3}(?:\.\d{3})*$|^\d{1,7}$/.test(v))return null;
+  const n=Number(v.replace(/\./g,""));
+  return Number.isInteger(n)&&n>0&&n<=10000000?n:null;
+ };
+ const add=(value,score,line,evidence)=>{
+  if(Number.isFinite(value)&&value>0&&value<=10000000)
+   candidates.push({value,score,line,evidence});
+ };
+ const te=[],tusd=[];
  for(let i=0;i<lines.length;i++){
   const n=clean(lines[i]);
   if(/HISTORICO|MEDIA DIARIA|ENERGIA INJETADA|ENERGIA REATIVA|GERACAO|DEMANDA|TARIFA/.test(n))continue;
   const strong=best.test(n),medium=!strong&&second.test(n);
-  const markers=strong||medium;
-  if(markers){
+  if(strong||medium){
    const weight=strong?99:75;
    const tail=lines[i].replace(/^.*?(CONSUMO TOTAL FATURADO|CONSUMO FATURADO(?: NO M[EÊ]S)?|CONSUMO NO M[EÊ]S|CONSUMO DO M[EÊ]S|CONSUMO M[EÊ]S|CONSUMO MEDIDO|TOTAL FATURADO|CONSUMO\s*(?:\(?kWh\)?)?)[\s:=]*/i,"");
-   let values=kwhCandidates(tail);
-   // Tabelas mais genéricas: "Consumo kWh 200" ou "Consumo no mês 200" sem kWh.
+   const values=kwhCandidates(tail);
    const direct=tail.match(/^\s*([\d.]{1,10})\s*(?:KWH)?\b/i);
-   if(direct){
-    const val=Number(direct[1].replace(/\./g,""));
-    if(val>0&&val<10000000)values.push({value:val,kind:"direct"});
-   }
-   for(const val of values)candidates.push({value:val.value,score:weight+(val.kind==="direct"?-8:0),line:i,evidence:lines[i]});
+   if(direct){const val=asInteger(direct[1]);if(val!==null)values.push({value:val,kind:"direct"})}
+   for(const v of values)add(v.value,weight+(v.kind==="direct"?-8:0),i,lines[i]);
    if(strong&&!values.length){
     for(let d=1;d<=2;d++){
      const row=lines[i+d]||"";
-     for(const val of kwhCandidates(row))candidates.push({value:val.value,score:weight-14*d,line:i+d,evidence:row});
-     if(d===1&&/^\d{1,6}$/.test(row))candidates.push({value:Number(row),score:weight-18,line:i+d,evidence:row});
+     for(const v of kwhCandidates(row))add(v.value,weight-14*d,i+d,row);
+     if(d===1&&/^\d{1,6}$/.test(row))add(Number(row),weight-18,i+d,row);
     }
    }
   }
   if(/\bENERGIA ELETRICA\s+KWH\s+\d+\b/.test(n)){
-   const v=n.match(/ENERGIA ELETRICA\s+KWH\s+(\d{1,6})\b/);
-   if(v)candidates.push({value:Number(v[1]),score:85,line:i,evidence:lines[i]});
+   const m=n.match(/ENERGIA ELETRICA\s+KWH\s+(\d{1,6})\b/);
+   if(m)add(Number(m[1]),85,i,lines[i]);
+  }
+  // Celesc: a medição costuma estar na tabela Leitura anterior/atual/Total apurado.
+  if(/\bTOTAL\s+APURADO\b/.test(n)){
+    const t=n.split(/\bTOTAL\s+APURADO\b/).slice(1).join(" ");
+    const direct=t.match(/^\s*[:=]?\s*(\d{1,6})\b/);
+    if(direct)add(Number(direct[1]),102,i,lines[i]);
+    // Linha tabular após o cabeçalho: "5792955 Energia Único 1.077 1.554 1,000... 0,00 477".
+    for(let d=1;d<=3;d++){
+     const row=clean(lines[i+d]||"");
+     if(!row||/HISTORICO DE CONSUMO|TRIBUTOS|ITENS DE FATURA/.test(row))break;
+     const measures=[...row.matchAll(/\b(\d{1,3}\.\d{3}|\d{1,6})\b/g)].map(m=>({value:asInteger(m[1]),raw:m[1]})).filter(x=>x.value!==null);
+     const dotted=measures.filter(x=>/^\d{1,3}\.\d{3}$/.test(x.raw));
+     if(dotted.length>=2){
+      const delta=dotted[1].value-dotted[0].value;
+      const last=measures.at(-1);
+      if(delta>0&&last&&delta===last.value)add(delta,110,i+d,lines[i+d]);
+      else if(delta>0&&delta<100000)add(delta,87,i+d,lines[i+d]);
+     }
+     if(measures.length&&d===1&&/^\d{1,6}$/.test(row))add(Number(row),90,i+d,lines[i+d]);
+    }
+  }
+  // Itens Celesc podem repartir 477 kWh em 150,000 + 327,000 para
+  // "Consumo TE" e repetir os mesmos kWh em "Consumo TUSD".
+  // Somamos APENAS uma categoria para evitar dupla contagem.
+  const item=n.match(/\bCONSUMO\s+(TE|TUSD)\b.*?\bKWH\s+(\d{1,6}(?:[,.]\d{1,3})?)/);
+  if(item){
+    const val=Number(item[2].replace(",","."));
+    if(Number.isFinite(val)&&val>0&&val<1000000){
+      const target=item[1]==="TE"?te:tusd;
+      target.push({value:val,line:i});
+    }
+  }
+ }
+ // Apenas combinar itens homogêneos da mesma classe de cobrança.
+ // A soma é um fallback com revisão obrigatória: o valor pode não representar
+ // a energia líquida compensável quando há geração distribuída.
+ for(const group of [te,tusd]){
+  if(group.length>=2){
+   const sum=group.reduce((a,b)=>a+b.value,0);
+   if(Number.isInteger(sum)&&sum<=10000000){
+    add(sum,group===te?91:85,group[0].line,group.map(x=>lines[x.line]).join(" | "));
+   }
   }
  }
  return scorePick(candidates);
