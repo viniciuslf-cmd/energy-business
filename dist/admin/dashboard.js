@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id);
 const panes=new Map([...document.querySelectorAll("[data-view-pane]")].map(el=>[el.dataset.viewPane,el]));
 const links=[...document.querySelectorAll("#dashboard-navigation [data-view]")];
-const titles={inicio:"Visão geral",solicitacoes:"Solicitações",clubes:"Clubes",parceiros:"Gestão de parceiros",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
+const titles={inicio:"Visão geral",solicitacoes:"Clientes pessoa física",clubes:"Clubes",parceiros:"Gestão de clientes",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
 const main=$("dashboard-main");
 let current="inicio",partners=[],histories=[],partnerLoaded=false,usersLoaded=false,currentUser=null,clubs=[];
 const labels={pendente:"Pendente",contato:"Em contato",negociacao:"Em negociação",acordo:"Acordo concluído",contrato:"Contrato assinado",pausado:"Pausado",perdido:"Não avançou"};
@@ -52,6 +52,10 @@ function showPane(view,updateHistory=true){
  if(view==="socios")loadUsers();
 }
 links.forEach(a=>a.addEventListener("click",e=>{e.preventDefault();showPane(a.dataset.view)}));
+function showPFSubtab(tab){$("pf-clients-content").hidden=tab!=="clientes";$("pf-referrals-content").hidden=tab!=="indicacoes";$("pf-tab-clients").className="btn "+(tab==="clientes"?"":"alt");$("pf-tab-referrals").className="btn "+(tab==="indicacoes"?"":"alt");if(tab==="indicacoes"){const frame=$("pf-referrals-content").querySelector("iframe[data-src]");if(frame&&!frame.src)frame.src=frame.dataset.src;}}
+$("pf-tab-clients").addEventListener("click",()=>showPFSubtab("clientes"));
+$("pf-tab-referrals").addEventListener("click",()=>showPFSubtab("indicacoes"));
+
 window.addEventListener("popstate",()=>showPane(location.hash.slice(1),false));
 document.querySelector("[data-action=open-simulator]")?.addEventListener("click",e=>{e.preventDefault();showPane("simulador")});
 showPane(location.hash.slice(1)||"inicio",false);
