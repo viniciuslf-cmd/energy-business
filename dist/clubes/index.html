@@ -51,6 +51,9 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
    const item=add("article","club",undefined,grid);add("div","icon","⚽",item);add("h3","",c.name, item);
    add("p","",c.state?"Estado: "+c.state:"Clube cadastrado",item);
    add("div","spacer","",item);
+   const select=add("a","btn","Selecionar este clube e cadastrar →",item);
+   select.href="/?clube="+encodeURIComponent(c.id)+"#cadastro";
+   select.setAttribute("aria-label","Selecionar "+c.name+" e iniciar cadastro");
    if(c.site_url){
     const a=add("a","btn", "Acessar ambiente indicado ↗",item);
     a.href=c.site_url;a.target="_blank";a.rel="noopener noreferrer";
