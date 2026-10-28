@@ -72,7 +72,40 @@ body{background:#f6f8fc}
  .hero .club-picker .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 }
 @media(max-width:450px){.hero .club-picker .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.hero .club-picker .toolbar{display:block}.hero .club-picker .toolbar label{max-width:none;margin-top:9px}.hero .club-registration{padding:8px!important}.hero .club-registration iframe{min-height:720px}}
-.hero .club-picker .club .icon{width:60px;height:60px;background:#f6f8fb;border:1px solid #e7edf3;color:#173553;font-size:18px;font-weight:900;border-radius:12px}.hero .club-picker .club .icon img{width:100%;height:100%;object-fit:contain;padding:4px}.hero .club-picker .grid{min-height:100px}.hero .club-registration #registration-active>p{margin-bottom:9px}.hero .club-picker .club{cursor:pointer}.hero .club-picker .club:hover{border-color:#c5a36d;background:#fcfaf5} </style></head><body>
+.hero .club-picker .club .icon{width:60px;height:60px;background:#f6f8fb;border:1px solid #e7edf3;color:#173553;font-size:18px;font-weight:900;border-radius:12px}.hero .club-picker .club .icon img{width:100%;height:100%;object-fit:contain;padding:4px}.hero .club-picker .grid{min-height:100px}.hero .club-registration #registration-active>p{margin-bottom:9px}.hero .club-picker .club{cursor:pointer}.hero .club-picker .club:hover{border-color:#c5a36d;background:#fcfaf5} 
+/* Layout aprovado: faixa editorial de futebol, escudos compactos e cadastro lateral */
+.hero{background:linear-gradient(105deg,#f8fafc 0%,#f5f8fc 53%,#dce5ed 100%)!important;min-height:780px}
+.hero>.wrap{width:min(1440px,calc(100% - 70px))!important;grid-template-columns:minmax(0,1.48fr) minmax(370px,1fr)!important;column-gap:38px!important;align-items:start!important}
+.hero .eyebrow{margin:10px 0 0;font-size:12px!important;z-index:3}
+.hero h1{font-size:clamp(38px,4vw,62px)!important;max-width:720px!important;margin:10px 0 16px!important;line-height:1.05!important}
+.hero>.wrap>p{font-size:16px!important;line-height:1.58!important;max-width:580px!important}
+.hero .football-scene{position:absolute!important;top:90px;left:21%;width:48%!important;height:640px;margin:0!important;z-index:0!important;border:0!important;background:transparent!important;box-shadow:none!important;border-radius:0!important;pointer-events:none;mask-image:linear-gradient(to right,transparent 0%,black 18%,black 78%,transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0%,black 18%,black 78%,transparent 100%)}
+.hero .football-scene img{height:100%!important;width:100%!important;object-fit:cover!important;object-position:center!important}
+.hero .football-scene figcaption{display:none!important}
+.hero .eyebrow,.hero h1,.hero>.wrap>p,.hero .club-picker,.hero .path-note{position:relative;z-index:2}
+.hero .path-note{grid-column:1!important;grid-row:5;display:flex;gap:9px;margin:14px 0!important;font-size:11px!important}
+.hero .club-picker{grid-column:1!important;grid-row:6;background:#fffffff0!important;box-shadow:0 7px 28px #10243d15!important;border:1px solid #e3e9f0;border-radius:16px!important;padding:17px!important;margin-top:245px;align-self:end}
+.hero .club-picker .toolbar>div h2{font-size:12px!important;text-transform:uppercase;letter-spacing:.2em}
+.hero .club-picker .toolbar>div .lead{display:none}
+.hero .club-picker .grid{grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:9px!important}
+.hero .club-picker .club{position:relative;min-width:0!important;padding:7px 4px!important;background:#f7f9fc;border:1px solid #e3e9ef;transition:transform .15s,border-color .15s}
+.hero .club-picker .club:focus-within,.hero .club-picker .club:hover{transform:translateY(-2px);border-color:#bd914a}
+.hero .club-picker .club .icon{width:57px!important;height:57px!important;max-width:100%;background:transparent!important;border:0!important}
+.hero .club-picker .club h3{font-size:10px!important;line-height:1.2!important}
+.hero .club-picker .club>a.btn{position:absolute;inset:0;background:transparent!important;color:transparent!important;border:0;font-size:0!important;opacity:0;z-index:3}
+.hero .club-picker .club .btn:focus-visible{opacity:1;outline:3px solid #edc573}
+.hero .club-picker .club:hover{background:#fff8e9}
+.hero .club-picker .club-picker-more{display:flex;justify-content:center;align-items:center;text-align:center;flex-direction:column;border:1px solid #e2e8f0;border-radius:11px;background:#f5f7fa;color:#17324e;font-size:12px;font-weight:700;min-height:92px;cursor:pointer}
+.hero .club-picker .club-picker-more strong{font-size:29px;font-weight:400;line-height:1}
+.hero .club-picker #status{font-size:11px;margin:8px 0}
+.hero .club-picker .lead:last-child{display:none}
+.hero .club-registration{grid-column:2!important;grid-row:1 / span 7!important;position:relative!important;top:0!important;padding:30px!important;margin:0!important;min-width:0;border-radius:22px!important;box-shadow:0 25px 65px #10243d26!important}
+.hero .club-registration h2{font-size:27px!important}
+.hero .club-registration iframe{min-height:740px!important}
+@media(max-width:1120px){.hero>.wrap{grid-template-columns:minmax(0,1fr) minmax(340px,.95fr)!important;gap:22px!important}.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero .football-scene{left:13%;width:60%!important}}
+@media(max-width:900px){.hero{min-height:unset}.hero>.wrap{width:min(700px,calc(100% - 30px))!important;display:flex!important;flex-direction:column!important;gap:10px!important}.hero .football-scene{position:relative!important;top:auto;left:auto;width:100%!important;height:auto!important;max-height:440px;order:4;mask-image:none;-webkit-mask-image:none;border-radius:14px!important;overflow:hidden!important}.hero .football-scene img{height:auto!important;object-fit:contain!important}.hero .club-picker{margin-top:0!important;order:5}.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero .club-registration{position:static!important;order:9}.hero .path-note{order:8}.hero h1{font-size:clamp(33px,7vw,49px)!important}}
+@media(max-width:500px){.hero>.wrap{width:calc(100% - 24px)!important}.hero .club-picker .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.hero .club-picker .club .icon{width:50px!important;height:50px!important}.hero .club-registration{padding:12px!important}.hero .club-registration h2{font-size:21px!important}}
+</style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize na energia. <span>Marque um golaço pelo seu clube!</span></h1>
 <p>Escolha seu time do coração e conheça as oportunidades de economizar na conta de luz. Ao aderir a uma oferta elegível, você também pode ajudar a fortalecer seu clube, conforme as condições da parceria.</p>
@@ -127,7 +160,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
    const item=add("article","club",undefined,grid);const crest=add("div","icon","",item);const logo=c.logo_url||c.logoUrl||c.crest_url||c.badge_url||c.logo||"";if(typeof logo==="string"&&/^https?:\/\/|^\//.test(logo)){const img=add("img","",undefined,crest);img.src=logo;img.alt="Escudo do "+c.name;img.loading="lazy";img.onerror=()=>{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}}else{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}add("h3","",c.name, item);
    add("p","",c.state?"Estado: "+c.state:"Clube cadastrado",item);
    add("div","spacer","",item);
-   const select=add("a","btn","Selecionar este clube e cadastrar →",item);
+   const select=add("a","btn","Selecionar "+c.name,item);
    select.href="#club-registration";
    select.addEventListener("click",e=>{e.preventDefault();openRegistration(c)});
    select.setAttribute("aria-label","Selecionar "+c.name+" e iniciar cadastro");
@@ -141,6 +174,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
     add("p","", "Aguarde o cadastro e a validação do endereço pelo gestor.",item);
    }
   }
+  if(!q&&clubs.length>7){const more=add("button","club-picker-more",undefined,grid);more.type="button";more.innerHTML="<strong>+</strong>Ver mais clubes";more.addEventListener("click",()=>{search.focus();search.scrollIntoView({behavior:"smooth",block:"center"});search.placeholder="Digite o clube que deseja encontrar...";});}
  }
  search.addEventListener("input",render);
  fetch("/api/clubs",{cache:"no-store"}).then(async response=>{
