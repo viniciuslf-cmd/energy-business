@@ -42,6 +42,8 @@ function render(){
    const name=document.createElement("b");name.textContent=club.name;cell(tr,name);
    cell(tr,club.state||"—");
    cell(tr,publishLabel(Boolean(club.is_active)));
+   cell(tr,club.site_url||"Sem endereço");
+   cell(tr,club.link_verified?"Validado":"Pendente");
    cell(tr,club.partner_confirmed?String(club.club_share_percent??0)+"%":"Não divulgado");
    cell(tr,club.partner_confirmed?(club.support_message||"Conforme contrato"):"Parceria ainda não confirmada");
    cell(tr,club.partner_confirmed?"Formalizada":"Não confirmada");
@@ -57,6 +59,10 @@ function render(){
    const checked=document.createElement("input");checked.type="checkbox";checked.checked=Boolean(club.is_active);
    stateWrapper.append(checked,document.createTextNode(" Visível no site"));
    cell(tr,stateWrapper);
+   const site=control("url",club.site_url||"","site-url",500);site.placeholder="https://clube.com.br";site.style.minWidth="220px";cell(tr,site);
+   const linkLabel=document.createElement("label");linkLabel.className="club-enabled";
+   const linkCheck=document.createElement("input");linkCheck.type="checkbox";linkCheck.checked=Boolean(club.link_verified);
+   linkLabel.append(linkCheck,document.createTextNode(" Conferido"));cell(tr,linkLabel);
    const share=control("number",String(club.club_share_percent??0),"share club-share-input",8);
    share.min="0";share.max="100";share.step="0.01";share.required=true;
    cell(tr,share);
@@ -71,11 +77,13 @@ function render(){
    const save=document.createElement("button");save.type="button";save.className="btn";save.textContent="Salvar";
    save.disabled=busy;
    save.onclick=async()=>{
-    if(!name.reportValidity()||!uf.reportValidity()||!share.reportValidity())return;
+    if(!name.reportValidity()||!uf.reportValidity()||!site.reportValidity()||!share.reportValidity())return;
     save.disabled=true;
     try{
      await updateClub({id:club.id,name:name.value.trim(),state:uf.value.trim().toUpperCase(),is_active:checked.checked,club_share_percent:Number(share.value),support_message:support.value.trim(),partner_confirmed:partnerCheck.checked});
-     message("Clube atualizado. A lista pública refletirá a alteração na próxima atualização.");
+     await updateLink(club.id,site.value.trim(),linkCheck.checked);
+     await getClubs();
+     message("Clube e endereço atualizados. O visitante só terá acesso a links conferidos.");
     }catch(err){message(err.message,true)}
     finally{save.disabled=false}
    };
@@ -102,6 +110,7 @@ async function getClubs(){
  }
  render();
 }
+async function updateLink(id,url,verified){return api("/api/admin/club-link",{method:"POST",body:JSON.stringify({club_id:id,site_url:url,verified})})}
 async function updateClub(input){
  const d=await api("/api/admin/clubs",{method:"PATCH",body:JSON.stringify(input)});
  const i=clubs.findIndex(c=>c.id===input.id);
@@ -121,12 +130,12 @@ form.addEventListener("submit",async e=>{
   support_message:$("club-support-message").value.trim(),
   partner_confirmed:$("club-partner-confirmed").checked
  };
+ const url=$("club-site-url").value.trim(),verified=$("club-link-verified").checked;
  try{
   const data=await api("/api/admin/clubs",{method:"POST",body:JSON.stringify(input)});
-  clubs.push(data.club);
-  clubs.sort((a,b)=>a.name.localeCompare(b.name,"pt-BR"));
-  form.reset();render();
-  message("Clube cadastrado"+(data.club.is_active?" e publicado no site.":" como oculto. Ative-o quando quiser exibir aos clientes."));
+  if(url||verified)await updateLink(data.club.id,url,verified);
+  await getClubs();form.reset();
+  message("Clube cadastrado. Somente endereços validados são disponibilizados aos visitantes.");
  }catch(err){message(err.message,true)}
  finally{busy=false;submit.disabled=false}
 });
@@ -140,9 +149,9 @@ async function beginManager(){
   if(settings.testingEnabled){
    testClubsMode=true;editable=true;
    $("club-intro-title").textContent="Gestão liberada após login";
-   $("club-intro-desc").textContent="Cadastre e edite clubes de teste com seus sócios. As alterações ficam salvas no ambiente de homologação.";
+   $("club-intro-desc").textContent="Cadastre clubes e endereços HTTPS validados. Os registros deste ambiente são de teste.";
    $("club-test-badge").hidden=false;
-   $("club-caveat").textContent="Somente TESTE: percentuais, mensagens e parceria simulada não representam acordos oficiais. Nenhum repasse ou benefício real é criado. O catálogo definitivo permanece protegido.";
+   $("club-caveat").textContent="Somente homologação: endereços devem ser conferidos antes de divulgar. A exibição de clube ou URL não representa confirmação de parceria comercial.";
    const partnerCheck=$("club-partner-confirmed");
    if(partnerCheck?.parentElement)partnerCheck.parentElement.lastChild.textContent=" Parceria simulada";
   }

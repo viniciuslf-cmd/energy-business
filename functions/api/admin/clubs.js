@@ -20,7 +20,7 @@ export async function onRequestGet({request,env}){
  if(!(await authorized(request,env)))return respond({error:"Autorização administrativa obrigatória."},401);
  if(!env.DB)return respond({error:"Banco de clubes indisponível."},503);
  try{
-  const q=await env.DB.prepare("SELECT id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at FROM clubs ORDER BY name COLLATE NOCASE ASC LIMIT 500").all();
+  const q=await env.DB.prepare("SELECT c.id,c.name,c.state,c.is_active,c.club_share_percent,c.support_message,c.partner_confirmed,c.created_at,c.updated_at,COALESCE(d.site_url,'') AS site_url,COALESCE(d.link_verified,0) AS link_verified FROM clubs c LEFT JOIN club_destinations d ON d.club_id=c.id ORDER BY c.name COLLATE NOCASE ASC LIMIT 500").all();
   return respond({clubs:q.results||[]});
  }catch{return respond({error:"Não foi possível consultar os clubes."},503)}
 }

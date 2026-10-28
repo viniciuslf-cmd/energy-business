@@ -24,7 +24,7 @@ export async function onRequestGet({request,env}){
  if(!await getSession(request,env))return respond({error:"Autenticação obrigatória."},401);
  if(!active(env))return respond({error:"Catálogo de testes desativado."},503);
  try{
- const q=await env.DB.prepare("SELECT id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at FROM test_clubs ORDER BY name COLLATE NOCASE ASC LIMIT 100").all();
+ const q=await env.DB.prepare("SELECT c.id,c.name,c.state,c.is_active,c.club_share_percent,c.support_message,c.partner_confirmed,c.created_at,c.updated_at,COALESCE(d.site_url,'') AS site_url,COALESCE(d.link_verified,0) AS link_verified FROM test_clubs c LEFT JOIN club_destinations d ON d.club_id=c.id ORDER BY c.name COLLATE NOCASE ASC LIMIT 100").all();
  return respond({clubs:q.results||[],testOnly:true});
  }catch{return respond({error:"Falha ao listar clubes fictícios."},503)}
 }

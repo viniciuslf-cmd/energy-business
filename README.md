@@ -73,3 +73,14 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 - O middleware protege `/admin/`, `/api/admin/*` e `/api/test/clubs` com sessão de servidor. Somente a página de login e os endpoints públicos destinados ao torcedor permanecem sem autenticação.
 - Uma única autenticação libera a visão geral, os cadastros fictícios salvos no D1, a gestão de clubes e a validação de indicações. A opção **Sair** revoga a sessão.
 - Neste estágio de homologação, o catálogo `test_clubs` e os cadastros `test_leads` são usados; o catálogo comercial `clubs` e a tabela `leads` seguem isolados.
+
+## Dois caminhos independentes (27/10/2026)
+
+- Homepage: cadastro de economia sem qualquer seleção de clube ou herança da escolha de quem indicou.
+- Botão separado "Quer economizar e ainda ajudar seu time do coração?" leva ao portal `/clubes/`.
+- O portal consulta `/api/clubs`; lista clubes visíveis e só libera botão de endereço externo quando o gestor cadastrou um link HTTPS e marcou que foi conferido.
+- No Painel de Gestão > Clubes, novos campos **Site do clube** e **Endereço conferido**. Sem URL validada, é exibido "Endereço em preparação", sem criar redirecionamento falso.
+- Os links são de domínios externos e abrem em nova aba; o consumidor recebe aviso de conferência do domínio. Exibição não indica, por si só, convênio oficial.
+- D1: tabela `club_destinations` (DDL em `club-destinations.sql`), associada por `club_id`, usada pelos ambientes comercial e de homologação. Criada na produção Cloudflare.
+- Endpoint `POST /api/admin/club-link` exige login de gestor e origem confiável. URL HTTPS validada no servidor.
+- A autenticação inicial inclui migração de hash do cadastro conhecido do gestor com 150k para 100k iterações PBKDF2 somente após conferir a senha enviada. Essa exceção deve ser removida depois da migração e a credencial provisória precisa ser substituída por uma senha forte antes do uso comercial.
