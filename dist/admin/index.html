@@ -141,7 +141,6 @@ aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:
 <a href="#clubes" data-view="clubes"><span>⚽</span> Clubes</a>
 <a href="#parceiros" data-view="parceiros"><span>◈</span> Gestão de clientes</a>
 <a href="#portal" data-view="portal"><span>↗</span> Portal dos clubes</a>
-<a href="#simulador" data-view="simulador"><span>↗</span> Simulador</a>
 <a href="#privacidade" data-view="privacidade"><span>◇</span> Privacidade</a>
 <a href="#socios" data-view="socios"><span>♙</span> Acessos dos sócios</a>
 </nav><div class="side-foot">Energy Business<br>Painel em desenvolvimento. Informações reais continuam protegidas.</div></aside>
@@ -251,7 +250,6 @@ aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:
 <section class="pane" id="financeiro"><div class="card"><h2>Visão financeira da Energy Business</h2><label style="max-width:360px">Proposta selecionada<select id="selected"><option value="0">Fornecedor A</option><option value="1">Fornecedor B</option><option value="2">Fornecedor C</option></select></label><div class="kpis"><div class="kpi">Economia mensal estimada<b id="k-economy">—</b></div><div class="kpi">Comissão mensal estimada<b id="k-commission">—</b></div><div class="kpi">Receita no prazo contratado<b id="k-total">—</b></div></div><p class="note">Comissões são projeções brutas, sem impostos, inadimplência, retenções ou custos de aquisição. O percentual e a base de cálculo devem estar definidos no contrato com a fornecedora.</p><button class="action" data-goto="diagnostico">← Rever diagnóstico</button></div></section>
 </div></div></section>
 <section class="dash-view" id="portal" data-view-pane="portal" hidden><div class="header-row"><div><p class="eyebrow">Navegação integrada</p><h1>Portal dos clubes.</h1><p>Confira a experiência que os visitantes terão no portal, dentro do seu painel.</p></div></div><iframe class="dashboard-frame" title="Portal dos clubes" data-src="/clubes/?embed=1"></iframe></section>
-<section class="dash-view" id="simulador" data-view-pane="simulador" hidden><div class="header-row"><div><p class="eyebrow">Ferramentas</p><h1>Simulador.</h1><p>Simule cenários ilustrativos sem sair da área de gestão.</p></div></div><iframe class="dashboard-frame" title="Simulador Energy Business" data-src="/?painel=simulador#simular"></iframe></section>
 <section class="dash-view" id="privacidade" data-view-pane="privacidade" hidden><div class="header-row"><div><p class="eyebrow">Documentação</p><h1>Privacidade.</h1><p>Consulte a política vigente sem abrir uma nova página.</p></div></div><iframe class="dashboard-frame" title="Privacidade Energy Business" data-src="/privacidade/"></iframe></section>
 </main></div></div><script>(function(){
 const $=id=>document.getElementById(id),fmt=n=>Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}),num=id=>Math.max(0,Number($(id).value)||0);
