@@ -72,7 +72,7 @@ body{background:#f6f8fc}
  .hero .club-picker .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
 }
 @media(max-width:450px){.hero .club-picker .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.hero .club-picker .toolbar{display:block}.hero .club-picker .toolbar label{max-width:none;margin-top:9px}.hero .club-registration{padding:8px!important}.hero .club-registration iframe{min-height:720px}}
-</style></head><body>
+.hero .club-picker .club .icon{width:60px;height:60px;background:#f6f8fb;border:1px solid #e7edf3;color:#173553;font-size:18px;font-weight:900;border-radius:12px}.hero .club-picker .club .icon img{width:100%;height:100%;object-fit:contain;padding:4px}.hero .club-picker .grid{min-height:100px}.hero .club-registration #registration-active>p{margin-bottom:9px}.hero .club-picker .club{cursor:pointer}.hero .club-picker .club:hover{border-color:#c5a36d;background:#fcfaf5} </style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize na energia. <span>Marque um golaço pelo seu clube!</span></h1>
 <p>Escolha seu time do coração e conheça as oportunidades de economizar na conta de luz. Ao aderir a uma oferta elegível, você também pode ajudar a fortalecer seu clube, conforme as condições da parceria.</p>
@@ -80,7 +80,7 @@ body{background:#f6f8fc}
 <main class="wrap main"><div class="club-experience"><div class="card club-picker"><div class="toolbar"><div><h2>Escolha seu time</h2><p class="lead">Clubes são cadastrados e publicados pela gestão da Energy Business.</p></div><label><span style="display:block;font-size:11px;font-weight:800;margin-bottom:5px">Buscar clube</span><input id="search" type="search" placeholder="Digite o nome do clube..." aria-label="Buscar clube" autocomplete="off"></label></div>
 <p id="status" role="status" class="lead">Consultando clubes disponíveis...</p><div id="grid" class="grid" aria-live="polite"></div><div id="empty" class="empty" hidden>Nenhum clube com esse nome. A lista será atualizada conforme o cadastramento de novos parceiros.</div>
 <p class="lead" style="margin:24px 0 0"><strong>Transparência:</strong> a exibição de um clube ou de um endereço não confirma, por si só, contrato, patrocínio ou direito a repasse. Antes de informar dados pessoais em outro site, confira seu domínio e a política de privacidade. O benefício depende de análise, convênio e contratação elegível.</p></div>
-<section class="club-registration" id="club-registration"><div id="registration-placeholder"><h2>Seu cadastro começa pelo clube</h2><p>Escolha um dos clubes disponíveis ao lado para iniciar as três etapas aqui mesmo.</p></div><div id="registration-active" hidden><h2 id="chosen-club-title">Cadastro do torcedor</h2><p>Faça seu cadastro, envie as informações da conta e acompanhe a simulação nesta página.</p><iframe id="club-registration-frame" title="Cadastro de energia do torcedor" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe></div></section>
+<section class="club-registration" id="club-registration"><div id="registration-placeholder" hidden><h2>Seu cadastro começa pelo clube</h2><p>Escolha um clube à esquerda para vincular o seu cadastro antes de enviar.</p></div><div id="registration-active"><h2 id="chosen-club-title">Cadastro do torcedor</h2><p>Faça seu cadastro, envie as informações da conta e acompanhe a simulação nesta página.</p><iframe id="club-registration-frame" title="Cadastro de energia do torcedor" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe></div></section>
 </div><div class="callout"><div><h3>Quer somente desconto na sua conta?</h3><p>Volte para o cadastro da Energy Business, sem escolher clube.</p></div><a class="btn gold" href="/#cadastro">Fazer cadastro sem clube →</a></div></main><footer>© 2026 Energy Business · Plataforma de homologação · Benefícios sujeitos a condições</footer>
 <script>
 if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embedded");
@@ -93,6 +93,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
  if(heroWrap&&picker&&regPanel){heroWrap.append(picker);heroWrap.append(regPanel)}
  const registration=document.getElementById("club-registration"),frame=document.getElementById("club-registration-frame"),chosenTitle=document.getElementById("chosen-club-title");
  let frameSizing=null;
+ frame.setAttribute("src","/?jornada=clubes#cadastro");
  function openRegistration(club){
   chosenTitle.textContent="Cadastro do torcedor · "+club.name;
   document.getElementById("registration-placeholder").hidden=true;
@@ -123,7 +124,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
   const selected=clubs.filter(c=>c.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().includes(q));
   grid.replaceChildren();empty.hidden=Boolean(selected.length);empty.textContent=q?"Nenhum clube encontrado para esta busca.":"Os clubes aparecerão aqui quando forem cadastrados e publicados pelos gestores.";
   for(const c of selected){
-   const item=add("article","club",undefined,grid);add("div","icon","⚽",item);add("h3","",c.name, item);
+   const item=add("article","club",undefined,grid);const crest=add("div","icon","",item);const logo=c.logo_url||c.logoUrl||c.crest_url||c.badge_url||c.logo||"";if(typeof logo==="string"&&/^https?:\/\/|^\//.test(logo)){const img=add("img","",undefined,crest);img.src=logo;img.alt="Escudo do "+c.name;img.loading="lazy";img.onerror=()=>{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}}else{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}add("h3","",c.name, item);
    add("p","",c.state?"Estado: "+c.state:"Clube cadastrado",item);
    add("div","spacer","",item);
    const select=add("a","btn","Selecionar este clube e cadastrar →",item);
