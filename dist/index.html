@@ -600,6 +600,18 @@ form.addEventListener("submit",async e=>{
   goToBillStep(false);
   return;
  }
+ if(testMode){
+  const name=$("entry-name").value.replace(/\s+/g," ").trim().toUpperCase();
+  const phone=$("entry-phone").value.replace(/\D/g,"");
+  const email=$("entry-email").value.trim().toLowerCase();
+  if(!/^TESTE [A-ZÀ-Ú ]{3,75}$/.test(name)||!/^1199999\d{4}$/.test(phone)||!/^[a-z0-9][a-z0-9._+-]{0,63}@example\.(com|org|net)$/.test(email)){
+   status.textContent="Para continuar nesta versão de testes, use dados fictícios: nome começando com TESTE, telefone 1199999XXXX e e-mail @example.com. Ou clique em 'Preencher dados fictícios automaticamente' acima.";
+   status.style.color="#a13e27";
+   status.scrollIntoView({behavior:"smooth",block:"center"});
+   return;
+  }
+ }
+ status.style.color="";
  if(liveMode&&(turnstileWidget===null||!window.turnstile)){status.textContent="Conclua a verificação de segurança antes de prosseguir.";return}
  const security=liveMode?window.turnstile.getResponse(turnstileWidget):"test-only";
  if(liveMode&&!security){status.textContent="Conclua a verificação de segurança.";return}
@@ -622,7 +634,7 @@ form.addEventListener("submit",async e=>{
   leadId=data.id;completionToken=data.completionToken;
   window.EnergyFan?.setReferralCode?.(data.referralCode);
   goToBillStep(true);
- }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação."}
+ }catch(err){status.textContent=err.message||"Não foi possível registrar sua solicitação.";status.style.color="#a13e27";status.scrollIntoView({behavior:"smooth",block:"center"})}
  finally{if(liveMode&&window.turnstile&&turnstileWidget!==null)window.turnstile.reset(turnstileWidget);button.disabled=false;submissionBusy=false}
 });
 
