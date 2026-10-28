@@ -34,7 +34,7 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 .club-login-line input{flex:1;min-width:180px}
 .club-login input,.club-new input,.club-field{padding:10px 12px;min-height:41px;background:#fafbfd;color:#233c5b;border:1px solid #d6e1ed;border-radius:10px;font:inherit}
 .club-login input:focus-visible,.club-new input:focus-visible,.club-field:focus-visible{outline:3px solid #e9bf6d}
-#club-new-heading[hidden],.club-new[hidden],#club-lock[hidden],#club-unlock[hidden],#club-token[hidden]{display:none!important}
+#club-list-view[hidden],#club-new-heading[hidden],.club-new[hidden],#club-lock[hidden],#club-unlock[hidden],#club-token[hidden]{display:none!important}
 .club-new{display:flex;flex-wrap:wrap;align-items:end;gap:12px;background:#f9fbfd;border:1px solid #e1e8f0;border-radius:12px;padding:16px;margin:14px 0 19px}
 .club-new>div:first-child{flex:2;min-width:190px}
 .club-new>div:nth-child(2){width:80px}
@@ -168,6 +168,7 @@ aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:
 <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Conta ilustrativa</th><th>Perfil</th><th>Origem</th><th>Status</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty"><div class="empty-icon">▤</div><h3>Nenhuma solicitação nesta seleção</h3><p>Sem registros nesta seleção. No ambiente de homologação, crie cadastros fictícios na plataforma ou carregue exemplos de visualização.</p></div></div><div class="tbl-foot"><span id="count-footer">0 registros</span><span id="data-caption">Somente dados autorizados</span></div></section>
 <section id="clubes" data-view-pane="clubes" class="dash-view panel clubs-panel" hidden>
 <div class="panel-header"><div><h2>⚽ Gestão de clubes</h2><p>Cadastre o clube, informe o endereço HTTPS da campanha no site do time e valide o link para liberar o encaminhamento.</p></div><div class="buttons"><span class="mini-tag" id="clubs-count">0 clubes</span><button type="button" class="btn gold" id="club-new-toggle" aria-expanded="false" aria-controls="club-new-form">+ Cadastrar clube</button></div></div>
+<div id="club-list-view">
 <div class="clubs-intro"><b id="club-intro-title">Gestão de Clubes</b><p id="club-intro-desc">O login libera cadastro e edição. Cadastre o endereço do clube e confirme a verificação antes de disponibilizá-lo aos visitantes.</p><span id="club-test-badge" class="club-test-badge" hidden>CATÁLOGO DE TESTE · GESTOR AUTENTICADO</span></div>
 <div class="club-login" id="club-login" hidden></div>
 <p id="club-message" role="status" aria-live="polite" class="club-message">Carregando clubes publicados...</p>
@@ -175,7 +176,8 @@ aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:
 <div class="clubs-scroll"><table class="clubs-table">
 <thead><tr><th>Clube</th><th>UF</th><th>Visibilidade</th><th>Site do clube</th><th>Link validado</th><th>Participação (%)</th><th>Mensagem ao torcedor</th><th>Convênio</th><th>Ações</th></tr></thead>
 <tbody id="club-rows"></tbody></table><p id="club-empty" class="club-empty">Nenhum clube cadastrado ou publicado.</p></div>
-<p class="club-caveat" id="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p><div class="section-split-title" id="club-new-heading" hidden><h3>Cadastrar novo clube</h3><p>Após consultar os clubes existentes, cadastre um novo parceiro no catálogo.</p></div>
+<p class="club-caveat" id="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p></div>
+<div class="section-split-title" id="club-new-heading" hidden><h3>Cadastrar novo clube</h3><p>Preencha os dados do clube e salve para retornar à gestão de clubes.</p></div>
 <form id="club-new-form" class="club-new" hidden>
   <div><label for="club-name">Nome do clube</label><input id="club-name" maxlength="80" minlength="2" required placeholder="Nome do clube"></div>
   <div><label for="club-state">UF (opcional)</label><input id="club-state" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SC"></div>
