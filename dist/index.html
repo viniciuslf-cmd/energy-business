@@ -379,6 +379,20 @@ body[data-flow-step="simular"] #simular .section-heading h2{font-size:clamp(23px
 body[data-flow-step="simular"] #simular .section-heading p{font-size:13px;margin:0}
 body[data-flow-step="simular"] #simular .simulator-input{padding:24px}
 @media(max-width:800px){body[data-flow-step="simular"] #simular .simulator-input{padding:16px}body[data-flow-step="simular"] #simular .section-heading h2{font-size:23px}}
+
+/* Primeira etapa mais compacta, preservando os campos e a validação. */
+body:not([data-flow-step="fatura"]):not([data-flow-step="simular"]):not([data-flow-step="conclusao"]) .intake-hero{padding-top:22px;padding-bottom:22px;gap:24px;align-items:start}
+.intake-hero .partner-test{margin:0 0 10px;padding:0;background:transparent;border:0;box-shadow:none}
+.intake-hero .partner-test .btn{margin:0;min-height:37px;padding:8px 12px;font-size:12px;width:auto}
+.intake-hero .intake-card{padding-top:14px;padding-bottom:14px}
+.intake-hero .intake-card .field{margin-top:7px;margin-bottom:4px}
+.intake-hero .intake-card input,.intake-hero .intake-card select{min-height:38px}
+.intake-hero .intake-card .checklabel{margin-top:10px}
+.intake-hero .intake-card .btn[type="submit"]{margin-top:9px}
+.intake-hero .hero-intro h1{margin-top:6px;margin-bottom:10px}
+.intake-hero .hero-intro p{line-height:1.45}
+.intake-hero .intake-steps{margin-top:13px}
+@media(max-width:750px){body:not([data-flow-step="fatura"]):not([data-flow-step="simular"]):not([data-flow-step="conclusao"]) .intake-hero{padding-top:15px;padding-bottom:20px;gap:16px}}
 body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{display:none}body[data-flow-step="fatura"] #fatura,body[data-flow-step="simular"] #simular,body.simulator-embedded #simular{display:block!important}body[data-flow-step="fatura"] #cadastro,body[data-flow-step="simular"] #cadastro{display:none}body[data-flow-step="simular"] #fatura{display:none}body[data-flow-step="conclusao"] #cadastro,body[data-flow-step="conclusao"] #fatura,body[data-flow-step="conclusao"] #simular{display:none}#como-funciona{padding:32px 0}#duvidas{padding:26px 0!important}.hero-shell{padding-bottom:28px}
 </style>
 </head>
@@ -407,11 +421,7 @@ body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{dis
   <div class="intake-card hero-form">
     <div class="form-headline"><div><span class="form-step">ETAPA 1 DE 3</span><h2>Vamos começar?</h2><p id="intake-description">Preencha os campos abaixo. Nesta fase de testes, use somente dados fictícios: o cadastro não é enviado nem armazenado.</p></div></div>
     <form id="entry-form">
-      <div id="partner-test" class="partner-test" hidden>
-        <strong>Ambiente de homologação dos sócios</strong>
-        <p>Use somente informações fictícias. O sistema grava registros de homologação e vincula indicações entre esses testes, sem criar descontos reais. Não utilize CPF, nome, telefone ou e-mail reais.</p><p>Como testar: preencha os dados de exemplo, conclua a fatura na etapa 2, finalize a simulação e compartilhe o link gerado com outro sócio. As indicações podem ser validadas no <a href="/admin/indicacoes/" style="color:#785522;text-decoration:underline">painel de testes</a>.</p>
-        <button type="button" id="partner-fake" class="btn outline">Preencher dados fictícios automaticamente</button>
-      </div>
+      <div id="partner-test" class="partner-test" hidden><button type="button" id="partner-fake" class="btn outline">Preencher dados fictícios automaticamente</button></div>
       <label class="field" for="entry-name">Nome completo</label>
       <input id="entry-name" name="name" required maxlength="100" minlength="3" placeholder="Nome de exemplo" autocomplete="off">
       <div class="grid-two">
