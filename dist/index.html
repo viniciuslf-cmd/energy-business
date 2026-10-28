@@ -639,6 +639,10 @@ function goToBillStep(submitted){
 form.addEventListener("submit",async e=>{
  e.preventDefault();
  if(submissionBusy||!form.reportValidity())return;
+ if(new URLSearchParams(location.search).get("jornada")==="clubes"&&!window.EnergySelectedClub){
+  status.textContent="Selecione um clube na página Energia + Futebol e aguarde a confirmação antes de enviar o cadastro.";
+  status.style.color="#a13e27";return;
+ }
  if(!liveMode&&!testMode){
   goToBillStep(false);
   return;
@@ -805,6 +809,10 @@ update();
 (function(){
  if(new URLSearchParams(location.search).get('jornada')!=='clubes')return;
  document.documentElement.classList.add('club-journey');
+ const helper=document.querySelector('.club-helper');
+ if(helper)helper.textContent='Cadastro do torcedor vinculado ao clube escolhido em Energia + Futebol. Benefícios sujeitos a contratação elegível e regras da parceria.';
+ const footnote=document.querySelector('.intake-footnote');
+ if(footnote)footnote.textContent='Origem: Energia + Futebol · Clube indicado no topo do formulário · Nenhum repasse automático.';
  const style=document.createElement('style');
  style.textContent=`
  html.club-journey .notice-banner,html.club-journey .site-header,html.club-journey .footer,
