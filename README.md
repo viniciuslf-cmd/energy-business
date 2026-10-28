@@ -7,8 +7,8 @@ Painel: https://energy-business.pages.dev/admin/
 
 - Reformulação completa da home e da área de gestão com layout moderno responsivo.
 - Origem da simulação fixa em Energy Business, sem seleção de clubes.
-- Painel com visualização sem senha nesta fase e opção de registros de exemplo claramente fictícios.
-- A API administrativa de dados pessoais continua protegida por segredo no Cloudflare; a remoção de senha na visualização não expõe dados de clientes.
+- Painel de gestão acessível pela aba no site, protegido por login único de gestor e sessão de 12 horas.
+- As rotas administrativas, incluindo as APIs de clubes e indicações de teste, exigem sessão autenticada no servidor.
 - LEADS_ENABLED=false: nenhum cadastro real enviado ou armazenado. O formulário testa apenas a simulação.
 - Simulador e projeções são valores ilustrativos, nunca garantia comercial.
 
@@ -18,7 +18,7 @@ Cloudflare Pages conectado ao branch main do GitHub, saída dist, sem comando de
 
 ## Para ativar operação real
 
-Finalizar política LGPD e identificação da empresa, proteção Cloudflare Turnstile, integração da fornecedora, homologação e login de usuário individual para acesso a informações reais. Somente depois alterar LEADS_ENABLED para true.
+Finalizar política LGPD e identificação da empresa, proteção Cloudflare Turnstile, integração da fornecedora e homologação. Antes de ativar dados reais, substituir a senha provisória por uma senha longa e configurar contas individuais por gestor/sócio. Somente depois alterar LEADS_ENABLED para true.
 
 Clubes de futebol não fazem parte da seleção pública nesta versão. A fonte inicial de todos os cadastros será a Energy Business.
 ## Leitor de faturas - #fatura
@@ -45,7 +45,7 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 ## Cadastro de clubes pelo painel de gestão (2026-10-27)
 
 - Os clubes NÃO são mais escritos diretamente no código. Cadastro: `https://energy-business.pages.dev/admin/#clubes`.
-- O painel é visível sem senha, mas cadastro, edição e publicação exigem a chave administrativa configurada como segredo `ADMIN_TOKEN` no Cloudflare. Nunca colocar a chave no código ou divulgar em convites.
+- O painel agora exige login único. Cadastro, edição, publicação e relatórios usam a mesma sessão autenticada por cookie HttpOnly/Secure/SameSite=Strict; não se pede outra chave em Clubes ou Indicações.
 - Campos: nome, UF e visibilidade (visível/oculto). Clube criado oculto por padrão. Não há declaração de parceria oficial pelo simples cadastro, nem porcentagens de repasse ativadas.
 - Os clubes visíveis são lidos no endpoint público `GET /api/clubs`; o painel usa `GET/POST/PATCH /api/admin/clubs` autenticados. O formulário da homepage e a seção de torcida leem somente a lista publicada. Se não houver clubes ativos, fica disponível a opção de continuar sem escolher time.
 - Tabela D1: `clubs`; DDL em `clubs.sql`. Migration já executada no D1 produção. Clubes inativos permanecem no banco para futuras reativações.
@@ -63,4 +63,13 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 - Para quem escolheu um time: exibe nome do clube e mensagem de apoio definida no painel. Percentual de participação só é divulgado se `partner_confirmed=1`.
 - Painel: `club_share_percent` (0–100, duas casas), `support_message` (máximo 650 caracteres) e `partner_confirmed` ("Parceria formalizada", marcar apenas quando houver contrato). O percentual é a fração sobre a **economia elegível do torcedor** utilizada para base de participação do clube, não um desconto adicional ao consumidor.
 - Migração Cloudflare D1 executada para as três colunas acima. DDL atualizado em `clubs.sql`.
-- A tela administrativa continua exigindo chave para editar informações comerciais de clubes, mesmo que a visualização do painel seja aberta.
+- A área administrativa exige login antes de carregar qualquer tela e libera a edição conforme a sessão autenticada.
+
+## Login do Painel de Gestão (2026-10-27)
+
+- Acesso pelo menu superior público **Acesso à gestão** ou em `/admin/`; visitantes são redirecionados para `/admin/login/`.
+- Usuário inicial `gestor`; a senha provisória foi cadastrada no D1 com salt e PBKDF2-SHA256 (150.000 iterações), sem senha em texto claro no GitHub. **Trocar antes da operação comercial.**
+- Tabelas D1 `manager_accounts`, `manager_sessions` e `manager_login_attempts`; cookie HttpOnly, Secure, SameSite=Strict, expiração em 12 horas e bloqueio após 5 tentativas malsucedidas por origem de IP durante 15 minutos.
+- O middleware protege `/admin/`, `/api/admin/*` e `/api/test/clubs` com sessão de servidor. Somente a página de login e os endpoints públicos destinados ao torcedor permanecem sem autenticação.
+- Uma única autenticação libera a visão geral, os cadastros fictícios salvos no D1, a gestão de clubes e a validação de indicações. A opção **Sair** revoga a sessão.
+- Neste estágio de homologação, o catálogo `test_clubs` e os cadastros `test_leads` são usados; o catálogo comercial `clubs` e a tabela `leads` seguem isolados.

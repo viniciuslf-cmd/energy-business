@@ -32,7 +32,7 @@ small{font-size:11px;color:#8292a2}
 <main>
 <span class="tag">HOMOLOGAÇÃO · SEM DESCONTO FINANCEIRO</span>
 <h1>Programa de indicações</h1><p>Configure as faixas, acompanhe indicações de teste e confirme cadastros que concluíram as três etapas. Nenhuma alteração aqui gera desconto automático em contas de energia.</p>
-<div class="card hide" id="auth"><h2>Acesso administrativo</h2><label for="token">Chave de administração</label><div class="flex"><input id="token" type="password" autocomplete="off" placeholder="Chave do gestor"><button type="button" id="unlock">Acessar</button></div></div>
+<div class="card" style="padding:13px 20px"><p style="margin:0">🔒 Acesso liberado pelo login único do Painel de Gestão. Todas as alterações ficam vinculadas à sessão do gestor.</p></div>
 <div class="card">
 <div class="flex" style="justify-content:space-between;align-items:center"><h2>Visão geral</h2><button type="button" class="secondary" id="refresh">Atualizar</button></div>
 <div class="grid"><div class="stat"><b id="count-indic">0</b><span>Indicações identificadas</span></div><div class="stat"><b id="count-confirm">0</b><span>Cadastros confirmados</span></div><div class="stat"><b id="count-pending">0</b><span>Pendentes de análise</span></div></div>
@@ -50,13 +50,14 @@ small{font-size:11px;color:#8292a2}
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
-let token="",dataset=null,testMode=true;
+let dataset=null,testMode=true;
 const setStatus=(id,text,error=false)=>{const el=$(id);el.textContent=text;el.classList.toggle("error",error)};
 async function call(method,body){
  const response=await fetch("/api/admin/referrals",{method,cache:"no-store",headers:{
- ...(token?{Authorization:"Bearer "+token}:{}),...(body?{"Content-Type":"application/json"}:{})},
+ ...(body?{"Content-Type":"application/json"}:{})},
  ...(body?{body:JSON.stringify(body)}:{})});
  const data=await response.json().catch(()=>({}));
+ if(response.status===401){location.href="/admin/login/?next="+encodeURIComponent(location.pathname);throw Error("Faça login para continuar.")}
  if(!response.ok)throw Error(data.error||"Falha na operação");
  return data;
 }
@@ -73,7 +74,7 @@ function makeTier(min=1,pct=0){
 function clear(el){el.replaceChildren()}
 function render(data){
  dataset=data;testMode=Boolean(data.testOnly);
- $("auth").classList.toggle("hide",testMode);
+ // A autorização já foi verificada no login único.
  $("enabled").checked=Boolean(data.program.enabled);
  clear($("tiers"));for(const x of data.program.tiers)makeTier(x.min_confirmed,x.extra_discount_pct);
  $("count-indic").textContent=data.referrals.length;
@@ -106,9 +107,8 @@ function render(data){
 }
 async function refresh(){
  try{const data=await call("GET");render(data)}
- catch(e){setStatus("notice",e.message,true);$("auth").classList.remove("hide")}
+ catch(e){setStatus("notice",e.message,true)}
 }
-$("unlock").onclick=async()=>{token=$("token").value.trim();$("token").value="";await refresh()};
 $("refresh").onclick=refresh;
 $("add-tier").onclick=()=>makeTier();
 $("save").onclick=async()=>{

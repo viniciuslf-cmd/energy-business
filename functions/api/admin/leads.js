@@ -1,14 +1,8 @@
+import {getSession} from "../../_lib/session.js";
 const json=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store, private","X-Content-Type-Options":"nosniff"}});
 const statuses=new Set(["novo","em_analise","contatado","convertido","descartado"]);
 const sources=new Set(["clube-demo"]);
-async function authorized(request,env){
-  const expected=env.ADMIN_TOKEN;
-  const supplied=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
-  if(!expected||!supplied||supplied.length>512)return false;
-  const enc=new TextEncoder();
-  const [a,b]=await Promise.all([crypto.subtle.digest("SHA-256",enc.encode(expected)),crypto.subtle.digest("SHA-256",enc.encode(supplied))]);
-  const x=new Uint8Array(a),y=new Uint8Array(b);let diff=0;for(let i=0;i<x.length;i++)diff|=x[i]^y[i];return diff===0;
-}
+async function authorized(request,env){return Boolean(await getSession(request,env))}
 export async function onRequestGet({request,env}){
   if(!(await authorized(request,env)))return json({error:"Acesso não autorizado."},401);
   if(!env.DB)return json({error:"Banco de dados indisponível."},503);

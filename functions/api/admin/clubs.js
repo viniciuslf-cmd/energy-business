@@ -1,16 +1,8 @@
+import {getSession} from "../../_lib/session.js";
 /* Energy Business: cadastro de clubes autorizado exclusivamente por chave do gestor. */
 const respond=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store, private","X-Content-Type-Options":"nosniff"}});
 const normalized=v=>String(v??"").normalize("NFC").replace(/\s+/g," ").trim();
-async function authorized(request,env){
- const expected=env.ADMIN_TOKEN;
- const token=(request.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
- if(!expected||!token||token.length>512)return false;
- const t=new TextEncoder();
- const [aa,bb]=await Promise.all([crypto.subtle.digest("SHA-256",t.encode(expected)),crypto.subtle.digest("SHA-256",t.encode(token))]);
- const a=new Uint8Array(aa),b=new Uint8Array(bb);
- let difference=0;for(let i=0;i<a.length;i++)difference|=a[i]^b[i];
- return difference===0;
-}
+async function authorized(request,env){return Boolean(await getSession(request,env))}
 function validClub(data){
  if(!data||typeof data!=="object"||Array.isArray(data))return null;
  const name=normalized(data.name),state=normalized(data.state||"").toUpperCase();

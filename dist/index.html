@@ -36,6 +36,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .brand .dot{color:var(--gold-d)}
 .site-nav{display:flex;gap:32px;align-items:center;color:#485d76;font-size:13px;font-weight:650}
 .site-nav a:hover{color:#ba8b32}
+.manager-top-link{color:var(--gold);font-size:11px;font-weight:850;margin-left:19px;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.manager-top-link:hover{color:#fff}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:13px;border:1px solid transparent;border-radius:13px;padding:14px 21px;background:var(--navy);color:white;font-weight:750;font-size:13px;line-height:1.3;transition:transform .2s,box-shadow .2s,background .2s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px #10243d24}
 .btn.gold{background:var(--gold);color:#15263b}
@@ -339,10 +341,10 @@ html{scroll-padding-top:88px}
 </style>
 </head>
 <body>
-<div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação.</div>
+<div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação. <a href="/admin/" class="manager-top-link">🔒 Acesso à gestão</a></div>
 <header class="site-header"><div class="wrap header-inner">
   <a class="brand" href="/" aria-label="Energy Business, início"><span class="brand-icon" role="img" aria-label="Logotipo da empresa"></span>Energy Business<span class="dot">.</span></a>
-  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#torcida">Seu time</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a></nav>
+  <nav class="site-nav" aria-label="Navegação"><a href="#como-funciona">Como funciona</a><a href="#torcida">Seu time</a><a href="#cadastro">Cadastro</a><a href="#fatura">Enviar conta</a><a href="#simular">Simulador</a><a href="#duvidas">Dúvidas</a><a href="/admin/">Gestão</a></nav>
   <a class="btn sm" href="#cadastro">Começar cadastro <span aria-hidden="true">↗</span></a>
 </div></header>
 <main>

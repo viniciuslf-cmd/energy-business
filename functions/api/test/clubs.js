@@ -1,3 +1,4 @@
+import {getSession} from "../../_lib/session.js";
 /* Gestão aberta somente para CLUBES FICTÍCIOS de homologação.
    Nunca permite alterar a tabela de clubes da operação comercial. */
 const respond=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
@@ -19,7 +20,8 @@ async function parse(request){
  if(Number(request.headers.get("content-length")||0)>2500)return null;
  try{return await request.json()}catch{return null}
 }
-export async function onRequestGet({env}){
+export async function onRequestGet({request,env}){
+ if(!await getSession(request,env))return respond({error:"Autenticação obrigatória."},401);
  if(!active(env))return respond({error:"Catálogo de testes desativado."},503);
  try{
  const q=await env.DB.prepare("SELECT id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at FROM test_clubs ORDER BY name COLLATE NOCASE ASC LIMIT 100").all();
@@ -27,6 +29,7 @@ export async function onRequestGet({env}){
  }catch{return respond({error:"Falha ao listar clubes fictícios."},503)}
 }
 export async function onRequestPost({request,env}){
+ if(!await getSession(request,env))return respond({error:"Autenticação obrigatória."},401);
  if(!active(env))return respond({error:"Edição de testes desativada."},503);
  if(!allowedOrigin(request))return respond({error:"Origem não autorizada."},403);
  const club=valid(await parse(request));if(!club)return respond({error:"Dados inválidos para clube de teste."},400);
@@ -39,6 +42,7 @@ export async function onRequestPost({request,env}){
  }catch(e){return respond({error:/UNIQUE/i.test(String(e))?"O clube já existe na lista de testes.":"Não foi possível gravar o clube fictício."},409)}
 }
 export async function onRequestPatch({request,env}){
+ if(!await getSession(request,env))return respond({error:"Autenticação obrigatória."},401);
  if(!active(env))return respond({error:"Edição de testes desativada."},503);
  if(!allowedOrigin(request))return respond({error:"Origem não autorizada."},403);
  const data=await parse(request),club=valid(data),id=String(data?.id||"");

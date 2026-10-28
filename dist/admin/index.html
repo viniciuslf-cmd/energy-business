@@ -71,9 +71,9 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 .club-login[hidden],.club-test-badge[hidden]{display:none!important}.club-test-badge{display:inline-block;background:#f8e9c8;color:#7c5a21;border:1px solid #e8cc83;padding:5px 10px;border-radius:12px;font-size:10px;font-weight:800;margin-top:9px;letter-spacing:.04em}
 </style></head><body>
 <div class="shell"><aside><a class="brand" href="/"><span class="brand-icon" aria-label="Logotipo" role="img"></span>Energy Business<em>.</em></a><div class="side-label">MENU PRINCIPAL</div><nav><a href="#inicio" class="active"><span>▦</span> Visão geral</a><a href="#solicitacoes"><span>☷</span> Solicitações</a><a href="#clubes"><span>⚽</span> Clubes</a><a href="/admin/indicacoes/"><span>↗</span> Indicações</a><a href="/#simular"><span>↗</span> Simulador</a><a href="/privacidade/"><span>◇</span> Privacidade</a></nav><div class="side-foot">Energy Business<br>Painel em desenvolvimento. Informações reais continuam protegidas.</div></aside>
-<div class="workspace"><div class="topbar"><div class="breadcrumb">Energy Business / <b>Painel de gestão</b></div><div class="account"><span>Ambiente de demonstração</span><div class="avatar">EB</div></div></div>
+<div class="workspace"><div class="topbar"><div class="breadcrumb">Energy Business / <b>Painel de gestão</b></div><div class="account"><span id="manager-name">Gestor autenticado</span><div class="avatar">EB</div><button class="btn alt" id="logout" type="button" style="padding:8px 12px">Sair</button></div></div>
 <main id="inicio"><div class="header-row"><div><p class="eyebrow">Visão da operação</p><h1>Seu negócio, em um só lugar.</h1><p>Um painel claro e organizado para a jornada Energy Business.</p></div><div class="buttons"><a class="btn alt" href="/">← Ver plataforma</a><button class="btn" id="refresh" type="button">↻ Atualizar</button></div></div>
-<div class="alert"><div><b>◈ Painel liberado sem senha nesta fase</b><p id="access-text">Você pode explorar o painel com dados fictícios. Cadastros reais não são mostrados sem autenticação.</p></div><span class="tag" id="access-tag">Modo demonstração</span></div>
+<div class="alert"><div><b>◈ Acesso autorizado ao Painel de Gestão</b><p id="access-text">Acesso único liberado. Consulte a operação e gerencie clubes e indicações sem informar outras chaves.</p></div><span class="tag" id="access-tag">Gestor conectado</span></div>
 <div class="kpis"><div class="kpi"><div class="kpi-top"><small>Total de solicitações</small><span class="kpi-icon">▤</span></div><strong id="total">0</strong><p>Registros exibidos</p></div>
 <div class="kpi"><div class="kpi-top"><small>Novas</small><span class="kpi-icon">✦</span></div><strong id="new">0</strong><p>Aguardando análise</p></div>
 <div class="kpi"><div class="kpi-top"><small>Em andamento</small><span class="kpi-icon">↗</span></div><strong id="working">0</strong><p>Em análise ou contatado</p></div>
@@ -82,14 +82,14 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <section class="panel"><div class="panel-header"><div><h2>Próximas etapas</h2><p>Preparando a operação</p></div></div>
 <div class="next"><span class="next-id">01</span><div><h3>Validar o cadastro</h3><p>Concluir identificação jurídica e informações de privacidade.</p></div></div>
 <div class="next"><span class="next-id">02</span><div><h3>Conectar a fornecedora</h3><p>Habilitar análise de fatura, disponibilidade e condições comerciais.</p></div></div>
-<div class="next"><span class="next-id">03</span><div><h3>Proteger a operação real</h3><p>Ativar login individual antes de disponibilizar dados de clientes.</p></div></div></section></div>
-<section id="solicitacoes" class="panel"><div class="panel-header"><div><h2>Solicitações</h2><p>Consulte a demonstração do funil de atendimento</p></div><span id="count-tag" class="mini-tag">0 registros</span></div>
+<div class="next"><span class="next-id">03</span><div><h3>Homologar com os sócios</h3><p>Login único ativo para o painel. Use informações fictícias até a abertura da operação comercial.</p></div></div></section></div>
+<section id="solicitacoes" class="panel"><div class="panel-header"><div><h2>Solicitações</h2><p>Consulte os cadastros salvos no banco e teste o funil de atendimento</p></div><span id="count-tag" class="mini-tag">0 registros</span></div>
 <div class="table-toolbar"><label for="status">Etapa <select id="status"><option value="">Todas</option><option value="novo">Novo</option><option value="em_analise">Em análise</option><option value="contatado">Contatado</option><option value="convertido">Convertido</option><option value="descartado">Descartado</option></select></label><div class="buttons"><button class="btn alt" id="samples" type="button">Carregar exemplos</button><button class="btn alt" id="export" type="button" disabled>↓ Exportar CSV</button></div></div>
-<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Conta ilustrativa</th><th>Perfil</th><th>Origem</th><th>Status</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty"><div class="empty-icon">▤</div><h3>Nenhuma solicitação nesta seleção</h3><p>Utilize “Carregar exemplos” para visualizar o layout com registros fictícios, sem expor informações pessoais.</p></div></div><div class="tbl-foot"><span id="count-footer">0 registros</span><span>Dados reais protegidos</span></div></section>
+<div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Conta ilustrativa</th><th>Perfil</th><th>Origem</th><th>Status</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty"><div class="empty-icon">▤</div><h3>Nenhuma solicitação nesta seleção</h3><p>Sem registros nesta seleção. No ambiente de homologação, crie cadastros fictícios na plataforma ou carregue exemplos de visualização.</p></div></div><div class="tbl-foot"><span id="count-footer">0 registros</span><span id="data-caption">Somente dados autorizados</span></div></section>
 <section id="clubes" class="panel clubs-panel">
 <div class="panel-header"><div><h2>⚽ Gestão de clubes</h2><p>Cadastre e controle quais clubes podem aparecer na seleção do público.</p></div><span class="mini-tag" id="clubs-count">0 clubes</span></div>
-<div class="clubs-intro"><b id="club-intro-title">Gestão de Clubes</b><p id="club-intro-desc">Para a homologação, a edição de clubes fictícios será liberada automaticamente. Na operação comercial, o painel exige acesso administrativo.</p><span id="club-test-badge" class="club-test-badge" hidden>CATÁLOGO DE TESTE · EDIÇÃO ABERTA</span></div>
-<div class="club-login" id="club-login"><label for="club-token">Chave do gestor</label><div class="club-login-line"><input id="club-token" type="password" placeholder="Chave administrativa" autocomplete="off"><button id="club-unlock" class="btn" type="button">Liberar edição</button><button class="btn alt" id="club-lock" type="button" hidden>Bloquear</button></div></div>
+<div class="clubs-intro"><b id="club-intro-title">Gestão de Clubes</b><p id="club-intro-desc">O login do gestor libera automaticamente a edição de clubes. No ambiente de teste, são utilizados registros fictícios.</p><span id="club-test-badge" class="club-test-badge" hidden>CATÁLOGO DE TESTE · GESTOR AUTENTICADO</span></div>
+<div class="club-login" id="club-login" hidden></div>
 <p id="club-message" role="status" aria-live="polite" class="club-message">Carregando clubes publicados...</p>
 <form id="club-new-form" class="club-new" hidden>
   <div><label for="club-name">Nome do clube</label><input id="club-name" maxlength="80" minlength="2" required placeholder="Nome do clube"></div>
@@ -113,7 +113,7 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
  const labels={novo:"Novo",em_analise:"Em análise",contatado:"Contatado",convertido:"Convertido",descartado:"Descartado"};
  const stages=Object.keys(labels);
  const samples=[{name:"Cliente fictício 01",bill:500,profile:"Residência",status:"novo"},{name:"Cliente fictício 02",bill:1200,profile:"Empresa",status:"em_analise"},{name:"Cliente fictício 03",bill:290,profile:"Condomínio",status:"contatado"}];
- let data=[];
+ let data=[],sampleMode=false,saved=[];
  const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  const money=n=>Number(n).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
  function render(){
@@ -121,35 +121,44 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
   $("total").textContent=data.length;$("new").textContent=counts.novo;$("working").textContent=counts.em_analise+counts.contatado;$("done").textContent=counts.convertido+counts.descartado;
   $("funnel").innerHTML=stages.map(k=>'<div class="stage"><span>'+labels[k]+'</span><div class="bar"><i style="width:'+(data.length?counts[k]*100/data.length:0)+'%"></i></div><b>'+counts[k]+'</b></div>').join("");
   const visible=data.filter(v=>!$("status").value||v.status===$("status").value);
-  $("rows").innerHTML=visible.map(v=>'<tr><td><b>'+esc(v.name)+'</b></td><td>'+money(v.bill)+'</td><td>'+esc(v.profile)+'</td><td>Energy Business</td><td><span class="pill">'+labels[v.status]+'</span></td><td>Exemplo</td></tr>').join("");
+  $("rows").innerHTML=visible.map(v=>'<tr><td><b>'+esc(v.name)+'</b></td><td>'+money(v.bill)+'</td><td>'+esc(v.profile)+'</td><td>Energy Business</td><td><span class="pill">'+labels[v.status]+'</span></td><td>'+esc(v.date||"Exemplo")+'</td></tr>').join("");
   $("empty").style.display=visible.length?"none":"block";
-  $("count-tag").textContent=visible.length+" registros";$("count-footer").textContent=visible.length+" registros fictícios";
-  $("export").disabled=visible.length===0;$("samples").textContent=data.length?"Limpar exemplos":"Carregar exemplos";
+  $("count-tag").textContent=visible.length+" registros";$("count-footer").textContent=visible.length+(sampleMode?" exemplos fictícios":" registros no banco");
+  $("export").disabled=visible.length===0;$("samples").textContent=sampleMode?"Voltar aos registros":"Ver exemplos";
  }
- $("samples").onclick=()=>{data=data.length?[]:samples.map(x=>({...x}));render()};
+ $("samples").onclick=()=>{sampleMode=!sampleMode;data=sampleMode?samples.map(x=>({...x})):saved.map(x=>({...x}));render()};
  $("status").onchange=render;
  $("export").onclick=()=>{
   const rows=data.filter(v=>!$("status").value||v.status===$("status").value);
   if(!rows.length)return;
-  const values=[["Cliente fictício","Conta simulada","Perfil","Origem","Status"],...rows.map(v=>[v.name,v.bill,v.profile,"Energy Business",labels[v.status]])];
+  const values=[["Cliente","Conta (R$)","Perfil","Origem","Status","Data"],...rows.map(v=>[v.name,v.bill,v.profile,"Energy Business",labels[v.status],v.date||"Exemplo"])];
   const csv="\uFEFF"+values.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(";")).join("\r\n");
   const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
-  const a=document.createElement("a");a.href=url;a.download="energy-business-exemplos-ficticios.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  const a=document.createElement("a");a.href=url;a.download="energy-business-solicitacoes.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
  };
  async function check(){
   try{
-   const r=await fetch("/api/config",{cache:"no-store"});if(!r.ok)return;
-   const d=await r.json();
-   if(d.acceptingLeads){
-    $("access-text").textContent="O recebimento foi habilitado. Por segurança, a consulta de registros reais permanece protegida por autenticação.";
-    $("access-tag").textContent="Dados protegidos";
-   }else{
-    $("access-text").textContent="Acesso visual sem senha. O recebimento de cadastros reais está desativado; você pode carregar exemplos fictícios para testar.";
-    $("access-tag").textContent="Modo demonstração";
-   }
-  }catch{$("access-text").textContent="Não foi possível verificar a API. O painel permanece demonstrativo."}
+   const [overview,me]=await Promise.all([fetch("/api/admin/overview",{cache:"no-store"}),fetch("/api/auth/me",{cache:"no-store"})]);
+   if(overview.status===401||me.status===401){location.replace("/admin/login/?next="+encodeURIComponent(location.pathname+location.hash));return}
+   if(!overview.ok)throw Error("Falha ao consultar os cadastros.");
+   const result=await overview.json();
+   saved=(result.items||[]).map(v=>({name:v.name,bill:Number(v.bill_amount),profile:v.property_type,status:v.status,date:v.created_at?String(v.created_at).slice(0,16):"—"}));
+   if(!sampleMode)data=saved.map(x=>({...x}));
+   $("access-tag").textContent=result.testOnly?"Homologação · registros fictícios":"Operação comercial";
+   $("access-text").textContent=result.testOnly
+    ?"Login confirmado. Clubes, indicações e cadastros fictícios salvos estão disponíveis para os gestores."
+    :"Login confirmado. Gestão de clubes, solicitações e indicações liberada para esta sessão.";
+   $("data-caption").textContent=result.limited?"Exibindo os 500 cadastros mais recentes":result.total+" registros salvos";
+   if(me.ok){const who=await me.json();$("manager-name").textContent="Gestor: "+who.username}
+   render();
+  }catch(e){$("access-text").textContent="Não foi possível carregar a visão geral. Confira a conexão e tente atualizar.";render()}
  }
- $("refresh").onclick=async()=>{await check();render()};
+ $("refresh").onclick=check;
+ $("logout").onclick=async()=>{
+  $("logout").disabled=true;
+  try{await fetch("/api/auth/logout",{method:"POST",cache:"no-store"});}
+  finally{location.replace("/admin/login/")}
+ };
  render();check();
 })();
-</script><script src="/admin/clubs.js?v=20261027-test-open" defer></script></body></html>
+</script><script src="/admin/clubs.js?v=20261027-manager-login" defer></script></body></html>

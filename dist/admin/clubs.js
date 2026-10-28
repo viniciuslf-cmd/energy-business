@@ -3,18 +3,15 @@
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);
-const rows=$("club-rows"),form=$("club-new-form"),tokenField=$("club-token");
+const rows=$("club-rows"),form=$("club-new-form");
 if(!rows||!form)return;
-let token="",clubs=[],editable=false,busy=false,testClubsMode=false;
+let clubs=[],editable=true,busy=false,testClubsMode=false;
 const message=(text,error=false)=>{
  const el=$("club-message");el.textContent=text;el.classList.toggle("error",error);
 };
 function stateLabels(){
- $("club-login").hidden=testClubsMode;
- $("club-lock").hidden=!editable;
- $("club-unlock").hidden=editable;
- tokenField.hidden=editable;
- form.hidden=!editable;
+ $("club-login").hidden=true;
+ form.hidden=false;
 }
 function cell(tr,child){
  const td=document.createElement("td");
@@ -88,7 +85,7 @@ function render(){
  }
 }
 async function api(path,opts={}){
- const headers={...(token?{Authorization:"Bearer "+token}:{}),...(opts.body?{"Content-Type":"application/json"}:{})};
+ const headers={...(opts.body?{"Content-Type":"application/json"}:{})};
  const target=testClubsMode?path.replace("/api/admin/clubs","/api/test/clubs"):path;
  const r=await fetch(target,{...opts,headers,cache:"no-store"});
  let data={};try{data=await r.json()}catch{}
@@ -111,27 +108,6 @@ async function updateClub(input){
  if(i!==-1)clubs[i]=d.club;
  render();
 }
-$("club-unlock").addEventListener("click",async()=>{
- const typed=tokenField.value.trim();
- if(!typed){message("Informe a chave do gestor para liberar cadastro e edição.",true);tokenField.focus();return}
- token=typed;
- try{
-  // A confirmação ocorre no servidor, nunca é feita comparando chaves no JavaScript.
-  const data=await api("/api/admin/clubs");
-  editable=true;clubs=data.clubs||[];
-  tokenField.value="";
-  stateLabels();render();
-  message("Gestão de clubes liberada nesta sessão. Os novos clubes começam ocultos, a menos que você marque a opção de visibilidade.");
- }catch(err){
-  editable=false;token="";message(err.message||"Acesso negado.",true);
- }
-});
-$("club-lock").addEventListener("click",async()=>{
- token="";editable=false;clubs=[];
- stateLabels();
- message("Edição bloqueada. A visualização do painel continua livre.");
- try{await getClubs()}catch{message("Não foi possível carregar os clubes publicados.",true)}
-});
 form.addEventListener("submit",async e=>{
  e.preventDefault();
  if(!editable||busy||!form.reportValidity())return;
@@ -163,8 +139,8 @@ async function beginManager(){
   const settings=response.ok?await response.json():{};
   if(settings.testingEnabled){
    testClubsMode=true;editable=true;
-   $("club-intro-title").textContent="Edição liberada sem senha para homologação";
-   $("club-intro-desc").textContent="Cadastre e edite times fictícios com seus sócios. Alterações feitas aqui não modificam os clubes da operação comercial.";
+   $("club-intro-title").textContent="Gestão liberada após login";
+   $("club-intro-desc").textContent="Cadastre e edite clubes de teste com seus sócios. As alterações ficam salvas no ambiente de homologação.";
    $("club-test-badge").hidden=false;
    $("club-caveat").textContent="Somente TESTE: percentuais, mensagens e parceria simulada não representam acordos oficiais. Nenhum repasse ou benefício real é criado. O catálogo definitivo permanece protegido.";
    const partnerCheck=$("club-partner-confirmed");
@@ -175,8 +151,8 @@ async function beginManager(){
  try{
   await getClubs();
   message(testClubsMode
-   ?"Modo de homologação: clubes fictícios podem ser cadastrados e editados sem chave. Habilite “Visível no site” para aparecer na escolha do torcedor."
-   :"Cadastro definitivo protegido. Informe a chave administrativa para editar.");
+   ?"Login confirmado: catálogo de testes liberado. Marque “Visível no site” para incluir o clube na seleção."
+   :"Login confirmado: cadastro e edição de clubes liberados.");
  }catch(e){message(e.message||"Não foi possível carregar os clubes.",true)}
 }
 beginManager();

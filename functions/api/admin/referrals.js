@@ -1,16 +1,11 @@
+import {getSession} from "../../_lib/session.js";
 /* Programa de indicações: homologação com dados sintéticos e aprovação manual.
   Em produção, acesso administrativo é obrigatório. */
 const respond=(value,status=200)=>Response.json(value,{status,headers:{"Cache-Control":"no-store, private","X-Content-Type-Options":"nosniff"}});
 function testMode(env){return env.LEADS_ENABLED!=="true"&&env.TEST_MODE_DISABLED!=="true"}
-async function authorized(req,env){
- const expected=env.ADMIN_TOKEN||"",token=(req.headers.get("authorization")||"").replace(/^Bearer\s+/i,"");
- if(!expected||!token||token.length>512)return false;
- const digest=async t=>new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(t)));
- const a=await digest(expected),b=await digest(token);let diff=0;
- for(let i=0;i<a.length;i++)diff|=a[i]^b[i];return diff===0;
-}
+async function authorized(request,env){return Boolean(await getSession(request,env))}
 const sameOrigin=req=>req.headers.get("origin")===new URL(req.url).origin;
-async function check(req,env){return testMode(env)||await authorized(req,env)}
+async function check(req,env){return await authorized(req,env)}
 const table=env=>testMode(env)?"test_leads":"leads";
 async function settings(db){
  const setting=await db.prepare("SELECT enabled FROM referral_program WHERE id=1").first();

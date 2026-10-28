@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0e2039">
+<title>Entrar no Painel de Gestão | Energy Business</title>
+<style>
+:root{--navy:#0c2039;--gold:#edc573;--text:#253b57;--muted:#72859b}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 84% 10%,#26435f,#0d213b 52%,#071729);display:grid;place-items:center;padding:26px;color:var(--text)}
+.background{position:fixed;inset:0;pointer-events:none;background:linear-gradient(135deg,#ffffff06,transparent 40%);overflow:hidden}
+.background:before{content:"";position:absolute;width:620px;height:620px;border:1px solid #edc57325;border-radius:50%;right:-250px;top:-250px;box-shadow:0 0 0 100px #ffffff05,0 0 0 210px #ffffff04}
+.wrap{width:min(100%,445px);position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:11px;justify-content:center;color:#fff;font-size:23px;font-weight:850;letter-spacing:-.04em;margin:0 auto 30px;text-decoration:none}
+.logo{width:53px;height:53px;flex:none;border-radius:50%;background-image:url("/energy-business-logo.png");background-position:-41px -11px;background-size:150px 86px}
+.brand i{font-style:normal;color:var(--gold)}
+.card{background:white;border-radius:24px;padding:38px;box-shadow:0 28px 95px #0005}
+.eyebrow{font-size:11px;letter-spacing:.14em;color:#b28a43;font-weight:850;text-transform:uppercase;margin:0 0 10px}
+h1{font-size:30px;letter-spacing:-.05em;margin:0 0 11px;color:#152c48;line-height:1.2}
+.desc{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 30px}
+label{display:block;font-size:12px;font-weight:780;margin:18px 0 8px}
+input{width:100%;padding:14px 15px;border:1px solid #dce5ed;background:#f8fafc;border-radius:12px;color:#172c48;font:inherit;font-size:14px;outline:none}
+input:focus{border-color:#b99750;box-shadow:0 0 0 3px #edc57345}
+button{background:var(--navy);color:white;border:0;border-radius:12px;padding:15px;width:100%;margin-top:26px;font:inherit;font-weight:770;font-size:14px;cursor:pointer}
+button:hover{background:#1a3554}button:disabled{opacity:.65;cursor:wait}
+.status{font-size:12px;min-height:22px;color:#b33d31;margin:13px 0 0}
+.foot{text-align:center;color:#b5c2d0;font-size:12px;margin-top:24px;line-height:1.7}
+.foot a{color:var(--gold);font-weight:750;text-decoration:none}
+@media(max-width:480px){.card{padding:29px 22px}h1{font-size:26px}}
+</style></head><body>
+<div class="background" aria-hidden="true"></div><div class="wrap">
+<a href="/" class="brand"><span class="logo" role="img" aria-label="Logotipo Energy Business"></span>Energy Business<i>.</i></a>
+<div class="card"><p class="eyebrow">Área administrativa</p><h1>Acesse seu painel.</h1>
+<p class="desc">Entre com as credenciais de gestor para acessar clubes, cadastros, indicações e indicadores em um único lugar.</p>
+<form id="login-form"><label for="username">Usuário</label><input id="username" name="username" autocomplete="username" required maxlength="80" placeholder="Seu usuário" autofocus>
+<label for="password">Senha</label><input type="password" id="password" name="password" autocomplete="current-password" required placeholder="Sua senha">
+<button id="submit" type="submit">Entrar no Painel de Gestão →</button><p id="error" class="status" role="alert" aria-live="polite"></p></form>
+</div><div class="foot">Acesso restrito aos gestores da Energy Business.<br><a href="/">← Voltar para a plataforma</a></div></div>
+<script>
+(function(){"use strict";
+ const form=document.getElementById("login-form"),button=document.getElementById("submit"),error=document.getElementById("error");
+ const next=new URLSearchParams(location.search).get("next")||"/admin/";
+ const redirect=(next.startsWith("/admin/")&&!next.startsWith("//")&&!next.includes("\\"))?next:"/admin/";
+ fetch("/api/auth/me",{cache:"no-store"}).then(r=>{if(r.ok)location.replace(redirect)}).catch(()=>{});
+ form.addEventListener("submit",async e=>{
+  e.preventDefault();button.disabled=true;error.textContent="";
+  try{
+   const r=await fetch("/api/auth/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:document.getElementById("username").value.trim(),password:document.getElementById("password").value}),cache:"no-store"});
+   const body=await r.json().catch(()=>({}));
+   if(!r.ok)throw Error(body.error||"Não foi possível entrar.");
+   form.password.value="";
+   location.replace(redirect);
+  }catch(err){error.textContent=err.message;button.disabled=false}
+ });
+})();
+</script></body></html>
