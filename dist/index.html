@@ -369,6 +369,16 @@ body[data-flow-step="fatura"] #fatura .bill-chooser{min-height:200px;margin-top:
 body[data-flow-step="fatura"] #fatura .bill-layout{align-items:start;gap:15px}
 @media(max-width:800px){body[data-flow-step="fatura"] #fatura .bill-layout{grid-template-columns:minmax(0,1fr)}body[data-flow-step="fatura"] #fatura .bill-card{min-width:0;padding:16px}body[data-flow-step="fatura"] #fatura .bill-chooser{min-height:185px}body[data-flow-step="fatura"] #fatura .section-heading h2{font-size:23px}}
 
+
+/* Etapa 3 compacta e alinhada após avançar do envio da fatura. */
+body[data-flow-step="simular"] #simular{padding-top:20px;overflow:visible}
+body[data-flow-step="simular"] #simular .sim-step-heading{margin-bottom:9px}
+body[data-flow-step="simular"] #simular .section-heading{max-width:none;margin:0 0 16px}
+body[data-flow-step="simular"] #simular .section-heading .eyebrow{display:none}
+body[data-flow-step="simular"] #simular .section-heading h2{font-size:clamp(23px,3vw,31px);line-height:1.2;margin:0 0 6px}
+body[data-flow-step="simular"] #simular .section-heading p{font-size:13px;margin:0}
+body[data-flow-step="simular"] #simular .simulator-input{padding:24px}
+@media(max-width:800px){body[data-flow-step="simular"] #simular .simulator-input{padding:16px}body[data-flow-step="simular"] #simular .section-heading h2{font-size:23px}}
 body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{display:none}body[data-flow-step="fatura"] #fatura,body[data-flow-step="simular"] #simular,body.simulator-embedded #simular{display:block!important}body[data-flow-step="fatura"] #cadastro,body[data-flow-step="simular"] #cadastro{display:none}body[data-flow-step="simular"] #fatura{display:none}body[data-flow-step="conclusao"] #cadastro,body[data-flow-step="conclusao"] #fatura,body[data-flow-step="conclusao"] #simular{display:none}#como-funciona{padding:32px 0}#duvidas{padding:26px 0!important}.hero-shell{padding-bottom:28px}
 </style>
 </head>
