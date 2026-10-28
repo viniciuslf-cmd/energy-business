@@ -39,7 +39,7 @@ export async function onRequestPost({request,env}){
   return json({error:"Informe nome do sócio e usuário (3 a 30 letras/números)."},400);
  try{
   const requested=typeof d?.password==="string"?d.password:"";
-  if(requested && (requested.length<12 || requested.length>128 || !/[A-Za-z]/.test(requested) || !/[0-9]/.test(requested)))return json({error:"A senha provisória deve ter 12 a 128 caracteres, incluindo letras e números."},400);
+  if(requested && (requested.length<4 || requested.length>128))return json({error:"A senha provisória deve ter entre 4 e 128 caracteres."},400);
   const pass=requested||randomPassword(),salt=bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
   const hash=await hashPass(pass,salt);
   const insert=await env.DB.prepare("INSERT INTO manager_accounts(username,display_name,role,password_salt,password_hash,iterations) SELECT ?,?,'socio',?,?,100000 WHERE (SELECT COUNT(*) FROM manager_accounts)<3 RETURNING username,display_name,role")
