@@ -28,6 +28,7 @@ footer{text-align:center;color:#8292a5;font-size:11px;padding:35px 20px}
 body.embedded .top,body.embedded footer{display:none}body.embedded .hero{padding:27px 0 33px}body.embedded .hero h1{font-size:clamp(32px,3.5vw,43px)}body.embedded .main{padding:25px 0}body.embedded{background:transparent}
 .football-scene{width:min(100%,760px);margin:18px auto 0;border-radius:20px;overflow:hidden;box-shadow:0 14px 36px #0003}.football-scene img{width:100%;height:auto;display:block;object-fit:contain;max-height:none}.football-scene figcaption{font-size:12px;line-height:1.5;padding:8px 13px;background:#ffffffeb;color:#29425c}@media(max-width:600px){.football-scene{width:100%;margin-top:18px}.football-scene img{width:100%;height:auto;max-height:none;object-fit:contain}}
 @media(min-width:880px){.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:32px;align-items:center}.hero .eyebrow,.hero h1,.hero p,.hero .path-note{grid-column:1}.hero .football-scene{grid-column:2;grid-row:1 / span 4;width:100%;margin:0}.hero h1{font-size:clamp(32px,3.6vw,52px)}.hero p{font-size:15px}.hero .path-note{margin-top:14px}}@media(max-width:879px){.hero .wrap{display:block}.hero .football-scene{margin:22px 0 0;width:100%}.hero h1{font-size:clamp(31px,7vw,46px)}}.football-scene img{aspect-ratio:auto!important;max-height:none!important;object-fit:contain!important}.main{padding-top:24px!important}.hero{overflow:visible!important}
+.club-registration{margin:22px 0 0;padding:20px;border:1px solid #dfe7ee;background:#fff;border-radius:20px;box-shadow:0 12px 35px #0c22380a;scroll-margin-top:12px}.club-registration[hidden]{display:none}.club-registration iframe{width:100%;height:760px;border:0;display:block;background:#fff;border-radius:14px}.club-registration h2{margin:0;font-size:24px}.club-registration p{margin:4px 0 12px;color:#61758b;font-size:13px}@media(max-width:600px){.club-registration{padding:10px;border-radius:14px}.club-registration h2{font-size:20px}}
 </style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize na energia. <span>Marque um golaço pelo seu clube!</span></h1>
@@ -36,12 +37,38 @@ body.embedded .top,body.embedded footer{display:none}body.embedded .hero{padding
 <main class="wrap main"><div class="card"><div class="toolbar"><div><h2>Escolha seu time</h2><p class="lead">Clubes são cadastrados e publicados pela gestão da Energy Business.</p></div><label><span style="display:block;font-size:11px;font-weight:800;margin-bottom:5px">Buscar clube</span><input id="search" type="search" placeholder="Digite o nome do clube..." aria-label="Buscar clube" autocomplete="off"></label></div>
 <p id="status" role="status" class="lead">Consultando clubes disponíveis...</p><div id="grid" class="grid" aria-live="polite"></div><div id="empty" class="empty" hidden>Nenhum clube com esse nome. A lista será atualizada conforme o cadastramento de novos parceiros.</div>
 <p class="lead" style="margin:24px 0 0"><strong>Transparência:</strong> a exibição de um clube ou de um endereço não confirma, por si só, contrato, patrocínio ou direito a repasse. Antes de informar dados pessoais em outro site, confira seu domínio e a política de privacidade. O benefício depende de análise, convênio e contratação elegível.</p></div>
+<section class="club-registration" id="club-registration" hidden><h2 id="chosen-club-title">Cadastro do torcedor</h2><p>Faça seu cadastro, envie as informações da conta e acompanhe a simulação nesta página.</p><iframe id="club-registration-frame" title="Cadastro de energia do torcedor" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe></section>
 <div class="callout"><div><h3>Quer somente desconto na sua conta?</h3><p>Volte para o cadastro da Energy Business, sem escolher clube.</p></div><a class="btn gold" href="/#cadastro">Fazer cadastro sem clube →</a></div></main><footer>© 2026 Energy Business · Plataforma de homologação · Benefícios sujeitos a condições</footer>
 <script>
 if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embedded");
 (function(){"use strict";
  const grid=document.getElementById("grid"),status=document.getElementById("status"),empty=document.getElementById("empty"),search=document.getElementById("search");
  let clubs=[];
+ const registration=document.getElementById("club-registration"),frame=document.getElementById("club-registration-frame"),chosenTitle=document.getElementById("chosen-club-title");
+ let frameSizing=null;
+ function openRegistration(club){
+  chosenTitle.textContent="Cadastro do torcedor · "+club.name;
+  registration.hidden=false;
+  const newSrc="/?clube="+encodeURIComponent(club.id)+"&jornada=clubes#cadastro";
+  if(frame.getAttribute("src")!==newSrc)frame.setAttribute("src",newSrc);
+  registration.scrollIntoView({block:"start",behavior:"smooth"});
+ }
+ frame.addEventListener("load",()=>{
+  if(frameSizing)clearInterval(frameSizing);
+  let previousStage="";
+  frameSizing=setInterval(()=>{
+   try{
+    const doc=frame.contentDocument,win=frame.contentWindow;
+    if(!doc||!win)return;
+    const stage=doc.body.dataset.flowStep||"cadastro";
+    const selectors=stage==="fatura"?["#fatura"]:stage==="simular"?["#simular"]:stage==="conclusao"?["#conclusao"]:["#cadastro"];
+    const visible=selectors.map(q=>doc.querySelector(q)).filter(Boolean);
+    const height=Math.max(560,...visible.map(x=>Math.ceil(x.getBoundingClientRect().bottom+win.scrollY+24)));
+    frame.style.height=Math.min(2600,height)+"px";
+    if(stage!==previousStage){if(previousStage)registration.scrollIntoView({block:"start",behavior:"smooth"});previousStage=stage}
+   }catch(_){}
+  },450);
+ });
  function add(tag,cls,text,parent){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;parent.append(el);return el}
  function render(){
   const q=search.value.trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
@@ -52,7 +79,8 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
    add("p","",c.state?"Estado: "+c.state:"Clube cadastrado",item);
    add("div","spacer","",item);
    const select=add("a","btn","Selecionar este clube e cadastrar →",item);
-   select.href="/?clube="+encodeURIComponent(c.id)+"#cadastro";
+   select.href="#club-registration";
+   select.addEventListener("click",e=>{e.preventDefault();openRegistration(c)});
    select.setAttribute("aria-label","Selecionar "+c.name+" e iniciar cadastro");
    if(c.site_url){
     const a=add("a","btn", "Acessar ambiente indicado ↗",item);
