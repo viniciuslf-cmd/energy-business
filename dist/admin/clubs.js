@@ -55,7 +55,6 @@ function render(){
    cell(tr,publishLabel(Boolean(club.is_active)));
    cell(tr,club.site_url||"Sem endereço");
    cell(tr,club.link_verified?"Validado":"Pendente");
-   cell(tr,club.partner_confirmed?String(club.club_share_percent??0)+"%":"Não divulgado");
    cell(tr,club.partner_confirmed?(club.support_message||"Conforme contrato"):"Parceria ainda não confirmada");
    cell(tr,club.partner_confirmed?"Formalizada":"Não confirmada");
    const info=document.createElement("span");info.textContent="Somente leitura";cell(tr,info);
@@ -74,9 +73,6 @@ function render(){
    const linkLabel=document.createElement("label");linkLabel.className="club-enabled";
    const linkCheck=document.createElement("input");linkCheck.type="checkbox";linkCheck.checked=Boolean(club.link_verified);
    linkLabel.append(linkCheck,document.createTextNode(" Conferido"));cell(tr,linkLabel);
-   const share=control("number",String(club.club_share_percent??0),"share club-share-input",8);
-   share.min="0";share.max="100";share.step="0.01";share.required=true;
-   cell(tr,share);
    const support=document.createElement("textarea");
    support.className="club-table-message";support.maxLength=650;support.rows=3;
    support.value=club.support_message||"";
@@ -88,10 +84,10 @@ function render(){
    const save=document.createElement("button");save.type="button";save.className="btn";save.textContent="Salvar";
    save.disabled=busy;
    save.onclick=async()=>{
-    if(!name.reportValidity()||!uf.reportValidity()||!site.reportValidity()||!share.reportValidity())return;
+    if(!name.reportValidity()||!uf.reportValidity()||!site.reportValidity())return;
     save.disabled=true;
     try{
-     await updateClub({id:club.id,name:name.value.trim(),state:uf.value.trim().toUpperCase(),is_active:checked.checked,club_share_percent:Number(share.value),support_message:support.value.trim(),partner_confirmed:partnerCheck.checked});
+     await updateClub({id:club.id,name:name.value.trim(),state:uf.value.trim().toUpperCase(),is_active:checked.checked,support_message:support.value.trim(),partner_confirmed:partnerCheck.checked});
      await updateLink(club.id,site.value.trim(),linkCheck.checked);
      await getClubs();
      message("Clube e endereço atualizados. O visitante só terá acesso a links conferidos.");
@@ -137,7 +133,6 @@ form.addEventListener("submit",async e=>{
   name:$("club-name").value.trim(),
   state:$("club-state").value.trim().toUpperCase(),
   is_active:$("club-active").checked,
-  club_share_percent:Number($("club-share").value),
   support_message:$("club-support-message").value.trim(),
   partner_confirmed:$("club-partner-confirmed").checked
  };
