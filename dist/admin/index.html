@@ -6,7 +6,7 @@ aside{position:sticky;top:0;height:100vh;background:var(--navy);color:white;padd
 .brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:850;letter-spacing:-.045em;padding:0 7px 39px}
 .brand-icon{width:43px;height:43px;border-radius:50%;flex:none;background-image:url('/energy-business-logo.png');background-size:114px 65px;background-position:-33.7px -8px}
 .brand em{font-style:normal;color:var(--gold)}.side-label{color:#7489a2;font-size:10px;letter-spacing:.13em;font-weight:850;padding:0 12px;margin:6px 0 13px}
-nav{display:grid;gap:5px}nav a{display:flex;align-items:center;gap:14px;padding:13px;border-radius:11px;font-size:13px;color:#b6c6d9;font-weight:650}nav a.active,nav a:hover{color:#fff;background:#ffffff13}nav a.active{box-shadow:inset 3px 0 var(--gold)}nav span{font-size:19px;color:var(--gold);width:20px;text-align:center}
+nav{display:grid;gap:5px}nav a{display:flex;align-items:center;gap:14px;padding:13px;border-radius:11px;font-size:13px;color:#b6c6d9;font-weight:650}nav a.active,nav a:hover{color:#fff;background:#ffffff13}nav a.active{box-shadow:inset 3px 0 var(--gold);background:#ffffff20;color:white}nav span{font-size:19px;color:var(--gold);width:20px;text-align:center}
 .side-foot{margin-top:auto;border-top:1px solid #ffffff18;padding:22px 12px;color:#899eb6;font-size:11px}
 .workspace{min-width:0}.topbar{height:77px;border-bottom:1px solid var(--line);background:#ffffffdd;display:flex;align-items:center;justify-content:space-between;padding:0 35px;gap:15px}.breadcrumb{color:#8c9bae;font-size:12px}.breadcrumb b{color:#344b67}.account{display:flex;align-items:center;gap:13px;color:#7c8da1;font-size:12px}.avatar{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:#f4e8cd;color:#916c26;font-weight:850}
 main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{font-size:32px;letter-spacing:-.05em;line-height:1.25;color:#182e48}h2{font-size:17px;letter-spacing:-.03em}h3{font-size:15px;letter-spacing:-.02em}p{color:#8190a4;font-size:13px}.eyebrow{font-size:10px;color:#b28a49;font-weight:850;letter-spacing:.13em;text-transform:uppercase;margin-bottom:7px}
@@ -69,10 +69,65 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 @media(max-width:600px){.club-login-line .btn{flex:1}.club-new>div:first-child{min-width:100%}.club-new>div:nth-child(2){flex:1}.clubs-panel{padding:18px}}
 
 .club-login[hidden],.club-test-badge[hidden]{display:none!important}.club-test-badge{display:inline-block;background:#f8e9c8;color:#7c5a21;border:1px solid #e8cc83;padding:5px 10px;border-radius:12px;font-size:10px;font-weight:800;margin-top:9px;letter-spacing:.04em}
+
+/* Dashboard SPA: menu fixo e rolagem somente dentro da área de trabalho. */
+html,body{height:100%;overflow:hidden;scroll-behavior:auto!important}
+.shell{height:100dvh;min-height:0;overflow:hidden}
+aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.workspace{display:flex;flex-direction:column;height:100dvh;min-height:0;overflow:hidden}
+.workspace .topbar{flex:none}
+#dashboard-main{flex:1;min-height:0;width:100%;max-width:none;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto}
+.dash-view[hidden],#partner-editor[hidden],#users-create-panel[hidden],#new-credential-card[hidden],#partner-history[hidden]{display:none!important}
+.dash-view{width:100%;max-width:1500px;margin:0 auto}
+.clubs-panel{margin-top:0}
+.dashboard-frame{display:block;width:100%;border:1px solid var(--line);border-radius:16px;background:#fff;height:calc(100dvh - 235px);min-height:360px;margin-top:19px}
+.partner-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.partner-fields label,.dash-label{display:flex;flex-direction:column;gap:6px;color:#3c536d;font-size:12px;font-weight:800}
+.partner-fields input,.partner-fields select,.partner-fields textarea,.dash-label input,#partners-search{width:100%;min-height:42px;background:#fafbfd;border:1px solid #d7e1eb;border-radius:10px;padding:10px 12px;color:#243d5a;font:inherit;font-size:13px}
+.partner-fields textarea{resize:vertical;min-height:92px}
+.partner-fields .partner-full{grid-column:1/-1}
+.partner-editor{margin:20px 0}
+.partner-actions{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:18px}
+.partners-kpis{margin:20px 0}
+.partners-table{min-width:1050px}
+.partners-table .btn{white-space:nowrap}
+.history-box{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}
+.history-item{padding:12px 0;border-bottom:1px solid #ecf0f5;font-size:12px;color:#506784}
+.history-item small{display:block;font-size:11px;color:#90a0af}
+.status-pill{display:inline-flex;border-radius:30px;background:#f1f4f8;color:#45617e;padding:5px 9px;font-size:11px;font-weight:800;white-space:nowrap}
+.status-pill.won{background:#e6f5eb;color:#237b51}.status-pill.progress{background:#fff2d7;color:#976b21}
+.users-list{margin-top:15px;display:grid;gap:12px}.user-row{border:1px solid var(--line);background:#f8fafc;border-radius:12px;padding:16px}
+.user-row b{display:block}.user-row span{display:block;font-size:11px;color:#7d8da0}
+.dash-label{margin:14px 0}.form-divider{border:0;border-top:1px solid var(--line);margin:25px 0}
+.credential-card{padding:19px;margin-top:18px;border:1px solid #eac57c;background:#fff9e9;border-radius:14px}
+.credential-card p{margin:4px 0 10px}.credential-card pre{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;color:#203c5b}
+@media(max-width:1150px){.partner-fields{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:800px){
+ html,body{overflow:hidden}
+ .shell{display:flex;flex-direction:column;height:100dvh}
+ aside{position:relative;top:auto;height:auto;min-height:0;max-height:none;overflow:visible;flex:none;padding:12px 15px}
+ aside .brand{padding:0}
+ nav#dashboard-navigation{display:flex;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin;overscroll-behavior-x:contain;padding:4px 0 8px}
+ nav#dashboard-navigation a{flex:none;white-space:nowrap}
+ .workspace{min-height:0;height:auto;flex:1}
+ .dashboard-frame{height:calc(100dvh - 260px)}
+ .partner-fields{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){.partner-fields{grid-template-columns:1fr}.kpis.partners-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.dash-view{min-width:0}.dashboard-frame{height:calc(100dvh - 285px)}}
 </style></head><body>
-<div class="shell"><aside><a class="brand" href="/"><span class="brand-icon" aria-label="Logotipo" role="img"></span>Energy Business<em>.</em></a><div class="side-label">MENU PRINCIPAL</div><nav><a href="#inicio" class="active"><span>▦</span> Visão geral</a><a href="#solicitacoes"><span>☷</span> Solicitações</a><a href="#clubes"><span>⚽</span> Clubes</a><a href="/admin/indicacoes/"><span>↗</span> Indicações</a><a href="/clubes/"><span>↗</span> Portal dos clubes</a><a href="/#simular"><span>↗</span> Simulador</a><a href="/privacidade/"><span>◇</span> Privacidade</a></nav><div class="side-foot">Energy Business<br>Painel em desenvolvimento. Informações reais continuam protegidas.</div></aside>
-<div class="workspace"><div class="topbar"><div class="breadcrumb">Energy Business / <b>Painel de gestão</b></div><div class="account"><span id="manager-name">Gestor autenticado</span><div class="avatar">EB</div><button class="btn alt" id="logout" type="button" style="padding:8px 12px">Sair</button></div></div>
-<main id="inicio"><div class="header-row"><div><p class="eyebrow">Visão da operação</p><h1>Seu negócio, em um só lugar.</h1><p>Um painel claro e organizado para a jornada Energy Business.</p></div><div class="buttons"><a class="btn alt" href="/">← Ver plataforma</a><button class="btn" id="refresh" type="button">↻ Atualizar</button></div></div>
+<div class="shell"><aside><a class="brand" href="/"><span class="brand-icon" aria-label="Logotipo" role="img"></span>Energy Business<em>.</em></a><div class="side-label">MENU PRINCIPAL</div><nav id="dashboard-navigation" aria-label="Menu do Painel de Gestão">
+<a href="#inicio" data-view="inicio" class="active" aria-current="page"><span>▦</span> Visão geral</a>
+<a href="#solicitacoes" data-view="solicitacoes"><span>☷</span> Solicitações</a>
+<a href="#clubes" data-view="clubes"><span>⚽</span> Clubes</a>
+<a href="#parceiros" data-view="parceiros"><span>◈</span> Gestão de parceiros</a>
+<a href="#indicacoes" data-view="indicacoes"><span>↗</span> Indicações</a>
+<a href="#portal" data-view="portal"><span>↗</span> Portal dos clubes</a>
+<a href="#simulador" data-view="simulador"><span>↗</span> Simulador</a>
+<a href="#privacidade" data-view="privacidade"><span>◇</span> Privacidade</a>
+<a href="#socios" data-view="socios"><span>♙</span> Acessos dos sócios</a>
+</nav><div class="side-foot">Energy Business<br>Painel em desenvolvimento. Informações reais continuam protegidas.</div></aside>
+<div class="workspace"><div class="topbar"><div class="breadcrumb">Energy Business / <b id="current-view-label">Visão geral</b></div><div class="account"><span id="manager-name">Gestor autenticado</span><div class="avatar">EB</div><button class="btn alt" id="logout" type="button" style="padding:8px 12px">Sair</button></div></div>
+<main id="dashboard-main" tabindex="-1"><section class="dash-view" id="inicio" data-view-pane="inicio"><div class="header-row"><div><p class="eyebrow">Visão da operação</p><h1>Seu negócio, em um só lugar.</h1><p>Um painel claro e organizado para a jornada Energy Business.</p></div><div class="buttons"><a class="btn alt" href="/">← Ver plataforma</a><button class="btn" id="refresh" type="button">↻ Atualizar</button></div></div>
 <div class="alert"><div><b>◈ Acesso autorizado ao Painel de Gestão</b><p id="access-text">Acesso único liberado. Consulte a operação e gerencie clubes e indicações sem informar outras chaves.</p></div><span class="tag" id="access-tag">Gestor conectado</span></div>
 <div class="kpis"><div class="kpi"><div class="kpi-top"><small>Total de solicitações</small><span class="kpi-icon">▤</span></div><strong id="total">0</strong><p>Registros exibidos</p></div>
 <div class="kpi"><div class="kpi-top"><small>Novas</small><span class="kpi-icon">✦</span></div><strong id="new">0</strong><p>Aguardando análise</p></div>
@@ -82,11 +137,12 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <section class="panel"><div class="panel-header"><div><h2>Próximas etapas</h2><p>Preparando a operação</p></div></div>
 <div class="next"><span class="next-id">01</span><div><h3>Validar o cadastro</h3><p>Concluir identificação jurídica e informações de privacidade.</p></div></div>
 <div class="next"><span class="next-id">02</span><div><h3>Conectar a fornecedora</h3><p>Habilitar análise de fatura, disponibilidade e condições comerciais.</p></div></div>
-<div class="next"><span class="next-id">03</span><div><h3>Homologar com os sócios</h3><p>Login único ativo para o painel. Use informações fictícias até a abertura da operação comercial.</p></div></div></section></div>
-<section id="solicitacoes" class="panel"><div class="panel-header"><div><h2>Solicitações</h2><p>Consulte os cadastros salvos no banco e teste o funil de atendimento</p></div><span id="count-tag" class="mini-tag">0 registros</span></div>
+<div class="next"><span class="next-id">03</span><div><h3>Homologar com os sócios</h3><p>Login único ativo para o painel. Use informações fictícias até a abertura da operação comercial.</p></div></div></section></div><div class="next-cta"><div><b>Simule economias com a identidade Energy Business</b><p>A origem é sempre a nossa empresa. Os percentuais são cenários ilustrativos.</p></div><a class="btn gold" href="#simulador" data-action="open-simulator">Abrir simulador →</a></div><div class="footer">Energy Business · Painel de Gestão · Navegação interna · 2026</div>
+</section>
+<section id="solicitacoes" data-view-pane="solicitacoes" hidden class="dash-view panel"><div class="panel-header"><div><h2>Solicitações</h2><p>Consulte os cadastros salvos no banco e teste o funil de atendimento</p></div><span id="count-tag" class="mini-tag">0 registros</span></div>
 <div class="table-toolbar"><label for="status">Etapa <select id="status"><option value="">Todas</option><option value="novo">Novo</option><option value="em_analise">Em análise</option><option value="contatado">Contatado</option><option value="convertido">Convertido</option><option value="descartado">Descartado</option></select></label><div class="buttons"><button class="btn alt" id="samples" type="button">Carregar exemplos</button><button class="btn alt" id="export" type="button" disabled>↓ Exportar CSV</button></div></div>
 <div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Conta ilustrativa</th><th>Perfil</th><th>Origem</th><th>Status</th><th>Data</th></tr></thead><tbody id="rows"></tbody></table><div class="empty" id="empty"><div class="empty-icon">▤</div><h3>Nenhuma solicitação nesta seleção</h3><p>Sem registros nesta seleção. No ambiente de homologação, crie cadastros fictícios na plataforma ou carregue exemplos de visualização.</p></div></div><div class="tbl-foot"><span id="count-footer">0 registros</span><span id="data-caption">Somente dados autorizados</span></div></section>
-<section id="clubes" class="panel clubs-panel">
+<section id="clubes" data-view-pane="clubes" class="dash-view panel clubs-panel" hidden>
 <div class="panel-header"><div><h2>⚽ Gestão de clubes</h2><p>Cadastre o clube, informe o endereço HTTPS da campanha no site do time e valide o link para liberar o encaminhamento.</p></div><span class="mini-tag" id="clubs-count">0 clubes</span></div>
 <div class="clubs-intro"><b id="club-intro-title">Gestão de Clubes</b><p id="club-intro-desc">O login libera cadastro e edição. Cadastre o endereço do clube e confirme a verificação antes de disponibilizá-lo aos visitantes.</p><span id="club-test-badge" class="club-test-badge" hidden>CATÁLOGO DE TESTE · GESTOR AUTENTICADO</span></div>
 <div class="club-login" id="club-login" hidden></div>
@@ -107,7 +163,55 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
 <tbody id="club-rows"></tbody></table><p id="club-empty" class="club-empty">Nenhum clube cadastrado ou publicado.</p></div>
 <p class="club-caveat" id="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p>
 </section>
-<div class="next-cta"><div><b>Simule economias com a identidade Energy Business</b><p>A origem é sempre a nossa empresa. Os percentuais são cenários ilustrativos.</p></div><a class="btn gold" href="#simulador" data-action="open-simulator">Abrir simulador →</a></div><div class="footer">Energy Business · Painel demonstrativo · 2026</div>
+
+<section class="dash-view" id="parceiros" data-view-pane="parceiros" hidden>
+ <div class="header-row"><div><p class="eyebrow">CRM estratégico · Energy Business</p><h1>Gestão de parceiros.</h1><p>Acompanhe clubes e grandes organizações, condições comerciais e o sócio responsável pelo relacionamento.</p></div><div class="buttons"><button id="partners-refresh" class="btn alt" type="button">↻ Atualizar</button><button id="partners-new" class="btn gold" type="button">+ Novo parceiro</button></div></div>
+ <div class="alert" style="margin-bottom:20px"><div><b>Negociações estratégicas, separadas dos consumidores</b><p>Clube cadastrado em Gestão de Clubes entra automaticamente neste acompanhamento. Os registros anteriores aparecem como “cadastro anterior”, sem atribuição inventada.</p></div><span id="partners-mode" class="tag">Homologação</span></div>
+ <div class="kpis partners-kpis">
+  <div class="kpi"><div class="kpi-top"><small>Parceiros cadastrados</small><span class="kpi-icon">◈</span></div><strong id="partners-total">0</strong><p>Clubes e outras organizações</p></div>
+  <div class="kpi"><div class="kpi-top"><small>Em negociação</small><span class="kpi-icon">↗</span></div><strong id="partners-negotiating">0</strong><p>Contato e negociação</p></div>
+  <div class="kpi"><div class="kpi-top"><small>Acordos concluídos</small><span class="kpi-icon">✓</span></div><strong id="partners-won">0</strong><p>Acordos e contratos</p></div>
+  <div class="kpi"><div class="kpi-top"><small>Torcedores estimados</small><span class="kpi-icon">⚽</span></div><strong id="partners-fans">0</strong><p>Soma das estimativas cadastradas</p></div>
+ </div>
+ <section id="partner-editor" class="panel partner-editor" hidden aria-label="Cadastro e edição de parceiro">
+  <div class="panel-header"><div><h2 id="partner-editor-title">Cadastrar parceiro estratégico</h2><p>Os percentuais são condições de negociação, não um desconto ativado automaticamente.</p></div><button id="partner-cancel" class="btn alt" type="button">Fechar</button></div>
+  <form id="partner-form"><input type="hidden" id="p-id"><div class="partner-fields">
+   <label>Nome da organização<input id="p-name" maxlength="140" minlength="2" required placeholder="Ex.: Clube de Futebol ABC"></label>
+   <label>Tipo de parceiro<select id="p-category"><option value="clube">Clube de futebol</option><option value="empresa">Empresa</option><option value="condominio">Condomínio</option><option value="instituicao">Instituição</option><option value="outro">Outro</option></select></label>
+   <label>Etapa da negociação<select id="p-status"><option value="pendente">Pendente</option><option value="contato">Em contato</option><option value="negociacao">Em negociação</option><option value="acordo">Acordo concluído</option><option value="contrato">Contrato assinado</option><option value="pausado">Pausado</option><option value="perdido">Não avançou</option></select></label>
+   <label>Clube vinculado no catálogo<select id="p-club-id"><option value="">Sem vínculo / cadastro estratégico independente</option></select></label>
+   <label>Torcedores estimados<input id="p-fans" type="number" min="0" max="300000000" step="1" placeholder="Ex.: 500000"></label>
+   <label>Unidades consumidoras potenciais<input id="p-potential" type="number" min="0" max="100000000" step="1" placeholder="Ex.: 50000"></label>
+   <label>Desconto para o próprio clube (%)<input id="p-discount" type="number" min="0" max="100" step=".01" placeholder="Ex.: 12"></label>
+   <label>Retorno negociado para Energy Business (%)<input id="p-return" type="number" min="0" max="100" step=".01" placeholder="Ex.: 15"></label>
+   <label>Participação negociada para o clube (%)<input id="p-club-share" type="number" min="0" max="100" step=".01" placeholder="Ex.: 5"></label>
+   <label>Conta mensal estimada do parceiro (R$)<input id="p-bill" type="number" min="0" max="1000000000" step=".01" placeholder="Ex.: 25000"></label>
+   <label>Contato na organização<input id="p-contact" maxlength="110" placeholder="Responsável pela negociação"></label>
+   <label>Telefone do contato<input id="p-phone" maxlength="40" placeholder="DDD + telefone"></label>
+   <label class="partner-full">Observações e próximos passos<textarea id="p-notes" maxlength="3000" rows="4" placeholder="Ex.: proposta enviada; reunião prevista; dúvidas comerciais; próximos passos"></textarea></label>
+  </div><div class="partner-actions"><span id="partner-owner-note" class="club-message">O responsável será o sócio autenticado no primeiro cadastro.</span><button type="submit" id="partner-save" class="btn gold">Salvar negociação</button></div><p id="partner-form-message" class="club-message" role="status"></p></form>
+  <div id="partner-history" class="history-box" hidden><h3>Histórico desta negociação</h3><div id="partner-history-items"></div></div>
+ </section>
+ <section class="panel" style="margin-top:20px"><div class="panel-header"><div><h2>Acompanhamento comercial</h2><p>Identifique quem cadastrou o parceiro e o estágio atual de cada negociação.</p></div><span class="mini-tag" id="partners-count">0 registros</span></div>
+ <div class="table-toolbar"><label for="partners-filter">Etapa <select id="partners-filter"><option value="">Todas</option><option value="pendente">Pendente</option><option value="contato">Em contato</option><option value="negociacao">Em negociação</option><option value="acordo">Acordo concluído</option><option value="contrato">Contrato assinado</option><option value="pausado">Pausado</option><option value="perdido">Não avançou</option></select></label><label for="partners-search">Buscar <input id="partners-search" type="search" placeholder="Clube ou empresa..." autocomplete="off"></label><button type="button" id="partners-export" class="btn alt">↓ Exportar CSV</button></div>
+ <div class="table-wrap"><table class="partners-table"><thead><tr><th>Organização</th><th>Etapa</th><th>Torcedores</th><th>Desconto clube</th><th>Retorno EB</th><th>Responsável</th><th>Última alteração</th><th>Ações</th></tr></thead><tbody id="partners-rows"></tbody></table></div>
+ <p id="partners-message" class="club-message" role="status"></p>
+ </section>
+</section>
+<section class="dash-view" id="socios" data-view-pane="socios" hidden><div class="header-row"><div><p class="eyebrow">Equipe · acesso individual</p><h1>Os três sócios.</h1><p>Cada sócio entra com usuário próprio. Assim, os cadastros e alterações ficam identificados corretamente.</p></div><button type="button" class="btn alt" id="users-refresh">↻ Atualizar</button></div>
+ <div class="alert"><div><b>Não compartilhe a mesma senha entre os três sócios</b><p>O usuário administrador pode criar mais dois acessos. As senhas novas aparecem apenas uma vez, no momento da criação. Recomenda-se alterar a senha provisória do gestor.</p></div><span class="tag" id="users-count">0 de 3</span></div>
+ <div class="split"><section class="panel"><h2>Acessos cadastrados</h2><p>Todos os sócios podem consultar e atualizar parceiros; o histórico registra o usuário autenticado.</p><div id="users-list" class="users-list"></div></section>
+ <section class="panel"><h2>Meu perfil</h2><p id="my-username" style="margin:6px 0 18px">Carregando...</p><form id="profile-form"><label class="dash-label">Nome de exibição<input id="profile-name" maxlength="90" required placeholder="Seu nome completo"></label><button class="btn" type="submit">Salvar meu nome</button><p id="profile-message" class="club-message" role="status"></p></form>
+ <hr class="form-divider"><h3>Alterar minha senha</h3><form id="password-form"><label class="dash-label">Senha atual<input type="password" id="password-current" required autocomplete="current-password"></label><label class="dash-label">Nova senha (mínimo 12 caracteres, letras e números)<input type="password" id="password-new" required autocomplete="new-password" minlength="12"></label><button class="btn alt" type="submit">Alterar senha</button><p id="password-message" class="club-message" role="status"></p></form></section></div>
+ <section class="panel" id="users-create-panel" hidden><h2>Cadastrar acesso de outro sócio</h2><p>Disponível apenas ao administrador. O sistema cria uma senha forte temporária, que deverá ser compartilhada por canal privado.</p>
+ <form id="users-create-form" class="partner-fields" style="margin-top:20px"><label>Nome completo do sócio<input id="new-user-name" required minlength="3" maxlength="90" placeholder="Nome completo"></label><label>Usuário para login<input id="new-user-login" required minlength="3" maxlength="30" pattern="[a-z][a-z0-9._-]{2,29}" placeholder="Ex.: socio2"></label><button class="btn gold" type="submit" style="align-self:end">Criar acesso individual</button></form><p id="users-message" class="club-message" role="status"></p>
+ <div id="new-credential-card" class="credential-card" hidden><b>Acesso criado — copie a senha agora</b><p>Por segurança, ela não poderá ser consultada novamente depois de sair desta tela.</p><div id="new-credential-content"></div><button type="button" class="btn alt" id="new-credential-copy">Copiar usuário e senha</button></div>
+ </section>
+</section>
+<section class="dash-view" id="indicacoes" data-view-pane="indicacoes" hidden><div class="header-row"><div><p class="eyebrow">Programa de indicações</p><h1>Indicações e validações.</h1><p>Confira os indicadores, regras e validações sem deixar o Painel de Gestão.</p></div></div><iframe class="dashboard-frame" title="Indicações Energy Business" data-src="/admin/indicacoes/?embed=1"></iframe></section>
+<section class="dash-view" id="portal" data-view-pane="portal" hidden><div class="header-row"><div><p class="eyebrow">Navegação integrada</p><h1>Portal dos clubes.</h1><p>Confira a experiência que os visitantes terão no portal, dentro do seu painel.</p></div></div><iframe class="dashboard-frame" title="Portal dos clubes" data-src="/clubes/?embed=1"></iframe></section>
+<section class="dash-view" id="simulador" data-view-pane="simulador" hidden><div class="header-row"><div><p class="eyebrow">Ferramentas</p><h1>Simulador.</h1><p>Simule cenários ilustrativos sem sair da área de gestão.</p></div></div><iframe class="dashboard-frame" title="Simulador Energy Business" data-src="/?painel=simulador#simular"></iframe></section>
+<section class="dash-view" id="privacidade" data-view-pane="privacidade" hidden><div class="header-row"><div><p class="eyebrow">Documentação</p><h1>Privacidade.</h1><p>Consulte a política vigente sem abrir uma nova página.</p></div></div><iframe class="dashboard-frame" title="Privacidade Energy Business" data-src="/privacidade/"></iframe></section>
 </main></div></div>
 <script>
 (function(){
@@ -163,4 +267,4 @@ main{padding:36px 36px 60px;max-width:1500px;margin:auto}h1,h2,h3,p{margin:0}h1{
  };
  render();check();
 })();
-</script><script src="/admin/clubs.js?v=20261027-manager-login" defer></script></body></html>
+</script><script src="/admin/clubs.js?v=20261027-manager-login" defer></script><script src="/admin/dashboard.js?v=20261027-fixednav-partners-v2" defer></script></body></html>
