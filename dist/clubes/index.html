@@ -30,6 +30,48 @@ body.embedded .top,body.embedded footer{display:none}body.embedded .hero{padding
 @media(min-width:880px){.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:32px;align-items:center}.hero .eyebrow,.hero h1,.hero p,.hero .path-note{grid-column:1}.hero .football-scene{grid-column:2;grid-row:1 / span 4;width:100%;margin:0}.hero h1{font-size:clamp(32px,3.6vw,52px)}.hero p{font-size:15px}.hero .path-note{margin-top:14px}}@media(max-width:879px){.hero .wrap{display:block}.hero .football-scene{margin:22px 0 0;width:100%}.hero h1{font-size:clamp(31px,7vw,46px)}}.football-scene img{aspect-ratio:auto!important;max-height:none!important;object-fit:contain!important}.main{padding-top:24px!important}.hero{overflow:visible!important}
 .club-registration{margin:22px 0 0;padding:20px;border:1px solid #dfe7ee;background:#fff;border-radius:20px;box-shadow:0 12px 35px #0c22380a;scroll-margin-top:12px}.club-registration[hidden]{display:none}.club-registration iframe{width:100%;height:760px;border:0;display:block;background:#fff;border-radius:14px}.club-registration h2{margin:0;font-size:24px}.club-registration p{margin:4px 0 12px;color:#61758b;font-size:13px}@media(max-width:600px){.club-registration{padding:10px;border-radius:14px}.club-registration h2{font-size:20px}}
 .club-experience{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}.club-experience .card{min-width:0}.club-experience .club-registration{margin:0;min-width:0;position:sticky;top:12px}.club-experience .club-registration iframe{min-height:650px}.club-experience .grid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.club-experience .club{min-height:170px;padding:16px}.club-experience .toolbar input{min-width:0}.club-experience #registration-placeholder{min-height:260px;display:flex;flex-direction:column;justify-content:center;padding:18px;background:linear-gradient(135deg,#f5f8fc,#e9f1fa);border-radius:12px}.club-experience #registration-placeholder[hidden],.club-experience #registration-active[hidden]{display:none}@media(max-width:950px){.club-experience{grid-template-columns:1fr}.club-experience .club-registration{position:static}.club-experience .grid{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}}@media(max-width:600px){.club-experience .club-registration iframe{min-height:640px}.club-experience .grid{grid-template-columns:1fr 1fr;gap:10px}.club-experience .club{padding:12px}.club-experience .club h3{font-size:15px}}@media(max-width:390px){.club-experience .grid{grid-template-columns:1fr}}
+
+/* Experiência Energia + Futebol: arte editorial e cadastro integrado. */
+body{background:#f6f8fc}
+.top{background:#0a1b31}
+.hero{position:relative;background:linear-gradient(115deg,#f8fafd 0%,#f4f8fc 55%,#dbe7ef 100%)!important;color:#10243d!important;padding:28px 0 38px!important;overflow:hidden!important}
+.hero>.wrap{position:relative;display:grid!important;grid-template-columns:minmax(0,1.13fr) minmax(0,.87fr)!important;column-gap:26px;align-items:start;width:min(1320px,calc(100% - 48px))}
+.hero .eyebrow,.hero h1,.hero> .wrap>p,.hero .path-note,.hero .club-picker{grid-column:1!important}
+.hero .eyebrow{color:#b18740!important;letter-spacing:.16em}
+.hero h1{font-size:clamp(36px,3.8vw,59px)!important;line-height:1.06!important;max-width:640px;margin:14px 0!important;position:relative;z-index:2;color:#10243d}
+.hero h1 span{color:#bc9146!important}
+.hero .wrap>p{font-size:15px;color:#36506b!important;max-width:560px;position:relative;z-index:2;margin-bottom:16px}
+.hero .path-note{color:#395671!important;margin-top:12px!important;position:relative;z-index:2}
+.hero .path-note b{color:#10243d}
+.hero .football-scene{grid-column:1!important;grid-row:auto!important;width:100%!important;margin:6px 0 12px!important;border-radius:14px!important;overflow:hidden!important;box-shadow:0 12px 26px #10243d1c!important;background:#16304a}
+.hero .football-scene img{width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;display:block}
+.hero .football-scene figcaption{background:#eef3f8;color:#29425c;padding:8px 12px}
+.hero .club-picker{padding:17px!important;box-shadow:0 6px 26px #10243d13!important;background:#ffffffef;z-index:2}
+.hero .club-picker h2{font-size:22px}
+.hero .club-picker .grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important;margin-top:13px}
+.hero .club-picker .club{min-height:0!important;padding:9px!important;gap:4px;text-align:center;align-items:center;border-radius:11px}
+.hero .club-picker .club .icon{font-size:23px!important}
+.hero .club-picker .club h3{font-size:12px!important;margin:0;line-height:1.3}
+.hero .club-picker .club .spacer,.hero .club-picker .club p,.hero .club-picker .club>a:not(:first-of-type),.hero .club-picker .club>.btn.disabled{display:none!important}
+.hero .club-picker .club>a.btn{font-size:10px;padding:7px 5px;line-height:1.3;width:100%;background:#122e4b}
+.hero .club-picker .toolbar{align-items:center}
+.hero .club-picker .toolbar label{max-width:210px}
+.hero .club-picker .toolbar input{min-width:0!important;width:100%!important;font-size:12px;padding:9px 11px}
+.hero .club-registration{grid-column:2!important;grid-row:1 / span 8!important;position:sticky!important;top:18px!important;margin:0!important;border-radius:20px!important;padding:21px!important;background:#fff;box-shadow:0 16px 42px #081a3330}
+.hero .club-registration iframe{width:100%;height:700px;border-radius:10px!important}
+.hero .club-registration h2{font-size:23px}
+.hero .club-registration #registration-placeholder{min-height:430px}
+.main{padding:0 0 50px!important}.main>.club-experience{display:none!important}.main>.callout{margin-top:20px}
+@media(max-width:900px){
+ .hero>.wrap{display:flex!important;flex-direction:column!important;width:min(700px,calc(100% - 30px));gap:10px}
+ .hero .eyebrow,.hero h1,.hero>.wrap>p,.hero .football-scene,.hero .club-picker,.hero .club-registration,.hero .path-note{width:100%!important}
+ .hero .club-registration{position:static!important;padding:15px!important;margin:0!important;order:9}
+ .hero .path-note{order:10}
+ .hero h1{font-size:clamp(32px,7.5vw,45px)!important}
+ .hero .football-scene{order:4}.hero .club-picker{order:5}
+ .hero .club-picker .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:450px){.hero .club-picker .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.hero .club-picker .toolbar{display:block}.hero .club-picker .toolbar label{max-width:none;margin-top:9px}.hero .club-registration{padding:8px!important}.hero .club-registration iframe{min-height:720px}}
 </style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize na energia. <span>Marque um golaço pelo seu clube!</span></h1>
@@ -45,6 +87,10 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
 (function(){"use strict";
  const grid=document.getElementById("grid"),status=document.getElementById("status"),empty=document.getElementById("empty"),search=document.getElementById("search");
  let clubs=[];
+ const heroWrap=document.querySelector(".hero>.wrap");
+ const picker=document.querySelector(".club-picker");
+ const regPanel=document.getElementById("club-registration");
+ if(heroWrap&&picker&&regPanel){heroWrap.append(picker);heroWrap.append(regPanel)}
  const registration=document.getElementById("club-registration"),frame=document.getElementById("club-registration-frame"),chosenTitle=document.getElementById("chosen-club-title");
  let frameSizing=null;
  function openRegistration(club){
@@ -53,7 +99,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
   document.getElementById("registration-active").hidden=false;
   const newSrc="/?clube="+encodeURIComponent(club.id)+"&jornada=clubes#cadastro";
   if(frame.getAttribute("src")!==newSrc)frame.setAttribute("src",newSrc);
-  registration.scrollIntoView({block:"start",behavior:"smooth"});
+  if(innerWidth<901)registration.scrollIntoView({block:"start",behavior:"smooth"});
  }
  frame.addEventListener("load",()=>{
   if(frameSizing)clearInterval(frameSizing);
