@@ -399,7 +399,7 @@ body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{dis
 .fan-hero-promo .fan-hero-player{display:grid!important;place-items:center!important;flex:0 0 110px!important;width:110px!important;height:128px!important;background:transparent!important;border:0!important;border-radius:0!important;color:#fff!important;opacity:.36;overflow:visible!important;filter:drop-shadow(0 9px 12px #0c3c2733)}
 .fan-hero-promo .fan-hero-player svg{width:110px;height:128px;display:block;transform:rotate(-5deg)}
 @media(max-width:520px){.fan-hero-promo .fan-hero-player{flex-basis:66px!important;width:66px!important;height:92px!important;opacity:.30}.fan-hero-promo .fan-hero-player svg{width:72px;height:92px}}
-@media(min-width:1021px){.intake-hero{align-items:end}.intake-hero .hero-form{margin-top:0;align-self:end}}
+@media(min-width:1021px){body:not([data-flow-step="fatura"]):not([data-flow-step="simular"]):not([data-flow-step="conclusao"]) .intake-hero{align-items:end} .intake-hero .hero-form{margin-top:0;align-self:end;margin-bottom:var(--fan-align-offset,0px)}}
 </style>
 </head>
 <body>
@@ -763,4 +763,18 @@ update();
  }catch(err){console.warn("O cadastro real ainda não está disponível.")}
 })();
 })();
-</script><script src="/fan.js?v=20261027-independent" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261027-linked-referrals" defer></script></body></html>
+</script><script src="/fan.js?v=20261027-independent" defer></script><script src="/fatura/parser.js?v=20261026-fiscal-cleanup" defer></script><script src="/fatura/reader.js?v=20261027-linked-referrals" defer></script><script>
+/* Sincroniza a borda inferior do formulário com o cartão de apoio ao clube. */
+(function(){
+ const root=document.querySelector('#cadastro .intake-hero'), intro=root?.querySelector('.hero-intro'), fan=document.getElementById('fan-hero-link');
+ if(!root||!intro||!fan)return;
+ const update=()=>{
+  if(window.innerWidth<1021){root.style.removeProperty('--fan-align-offset');return}
+  const gap=Math.max(0,Math.round(intro.getBoundingClientRect().bottom-fan.getBoundingClientRect().bottom));
+  root.style.setProperty('--fan-align-offset',gap+'px');
+ };
+ window.addEventListener('resize',update,{passive:true});
+ window.addEventListener('load',update,{once:true});
+ requestAnimationFrame(update);
+})();
+</script></body></html>
