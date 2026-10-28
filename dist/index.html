@@ -427,7 +427,6 @@ body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{dis
     </form>
   </div>
 </div></section>
-<div class="wrap benefits" aria-label="Benefícios"><div class="benefit"><span class="benefit-icon">↗</span><div><b>Economia em perspectiva</b><small>Visualize diferentes cenários.</small></div></div><div class="benefit"><span class="benefit-icon">◇</span><div><b>Experiência simplificada</b><small>Simule sem burocracia.</small></div></div><div class="benefit"><span class="benefit-icon">✳</span><div><b>Energia inteligente</b><small>Soluções conforme disponibilidade.</small></div></div></div>
 <section id="fatura" class="section"><div class="wrap">
 <div class="upload-step-header">
   <div class="upload-step-title"><span class="form-step">ETAPA 2 DE 3</span><span class="upload-step-label">Envio da conta de energia</span></div>
@@ -560,7 +559,7 @@ function alignToElement(element,stageId){
 }
 function navigateToStage(stage){
  if(["cadastro","fatura","simular","conclusao"].includes(stage))document.body.dataset.flowStep=stage;
- const selector=stage==="fatura"?"#fatura .bill-card":
+ const selector=stage==="fatura"?"#fatura .upload-step-header":
    stage==="simular"?"#simular .sim-step-heading":
    stage==="cadastro"?"#cadastro .hero-form":
    stage==="conclusao"?"#conclusao .complete-panel":null;
