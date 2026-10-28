@@ -663,8 +663,8 @@ form.addEventListener("submit",async e=>{
   const r=await fetch(testMode?"/api/test/leads":"/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
     name:$("entry-name").value.trim(),email:$("entry-email").value.trim(),phone:$("entry-phone").value.trim(),
     billAmount:Number($("entry-bill").value),rate:Number(rate.value),
-    propertyType:profile.value,clubCode:"energy-business",
-    favoriteClub:"",
+    propertyType:profile.value,clubCode:window.EnergySelectedClub?.id||"energy-business",
+    favoriteClub:window.EnergySelectedClub?.name||"",
     referredByCode:window.EnergyFan?.getRef?.()||"",
     consent:$("entry-consent").checked,turnstileToken:security
   })});
@@ -779,5 +779,25 @@ update();
  window.addEventListener('resize',update,{passive:true});
  window.addEventListener('load',update,{once:true});
  requestAnimationFrame(update);
+})();
+</script><script>
+/* Escolha explícita de clube, isolada das indicações compartilhadas. */
+(function(){
+ const params=new URLSearchParams(location.search);
+ const clubId=params.get('clube');
+ if(!clubId)return;
+ const form=document.querySelector('#cadastro .hero-form');
+ if(!form)return;
+ const notice=document.createElement('div');
+ notice.setAttribute('role','status');
+ notice.style.cssText='border:1px solid #c8d8ec;background:#eaf3fb;color:#163451;border-radius:12px;padding:11px 13px;font-size:13px;margin-bottom:12px';
+ notice.textContent='Validando o clube escolhido...';
+ form.prepend(notice);
+ fetch('/api/clubs',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Lista de clubes indisponível');return r.json()}).then(data=>{
+   const club=(data.clubs||[]).find(x=>x&&x.id===clubId);
+   if(!club){notice.textContent='Clube não encontrado. Volte à seleção de clubes para escolher novamente.';return}
+   window.EnergySelectedClub={id:club.id,name:club.name};
+   notice.textContent='Seu clube selecionado: '+club.name+'. Este vínculo acompanhará a solicitação, sujeito à confirmação do sistema.';
+ }).catch(()=>{notice.textContent='Não foi possível confirmar o clube. Retorne à seleção antes de concluir seu cadastro.'});
 })();
 </script></body></html>
