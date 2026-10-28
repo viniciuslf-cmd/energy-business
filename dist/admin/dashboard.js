@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id);
 const panes=new Map([...document.querySelectorAll("[data-view-pane]")].map(el=>[el.dataset.viewPane,el]));
 const links=[...document.querySelectorAll("#dashboard-navigation [data-view]")];
-const titles={inicio:"Visão geral",solicitacoes:"Clientes pessoa física",clubes:"Clubes",parceiros:"Gestão de clientes",fornecedores:"Fornecedores",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
+const titles={inicio:"Visão geral",solicitacoes:"Clientes pessoa física",clubes:"Clubes",parceiros:"Gestão de clientes",fornecedores:"Fornecedores",financeiro:"Financeiro",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
 const main=$("dashboard-main");
 let current="inicio",partners=[],histories=[],partnerLoaded=false,usersLoaded=false,currentUser=null,clubs=[];
 const labels={pendente:"Pendente",contato:"Em contato",negociacao:"Em negociação",acordo:"Acordo concluído",contrato:"Contrato assinado",pausado:"Pausado",perdido:"Não avançou"};
@@ -50,6 +50,8 @@ function showPane(view,updateHistory=true){
  if(view==="parceiros")loadPartners(true);
  if(view==="inicio")loadPartners();
  if(view==="socios")loadUsers();
+ if(view==="financeiro")loadFinance();
+ if(view==="inicio")loadFinance();
 }
 links.forEach(a=>a.addEventListener("click",e=>{e.preventDefault();showPane(a.dataset.view)}));
 function showPFSubtab(tab){$("pf-clients-content").hidden=tab!=="clientes";$("pf-referrals-content").hidden=tab!=="indicacoes";$("pf-tab-clients").className="btn "+(tab==="clientes"?"":"alt");$("pf-tab-referrals").className="btn "+(tab==="indicacoes"?"":"alt");if(tab==="indicacoes"){const frame=$("pf-referrals-content").querySelector("iframe[data-src]");if(frame&&!frame.src)frame.src=frame.dataset.src;}}
@@ -60,6 +62,32 @@ window.addEventListener("popstate",()=>showPane(location.hash.slice(1),false));
 document.querySelector("[data-action=open-simulator]")?.addEventListener("click",e=>{e.preventDefault();showPane("simulador")});
 showPane(location.hash.slice(1)||"inicio",false);
 
+/* Financeiro: registros persistidos, separados de projeções do laboratório. */
+const brl=v=>(Number(v)||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+let financeItems=[];
+async function loadFinance(){
+ try{const d=await api("/api/admin/finance");financeItems=d.items||[];renderFinance()}
+ catch(e){setMessage("fin-message",e.message,true);$("fin-overview-total").textContent="Indisponível"}
+}
+function renderFinance(){
+ const total=financeItems.reduce((a,x)=>a+Number(x.amount_cents||0),0);
+ const received=financeItems.reduce((a,x)=>a+Number(x.received_cents||0),0);
+ for(const [id,val] of [["fin-total",total],["fin-received",received],["fin-pending",total-received],["fin-overview-total",total],["fin-overview-received",received],["fin-overview-pending",total-received]])$(id).textContent=brl(val/100);
+ $("fin-overview-count").textContent=numbers(financeItems.length);
+ const tbody=$("finance-rows");tbody.replaceChildren();
+ for(const x of financeItems){
+  const tr=make("tr",tbody);
+  for(const s of [x.category==="patrocinio"?"Patrocínio":x.category==="energia"?"Energia":"Outros",x.client_name,x.supplier_name||"—",brl(x.amount_cents/100),brl(x.received_cents/100),brl((x.amount_cents-x.received_cents)/100),x.due_date||"—",x.created_by])make("td",tr,s);
+  const td=make("td",tr);const button=make("button",td,"Atualizar recebido","btn alt");
+  button.type="button";button.onclick=async()=>{const value=prompt("Total já recebido em R$ (valor acumulado):",String(x.received_cents/100));if(value===null)return;const n=Number(value.replace(",", "."));if(!Number.isFinite(n)||n<0||n>x.amount_cents/100){setMessage("fin-message","Valor inválido.",true);return}try{await api("/api/admin/finance",{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify({id:x.id,received:n})});await loadFinance();setMessage("fin-message","Recebimento atualizado.")}catch(e){setMessage("fin-message",e.message,true)}};
+ }
+}
+$("finance-form").addEventListener("submit",async e=>{
+ e.preventDefault();const form=e.currentTarget;const b=form.querySelector('button[type="submit"]');b.disabled=true;
+ try{await api("/api/admin/finance",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({category:$("fin-category").value,client_name:$("fin-client").value.trim(),supplier_name:$("fin-supplier").value.trim(),amount:Number($("fin-amount").value),received:Number($("fin-paid").value||0),due_date:$("fin-due").value,description:$("fin-description").value.trim()})});form.reset();await loadFinance();setMessage("fin-message","Comissão registrada e compartilhada no painel.")}catch(e){setMessage("fin-message",e.message,true)}finally{b.disabled=false}
+});
+$("finance-refresh").addEventListener("click",loadFinance);
+$("overview-open-finance").addEventListener("click",()=>showPane("financeiro"));
 /* CRM de clientes de grande porte e clubes. */
 async function loadPartners(force=false){
  if(partnerLoaded&&!force)return;
