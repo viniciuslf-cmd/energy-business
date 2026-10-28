@@ -38,7 +38,9 @@ export async function onRequestPost({request,env}){
  if(!/^[a-z][a-z0-9._-]{2,29}$/.test(username)||displayName.length<3||displayName.length>90)
   return json({error:"Informe nome do sócio e usuário (3 a 30 letras/números)."},400);
  try{
-  const pass=randomPassword(),salt=bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+  const requested=typeof d?.password==="string"?d.password:"";
+  if(requested && (requested.length<12 || requested.length>128 || !/[A-Za-z]/.test(requested) || !/[0-9]/.test(requested)))return json({error:"A senha provisória deve ter 12 a 128 caracteres, incluindo letras e números."},400);
+  const pass=requested||randomPassword(),salt=bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
   const hash=await hashPass(pass,salt);
   const insert=await env.DB.prepare("INSERT INTO manager_accounts(username,display_name,role,password_salt,password_hash,iterations) SELECT ?,?,'socio',?,?,100000 WHERE (SELECT COUNT(*) FROM manager_accounts)<3 RETURNING username,display_name,role")
    .bind(username,displayName,salt,hash).first();
