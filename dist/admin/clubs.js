@@ -6,13 +6,23 @@ const $=id=>document.getElementById(id);
 const rows=$("club-rows"),form=$("club-new-form");
 if(!rows||!form)return;
 let clubs=[],editable=true,busy=false,testClubsMode=false;
-$("club-new-toggle").addEventListener("click",()=>{const open=form.hidden;form.hidden=!open;$("club-new-heading").hidden=!open;$("club-new-toggle").setAttribute("aria-expanded",String(open));$("club-new-toggle").textContent=open?"Cancelar cadastro":"+ Cadastrar clube";if(open){form.scrollIntoView({block:"start",behavior:"smooth"});$("club-name").focus({preventScroll:true})}});
+function showClubRegistration(open){
+  $("club-list-view").hidden=open;
+  form.hidden=!open;
+  $("club-new-heading").hidden=!open;
+  $("club-new-toggle").setAttribute("aria-expanded",String(open));
+  $("club-new-toggle").textContent=open?"← Voltar à gestão de clubes":"+ Cadastrar clube";
+  if(open)$("club-name").focus({preventScroll:true});
+  const content=$("clubes").closest(".dash-content")||$("clubes").parentElement;
+  if(content&&typeof content.scrollTo==="function")content.scrollTo({top:0,behavior:"instant"});
+}
+$("club-new-toggle").addEventListener("click",()=>showClubRegistration(form.hidden));
 const message=(text,error=false)=>{
  const el=$("club-message");el.textContent=text;el.classList.toggle("error",error);
 };
 function stateLabels(){
  $("club-login").hidden=true;
- form.hidden=true;$("club-new-heading").hidden=true;$("club-new-toggle").setAttribute("aria-expanded","false");
+ showClubRegistration(false);
 }
 function cell(tr,child){
  const td=document.createElement("td");
@@ -135,7 +145,7 @@ form.addEventListener("submit",async e=>{
  try{
   const data=await api("/api/admin/clubs",{method:"POST",body:JSON.stringify(input)});
   if(url||verified)await updateLink(data.club.id,url,verified);
-  await getClubs();form.reset();form.hidden=true;$("club-new-heading").hidden=true;$("club-new-toggle").textContent="+ Cadastrar clube";$("club-new-toggle").setAttribute("aria-expanded","false");
+  await getClubs();form.reset();showClubRegistration(false);
   message("Clube cadastrado. Somente endereços validados são disponibilizados aos visitantes.");
  }catch(err){message(err.message,true)}
  finally{busy=false;submit.disabled=false}
