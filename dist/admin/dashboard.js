@@ -250,12 +250,13 @@ $("profile-form").addEventListener("submit",async e=>{
   usersLoaded=false;await loadUsers(true);setMessage("profile-message","Seu nome foi atualizado. Novos registros usarão esse nome.");
  }catch(e){setMessage("profile-message",e.message,true)}
 });
+$("new-user-login").addEventListener("input",e=>{const input=e.target;const pos=input.selectionStart;input.value=input.value.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g,"");try{input.setSelectionRange(pos,pos)}catch{}});
 $("users-create-form").addEventListener("submit",async e=>{
  e.preventDefault();
  const btn=e.currentTarget.querySelector("button");btn.disabled=true;
  try{
-  const result=await api("/api/admin/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:$("new-user-login").value.trim(),display_name:$("new-user-name").value.trim()})});
-  const credential="Usuário: "+result.user.username+"\nSenha temporária: "+result.temporaryPassword;
+  const result=await api("/api/admin/users",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username:$("new-user-login").value.trim().toLowerCase(),display_name:$("new-user-name").value.trim(),password:$("new-user-password").value||undefined})});
+  const credential="Usuário: "+result.user.username+"\nSenha provisória: "+result.temporaryPassword;
   $("new-credential-content").replaceChildren();
   make("pre",$("new-credential-content"),credential);
   $("new-credential-card").hidden=false;
