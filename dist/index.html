@@ -354,6 +354,21 @@ html{scroll-padding-top:88px}
 @media(max-width:850px){.complete-section>.wrap{grid-template-columns:1fr;max-width:740px}.complete-section .complete-panel{padding:28px 23px}.complete-section .complete-referral{margin-top:0}.complete-section .complete-referral .fan-panel-referral{padding:26px 24px}}
 @media(max-width:450px){.complete-section{padding:26px 0 40px}.complete-section .fan-panel-buttons{grid-template-columns:1fr}.complete-section .complete-referral .fan-panel-referral{padding:22px 20px}}
 
+
+/* Etapa 2: o envio da fatura deve ser o primeiro elemento útil e nunca ficar cortado. */
+body[data-flow-step="fatura"] #fatura{padding-top:20px;padding-bottom:42px;overflow:visible}
+body[data-flow-step="fatura"] #fatura .upload-step-header{margin-bottom:9px}
+body[data-flow-step="fatura"] #fatura .step2-status{margin:0 0 12px;padding:10px 14px}
+body[data-flow-step="fatura"] #fatura .section-heading{max-width:none;margin:0 0 15px}
+body[data-flow-step="fatura"] #fatura .section-heading .eyebrow{display:none}
+body[data-flow-step="fatura"] #fatura .section-heading h2{font-size:clamp(23px,3vw,31px);line-height:1.2;margin:0 0 6px}
+body[data-flow-step="fatura"] #fatura .section-heading h2 br{display:none}
+body[data-flow-step="fatura"] #fatura .section-heading p{font-size:13px;margin:0}
+body[data-flow-step="fatura"] #fatura .bill-card{padding:20px}
+body[data-flow-step="fatura"] #fatura .bill-chooser{min-height:200px;margin-top:12px;overflow:visible}
+body[data-flow-step="fatura"] #fatura .bill-layout{align-items:start;gap:15px}
+@media(max-width:800px){body[data-flow-step="fatura"] #fatura .bill-layout{grid-template-columns:minmax(0,1fr)}body[data-flow-step="fatura"] #fatura .bill-card{min-width:0;padding:16px}body[data-flow-step="fatura"] #fatura .bill-chooser{min-height:185px}body[data-flow-step="fatura"] #fatura .section-heading h2{font-size:23px}}
+
 body:not(.simulator-embedded) #fatura,body:not(.simulator-embedded) #simular{display:none}body[data-flow-step="fatura"] #fatura,body[data-flow-step="simular"] #simular,body.simulator-embedded #simular{display:block!important}body[data-flow-step="fatura"] #cadastro,body[data-flow-step="simular"] #cadastro{display:none}body[data-flow-step="simular"] #fatura{display:none}body[data-flow-step="conclusao"] #cadastro,body[data-flow-step="conclusao"] #fatura,body[data-flow-step="conclusao"] #simular{display:none}#como-funciona{padding:32px 0}#duvidas{padding:26px 0!important}.hero-shell{padding-bottom:28px}
 </style>
 </head>
@@ -545,11 +560,11 @@ function alignToElement(element,stageId){
 }
 function navigateToStage(stage){
  if(["cadastro","fatura","simular","conclusao"].includes(stage))document.body.dataset.flowStep=stage;
- const selector=stage==="fatura"?"#fatura .upload-step-header":
+ const selector=stage==="fatura"?"#fatura .bill-card":
    stage==="simular"?"#simular .sim-step-heading":
    stage==="cadastro"?"#cadastro .hero-form":
    stage==="conclusao"?"#conclusao .complete-panel":null;
- if(selector)alignToElement(document.querySelector(selector),stage);
+ if(selector){requestAnimationFrame(()=>requestAnimationFrame(()=>alignToElement(document.querySelector(selector),stage)));}
 }
 document.querySelectorAll('[data-public-nav="simular"]').forEach(a=>a.addEventListener("click",e=>{e.preventDefault();window.EnergyFlow?.navigateToStage?.("simular")}));
 window.EnergyFlow={
