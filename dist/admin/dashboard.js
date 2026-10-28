@@ -65,7 +65,7 @@ async function loadPartners(force=false){
   partners=result.partners||[];histories=result.history||[];partnerLoaded=true;
   $("partners-mode").textContent=result.testMode?"Homologação · registros de teste":"Operação comercial";
   await loadClubOptions();
-  renderPartners();setMessage("partners-message",partners.length+" negociações carregadas.");
+  renderPartners();await renderAdditionalOverview();setMessage("partners-message",partners.length+" negociações carregadas.");
  }catch(e){setMessage("partners-message",e.message,true);
   const item=$("ov-partners-latest");if(item)item.textContent="Não foi possível consultar os parceiros agora.";}
 }
@@ -86,6 +86,16 @@ function getFiltered(){
  const stage=$("partners-filter").value;
  return partners.filter(p=>(!stage||p.status===stage)&&(!query||p.name.toLocaleLowerCase("pt-BR").includes(query)||
  String(p.created_by||"").toLocaleLowerCase("pt-BR").includes(query)));
+}
+async function renderAdditionalOverview(){
+ $("ov-clubs-count").textContent=numbers(clubs.length);
+ const grouped=new Map();
+ for(const p of partners){const name=p.author_name||p.created_by||"Cadastro anterior";const val=grouped.get(name)||{all:0,active:0};val.all++;if(["contato","negociacao"].includes(p.status))val.active++;grouped.set(name,val)}
+ const target=$("ov-partners-by-owner");target.replaceChildren();
+ if(!grouped.size)make("p",target,"Nenhum parceiro cadastrado.");
+ for(const [name,v] of grouped){const line=make("div",target,undefined,"partner-overview-row");make("strong",line,name);make("span",line,v.all+" parceiros · "+v.active+" em negociação")}
+ try{const d=await api("/api/admin/referrals");const arr=Array.isArray(d)?d:(d.referrals||d.items||d.rows||null);$("ov-referrals-count").textContent=arr?numbers(arr.length):"—"}
+ catch{$("ov-referrals-count").textContent="Indisponível"}
 }
 function renderPartnerSummary(){
  const total=partners.length;
