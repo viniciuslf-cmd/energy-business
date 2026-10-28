@@ -105,6 +105,31 @@ body{background:#f6f8fc}
 @media(max-width:1120px){.hero>.wrap{grid-template-columns:minmax(0,1fr) minmax(340px,.95fr)!important;gap:22px!important}.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero .football-scene{left:13%;width:60%!important}}
 @media(max-width:900px){.hero{min-height:unset}.hero>.wrap{width:min(700px,calc(100% - 30px))!important;display:flex!important;flex-direction:column!important;gap:10px!important}.hero .football-scene{position:relative!important;top:auto;left:auto;width:100%!important;height:auto!important;max-height:440px;order:4;mask-image:none;-webkit-mask-image:none;border-radius:14px!important;overflow:hidden!important}.hero .football-scene img{height:auto!important;object-fit:contain!important}.hero .club-picker{margin-top:0!important;order:5}.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero .club-registration{position:static!important;order:9}.hero .path-note{order:8}.hero h1{font-size:clamp(33px,7vw,49px)!important}}
 @media(max-width:500px){.hero>.wrap{width:calc(100% - 24px)!important}.hero .club-picker .grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}.hero .club-picker .club .icon{width:50px!important;height:50px!important}.hero .club-registration{padding:12px!important}.hero .club-registration h2{font-size:21px!important}}
+
+/* Revisão da composição aprovada: foto em plano de fundo atrás do formulário e escudos soltos */
+.hero{isolation:isolate!important;overflow:hidden!important;background:linear-gradient(90deg,#fbfcfe 0%,#f7f9fc 44%,#e2eaf0 100%)!important;position:relative!important}
+.hero>.wrap{isolation:isolate;position:relative!important;align-items:start!important;min-height:870px;grid-template-columns:minmax(0,1.42fr) minmax(370px,1fr)!important;column-gap:20px!important}
+.hero .football-scene{position:absolute!important;z-index:-1!important;top:-30px!important;left:25%!important;width:78%!important;height:870px!important;overflow:visible!important;mask-image:linear-gradient(to right,transparent 0%,#000 24%,#000 98%)!important;-webkit-mask-image:linear-gradient(to right,transparent 0%,#000 24%,#000 98%)!important;pointer-events:none!important}
+.hero .football-scene img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:45% 45%!important;opacity:.86!important}
+.hero:before{content:"";pointer-events:none;position:absolute;inset:0;z-index:0;background:linear-gradient(90deg,#fbfcfefa 0%,#fbfcfef0 22%,#fbfcfe32 44%,transparent 71%),linear-gradient(0deg,#fbfcfe 0%,transparent 26%)}
+.hero .eyebrow,.hero h1,.hero>.wrap>p,.hero .path-note,.hero .club-picker{z-index:2!important}
+.hero h1{max-width:560px!important;font-size:clamp(36px,3.75vw,58px)!important;color:#0c1e33!important}
+.hero>.wrap>p{max-width:445px!important;color:#33485d!important}
+.hero .club-registration{z-index:6!important;position:relative!important;grid-column:2!important;grid-row:1 / span 9!important;background:#fffffff7!important;box-shadow:0 20px 60px #081a3329!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid #ffffffd9}
+.hero .club-picker{grid-column:1!important;grid-row:6!important;align-self:end!important;margin-top:360px!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;max-width:720px}
+.hero .club-picker .toolbar{margin-bottom:7px!important}
+.hero .club-picker .toolbar h2{font-size:11px!important;letter-spacing:.22em!important;color:#455164!important}
+.hero .club-picker .toolbar label{max-width:175px}
+.hero .club-picker .grid{grid-template-columns:repeat(8,minmax(0,1fr))!important;gap:8px!important;margin-top:9px!important}
+.hero .club-picker .club{background:#f8fafce0!important;border:1px solid #dfe5ed!important;box-shadow:0 3px 10px #081a3314;min-height:83px!important;border-radius:13px!important}
+.hero .club-picker .club .icon{width:54px!important;height:54px!important}
+.hero .club-picker .club h3{display:none!important}
+.hero .club-picker .club-picker-more{min-height:83px!important;background:#f8fafce0!important;box-shadow:0 3px 10px #081a3314}
+.hero .club-picker #status{font-size:10px!important;color:#596d7d}
+.hero .path-note{grid-row:5!important;align-self:start!important;margin-top:10px!important;max-width:410px}
+@media(max-width:1120px) and (min-width:901px){.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero>.wrap{min-height:960px}.hero .club-picker{margin-top:340px!important}}
+@media(max-width:900px){.hero>.wrap{min-height:unset!important;display:flex!important;flex-direction:column!important}.hero .football-scene{position:relative!important;z-index:1!important;top:auto!important;left:auto!important;width:100%!important;height:auto!important;margin:5px 0!important;mask-image:linear-gradient(to bottom,#000 80%,transparent)!important;-webkit-mask-image:linear-gradient(to bottom,#000 80%,transparent)!important}.hero .football-scene img{height:auto!important;opacity:1!important;object-fit:contain!important}.hero .club-picker{margin-top:0!important;width:100%!important;order:5!important}.hero .club-picker .grid{grid-template-columns:repeat(5,minmax(0,1fr))!important}.hero .club-registration{order:9!important;width:100%!important}.hero .path-note{order:8!important}.hero:before{background:linear-gradient(180deg,#fbfcfe 0%,#ffffff24 65%,#fbfcfe 100%)!important}}
+@media(max-width:500px){.hero .club-picker .grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}.hero .club-picker .toolbar{gap:5px!important}.hero .club-picker .toolbar label{max-width:155px!important}}
 </style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize na energia. <span>Marque um golaço pelo seu clube!</span></h1>
@@ -119,7 +144,7 @@ body{background:#f6f8fc}
 if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embedded");
 (function(){"use strict";
  const grid=document.getElementById("grid"),status=document.getElementById("status"),empty=document.getElementById("empty"),search=document.getElementById("search");
- let clubs=[];
+ let clubs=[]; let showAllClubs=false;
  const heroWrap=document.querySelector(".hero>.wrap");
  const picker=document.querySelector(".club-picker");
  const regPanel=document.getElementById("club-registration");
@@ -154,8 +179,9 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
  function add(tag,cls,text,parent){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;parent.append(el);return el}
  function render(){
   const q=search.value.trim().normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-  const selected=clubs.filter(c=>c.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().includes(q));
-  grid.replaceChildren();empty.hidden=Boolean(selected.length);empty.textContent=q?"Nenhum clube encontrado para esta busca.":"Os clubes aparecerão aqui quando forem cadastrados e publicados pelos gestores.";
+  const filtered=clubs.filter(c=>c.name.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().includes(q));
+  const selected=(q||showAllClubs)?filtered:filtered.slice(0,7);
+  grid.replaceChildren();empty.hidden=Boolean(filtered.length);empty.textContent=q?"Nenhum clube encontrado para esta busca.":"Os clubes aparecerão aqui quando forem cadastrados e publicados pelos gestores.";
   for(const c of selected){
    const item=add("article","club",undefined,grid);const crest=add("div","icon","",item);const logo=c.logo_url||c.logoUrl||c.crest_url||c.badge_url||c.logo||"";if(typeof logo==="string"&&/^https?:\/\/|^\//.test(logo)){const img=add("img","",undefined,crest);img.src=logo;img.alt="Escudo do "+c.name;img.loading="lazy";img.onerror=()=>{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}}else{crest.textContent=c.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase()}add("h3","",c.name, item);
    add("p","",c.state?"Estado: "+c.state:"Clube cadastrado",item);
@@ -174,7 +200,7 @@ if(new URLSearchParams(location.search).has("embed"))document.body.classList.add
     add("p","", "Aguarde o cadastro e a validação do endereço pelo gestor.",item);
    }
   }
-  if(!q&&clubs.length>7){const more=add("button","club-picker-more",undefined,grid);more.type="button";more.innerHTML="<strong>+</strong>Ver mais clubes";more.addEventListener("click",()=>{search.focus();search.scrollIntoView({behavior:"smooth",block:"center"});search.placeholder="Digite o clube que deseja encontrar...";});}
+  if(!q&&!showAllClubs&&filtered.length>7){const more=add("button","club-picker-more",undefined,grid);more.type="button";more.innerHTML="<strong>+</strong>Ver mais clubes";more.addEventListener("click",()=>{showAllClubs=true;render();});}
  }
  search.addEventListener("input",render);
  fetch("/api/clubs",{cache:"no-store"}).then(async response=>{
