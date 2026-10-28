@@ -21,16 +21,12 @@ export async function onRequestPost({request,env}){
    !Number.isInteger(amount)||amount<50||amount>1000000||
    ![10,15,20].includes(rate)||
    !["Residência","Empresa","Condomínio"].includes(propertyType)||
-   favoriteClub.length>70||(referral&&!/^EB[A-F0-9]{16}$/.test(referral))||
+   favoriteClub!==""||(referral&&!/^EB[A-F0-9]{16}$/.test(referral))||
    d?.consent!==true)
     return reply({error:"Use apenas informações fictícias: nome iniciando TESTE, e-mail @example.com e telefone 1199999XXXX."},400);
  try{
   const stats=await env.DB.prepare("SELECT COUNT(*) AS total FROM test_leads").first();
   if(Number(stats?.total)>=1500)return reply({error:"Limite de testes atingido."},429);
-  if(favoriteClub){
-   const allowed=await env.DB.prepare("SELECT id FROM test_clubs WHERE name=? COLLATE NOCASE AND is_active=1 LIMIT 1").bind(favoriteClub).first();
-   if(!allowed)return reply({error:"Clube não disponível. Atualize a lista."},400);
-  }
   const previous=await env.DB.prepare("SELECT id FROM test_leads WHERE phone=? OR email=? LIMIT 1").bind(phone,email).first();
   if(previous)return reply({error:"Esses contatos de teste já foram utilizados. Gere novos dados fictícios."},409);
   const id=crypto.randomUUID();
@@ -43,7 +39,7 @@ export async function onRequestPost({request,env}){
    if(inviter&&inviter.email!==email&&inviter.phone!==phone)referredBy=referral;
   }
   await env.DB.prepare("INSERT INTO test_leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,favorite_club,referral_code,referred_by_code,journey_token_hash) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)")
-   .bind(id,name,email,phone,amount,rate,propertyType,"clube-demo","teste-2026-10-27",favoriteClub,referralCode,referredBy,completionHash).run();
+   .bind(id,name,email,phone,amount,rate,propertyType,"energy-business","teste-2026-10-27","",referralCode,referredBy,completionHash).run();
   return reply({ok:true,testOnly:true,id,referralCode,completionToken,attributed:Boolean(referredBy),
     message:"Dados fictícios registrados para teste. Nenhum contrato ou desconto real foi criado."},201);
  }catch{return reply({error:"Falha ao gravar o cadastro fictício. Tente novamente."},503)}

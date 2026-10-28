@@ -593,7 +593,7 @@ form.addEventListener("submit",async e=>{
   const r=await fetch(testMode?"/api/test/leads":"/api/leads",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({
     name:$("entry-name").value.trim(),email:$("entry-email").value.trim(),phone:$("entry-phone").value.trim(),
     billAmount:Number($("entry-bill").value),rate:Number(rate.value),
-    propertyType:profile.value,clubCode:"clube-demo",
+    propertyType:profile.value,clubCode:"energy-business",
     favoriteClub:"",
     referredByCode:window.EnergyFan?.getRef?.()||"",
     consent:$("entry-consent").checked,turnstileToken:security

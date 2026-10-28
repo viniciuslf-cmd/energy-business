@@ -1,7 +1,7 @@
 import {getSession} from "../../_lib/session.js";
 const json=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store, private","X-Content-Type-Options":"nosniff"}});
 const statuses=new Set(["novo","em_analise","contatado","convertido","descartado"]);
-const sources=new Set(["clube-demo"]);
+const sources=new Set(["energy-business","clube-demo"]);
 async function authorized(request,env){return Boolean(await getSession(request,env))}
 export async function onRequestGet({request,env}){
   if(!(await authorized(request,env)))return json({error:"Acesso não autorizado."},401);

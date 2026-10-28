@@ -1,5 +1,5 @@
 const json=(data,status=200)=>Response.json(data,{status,headers:{"Cache-Control":"no-store","X-Content-Type-Options":"nosniff"}});
-const sources=new Set(["clube-demo"]);
+const sources=new Set(["energy-business"]);
 const profiles=new Set(["Residência","Empresa","Condomínio"]);
 export async function onRequestPost({request,env}){
   if(env.LEADS_ENABLED!=="true" || !env.DB || !env.TURNSTILE_SITE_KEY || !env.TURNSTILE_SECRET || !env.PRIVACY_CONTACT){
@@ -25,7 +25,7 @@ export async function onRequestPost({request,env}){
   if(name.length<2||name.length>120||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||
     !/^\d{10,13}$/.test(phone)||!Number.isInteger(billAmount)||billAmount<50||billAmount>1000000||
     ![10,15,20].includes(rate)||!profiles.has(propertyType)||!sources.has(clubCode)||
-    favoriteClub.length>70||/[\u0000-\u001f\u007f]/.test(favoriteClub)||
+    favoriteClub!==""||/[\u0000-\u001f\u007f]/.test(favoriteClub)||
     (referredByCode&&!/^EB[A-F0-9]{16}$/.test(referredByCode))||
     data.consent!==true||turnstileToken.length<10||turnstileToken.length>4096){
     return json({error:"Revise os campos e confirme a Política de Privacidade."},400);
@@ -42,11 +42,6 @@ export async function onRequestPost({request,env}){
   try{
     const duplicate=await env.DB.prepare("SELECT id FROM leads WHERE phone=? AND created_at>=datetime('now','-15 minutes') LIMIT 1").bind(phone).first();
     if(duplicate)return json({ok:true,message:"Recebemos uma solicitação recente com esse telefone."},200);
-    // Somente clubes habilitados no painel podem ser selecionados em novos cadastros.
-    if(favoriteClub){
-      const allowed=await env.DB.prepare("SELECT id FROM clubs WHERE name=? COLLATE NOCASE AND is_active=1 LIMIT 1").bind(favoriteClub).first();
-      if(!allowed)return json({error:"O clube selecionado não está habilitado. Atualize a página e escolha outra opção."},400);
-    }
     const id=crypto.randomUUID();
     const completionToken=Array.from(crypto.getRandomValues(new Uint8Array(32)),b=>b.toString(16).padStart(2,"0")).join("");
     const completionHash=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(completionToken))),b=>b.toString(16).padStart(2,"0")).join("");
@@ -58,7 +53,7 @@ export async function onRequestPost({request,env}){
       if(owner&&owner.phone!==phone&&owner.email!==email)validRef=referredByCode;
     }
     await env.DB.prepare("INSERT INTO leads (id,name,email,phone,bill_amount,discount_rate,property_type,club_code,consent_version,consent_at,status,favorite_club,referral_code,referred_by_code,journey_token_hash) VALUES (?,?,?,?,?,?,?,?,?,datetime('now'),'novo',?,?,?,?)")
-      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26",favoriteClub,referralCode,validRef,completionHash).run();
+      .bind(id,name,email,phone,billAmount,rate,propertyType,clubCode,"v1-2026-10-26","",referralCode,validRef,completionHash).run();
     return json({ok:true,id,referralCode,completionToken,message:"Solicitação recebida. Nossa equipe poderá entrar em contato após a análise. O programa de indicação depende de regulamento e elegibilidade."},201);
   }catch{return json({error:"Não foi possível registrar a solicitação agora."},503)}
 }
