@@ -175,14 +175,13 @@ aside{position:relative;height:100dvh;max-height:100dvh;min-height:0;overflow-y:
 <p id="club-message" role="status" aria-live="polite" class="club-message">Carregando clubes publicados...</p>
 
 <div class="clubs-scroll"><table class="clubs-table">
-<thead><tr><th>Clube</th><th>UF</th><th>Visibilidade</th><th>Site do clube</th><th>Link validado</th><th>Participação (%)</th><th>Mensagem ao torcedor</th><th>Convênio</th><th>Ações</th></tr></thead>
+<thead><tr><th>Clube</th><th>UF</th><th>Visibilidade</th><th>Site do clube</th><th>Link validado</th><th>Mensagem ao torcedor</th><th>Convênio</th><th>Ações</th></tr></thead>
 <tbody id="club-rows"></tbody></table><p id="club-empty" class="club-empty">Nenhum clube cadastrado ou publicado.</p></div>
-<p class="club-caveat" id="club-caveat">Percentual: parcela da economia do torcedor utilizada como base de cálculo da participação do clube, quando prevista em contrato. Ex.: economia de R$ 100 e participação de 10% correspondem a R$ 10 de referência para o clube. O percentual configurado não é um desconto adicional ao consumidor. Marque “Parceria formalizada” somente quando houver contrato. Clubes visíveis sem parceria aparecem apenas como preferência, sem promessa de repasse.</p></div>
+<p class="club-caveat" id="club-caveat">A presença de um clube no catálogo não constitui promessa de desconto, comissão ou repasse. As condições financeiras serão definidas separadamente com as fornecedoras.</p></div>
 <div class="section-split-title" id="club-new-heading" hidden><h3>Cadastrar novo clube</h3><p>Preencha os dados do clube e salve para retornar à gestão de clubes.</p></div>
 <form id="club-new-form" class="club-new" hidden>
   <div><label for="club-name">Nome do clube</label><input id="club-name" maxlength="80" minlength="2" required placeholder="Nome do clube"></div>
   <div><label for="club-state">UF (opcional)</label><input id="club-state" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SC"></div>
-  <div><label for="club-share">Participação do clube (%) sobre a economia</label><input id="club-share" type="number" step="0.01" min="0" max="100" value="0" required></div>
   <div class="club-support-field"><label for="club-support-message">Como o torcedor ajuda o clube</label><textarea id="club-support-message" maxlength="650" rows="3" placeholder="Benefício sujeito a parceria e contratação."></textarea></div>
   <div class="club-support-field"><label for="club-site-url">Endereço do site do clube (HTTPS)</label><input id="club-site-url" type="url" maxlength="500" placeholder="https://www.site-do-clube.com.br"><p style="font-size:11px;margin-top:4px">Use o link para a campanha de desconto de energia dentro do site do clube, quando existir. Não coloque links de terceiros não verificados.</p></div>
   <label class="club-active-check"><input type="checkbox" id="club-link-verified"> Endereço conferido e autorizado para divulgação</label>
