@@ -800,4 +800,24 @@ update();
    notice.textContent='Seu clube selecionado: '+club.name+'. Este vínculo acompanhará a solicitação, sujeito à confirmação do sistema.';
  }).catch(()=>{notice.textContent='Não foi possível confirmar o clube. Retorne à seleção antes de concluir seu cadastro.'});
 })();
+</script><script>
+/* Cadastro reutilizado dentro da área Energia + Futebol, sem navegação para a home. */
+(function(){
+ if(new URLSearchParams(location.search).get('jornada')!=='clubes')return;
+ document.documentElement.classList.add('club-journey');
+ const style=document.createElement('style');
+ style.textContent=`
+ html.club-journey .notice-banner,html.club-journey .site-header,html.club-journey .footer,
+ html.club-journey #como-funciona,html.club-journey #duvidas,
+ html.club-journey #cadastro .hero-intro{display:none!important}
+ html.club-journey body{background:#fff!important}
+ html.club-journey #cadastro{background:#fff!important;color:#163451!important;padding:0!important;overflow:visible!important}
+ html.club-journey #cadastro .intake-hero{display:block!important;max-width:860px;padding:4px 0 15px!important}
+ html.club-journey #cadastro .hero-form{max-width:760px!important;width:100%!important;margin:0 auto!important;border:1px solid #dfe7ee!important;box-shadow:none!important;align-self:initial!important}
+ html.club-journey #fatura,html.club-journey #simular,html.club-journey #conclusao{padding:12px 0 24px!important}
+ html.club-journey #fatura .wrap,html.club-journey #simular .wrap,html.club-journey #conclusao .wrap{max-width:850px!important}
+ html.club-journey .hero-shell:before{display:none!important}
+ `;
+ document.head.appendChild(style);
+})();
 </script></body></html>
