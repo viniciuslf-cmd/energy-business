@@ -27,7 +27,7 @@ label{display:block;font-size:12px;font-weight:780;color:#34516b;margin:7px 0}
 small{font-size:11px;color:#8292a2}
 .hide{display:none!important}
 @media(max-width:600px){main{padding:0 14px 40px;margin-top:22px}.card{padding:18px}.grid{grid-template-columns:1fr}.tier{grid-template-columns:1fr 1fr}.tier button{grid-column:1/-1}}
-body.embedded header{display:none}body.embedded main{max-width:none;margin:0;padding:2px 6px 28px}body.embedded{background:transparent}
+body.embedded #legacy-discount-rules{display:none}body.embedded header{display:none}body.embedded main{max-width:none;margin:0;padding:2px 6px 28px}body.embedded{background:transparent}
 </style></head><body>
 <header><a href="/admin/">← Painel Energy Business</a></header>
 <main>
@@ -39,7 +39,7 @@ body.embedded header{display:none}body.embedded main{max-width:none;margin:0;pad
 <div class="grid"><div class="stat"><b id="count-indic">0</b><span>Indicações identificadas</span></div><div class="stat"><b id="count-confirm">0</b><span>Cadastros confirmados</span></div><div class="stat"><b id="count-pending">0</b><span>Pendentes de análise</span></div></div>
 <p id="notice" class="status" role="status">Carregando dados…</p>
 </div>
-<div class="card"><h2>Desconto progressivo</h2><p>O número de indicações confirmadas define a maior faixa atingida. Percentuais não se somam. Em testes, a apuração é ilustrativa.</p>
+<div class="card" id="legacy-discount-rules"><h2>Desconto progressivo</h2><p>O número de indicações confirmadas define a maior faixa atingida. Percentuais não se somam. Em testes, a apuração é ilustrativa.</p>
 <label class="switch"><input type="checkbox" id="enabled"> Habilitar apuração das faixas (não aplica desconto real)</label>
 <div id="tiers" class="tiers"></div>
 <div class="flex"><button id="add-tier" type="button" class="secondary">+ Nova faixa</button><button id="save" type="button" class="gold">Salvar regras</button></div>
