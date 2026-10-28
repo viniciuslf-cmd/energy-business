@@ -84,3 +84,15 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 - D1: tabela `club_destinations` (DDL em `club-destinations.sql`), associada por `club_id`, usada pelos ambientes comercial e de homologação. Criada na produção Cloudflare.
 - Endpoint `POST /api/admin/club-link` exige login de gestor e origem confiável. URL HTTPS validada no servidor.
 - A autenticação inicial inclui migração de hash do cadastro conhecido do gestor com 150k para 100k iterações PBKDF2 somente após conferir a senha enviada. Essa exceção deve ser removida depois da migração e a credencial provisória precisa ser substituída por uma senha forte antes do uso comercial.
+
+## Painel de Gestão SPA + CRM estratégico (27/10/2026)
+
+- Menu fixo, seleção ativa em todas as áreas, sem navegar para fora de `/admin/`. A rolagem acontece apenas no conteúdo central.
+- Abas: Visão Geral, Solicitações, Clubes, Gestão de Parceiros, Indicações, Portal dos Clubes, Simulador, Privacidade, Acessos dos Sócios.
+- Áreas previamente separadas são integradas em iframes de mesma origem. `/admin/indicacoes/` mantém autorização de sessão e permite incorporação exclusivamente no mesmo domínio (CSP `frame-ancestors 'self'`).
+- Gestão de Parceiros armazena clubes/empresas/condomínios e etapa (pendente, contato, negociação, acordo, contrato, pausado, perdido). Inclui torcedores estimados, unidades potenciais, desconto para o clube, percentual de retorno para Energy Business, participação do clube, conta estimada, contatos e observações.
+- Clubes novos cadastrados no painel geram automaticamente um registro do CRM com `created_by` vinculado à sessão. Registros anteriores foram importados sem inventar autor (`created_by = sistema`). O criador original permanece imutável e mudanças posteriores geram histórico.
+- `manager_accounts` tem `display_name` e `role`, e cada sócio pode usar conta própria. Existe um administrador inicial e o administrador pode criar mais dois acessos individuais, total de três. Senhas novas são aleatórias, exibidas uma única vez, e são armazenadas somente com hash PBKDF2 + salt.
+- Sócios autenticados podem atualizar seus próprios nomes e alterar suas senhas. Senhas devem ser longas (mínimo 12 caracteres com letras e números).
+- Manter o ambiente de homologação com dados fictícios até concluir LGPD, configuração comercial e troca da senha provisória do administrador. Não compartilhar o login inicial entre os três sócios.
+- Novo endpoint autenticado `/api/admin/partners` (GET/POST/PATCH), `/api/admin/users` (GET/POST/PATCH), `/api/auth/change-password` (POST).

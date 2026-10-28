@@ -20,6 +20,9 @@
 })();
 </script>
 <style>
+/* Modo de apresentação exclusiva do simulador dentro do Painel de Gestão */
+html:has(body.simulator-embedded) .notice-banner,body.simulator-embedded .site-header,body.simulator-embedded .footer,body.simulator-embedded main > :not(#simular){display:none!important}
+body.simulator-embedded #simular{padding-top:16px!important;padding-bottom:30px!important}body.simulator-embedded{background:#f4f7fb}
 :root{--navy:#10243d;--navy2:#0a192d;--gold:#edc573;--gold-d:#c99b45;--ink:#152640;--muted:#708095;--line:#e2e8ef;--bg:#f5f7fa;--white:#fff;--radius:24px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:92px}
@@ -341,6 +344,7 @@ html{scroll-padding-top:88px}
 </style>
 </head>
 <body>
+<script>if(new URLSearchParams(location.search).get("painel")==="simulador")document.body.classList.add("simulator-embedded");</script>
 <div class="notice-banner"><strong>ENERGY BUSINESS</strong> · Plataforma em fase de demonstração. Simulações ilustrativas, sem contratação. <a href="/admin/" class="manager-top-link">🔒 Acesso à gestão</a></div>
 <header class="site-header"><div class="wrap header-inner">
   <a class="brand" href="/" aria-label="Energy Business, início"><span class="brand-icon" role="img" aria-label="Logotipo da empresa"></span>Energy Business<span class="dot">.</span></a>

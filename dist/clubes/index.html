@@ -25,6 +25,7 @@ h2{font-size:28px;letter-spacing:-.045em;margin:0 0 8px}.lead{font-size:13px;col
 .callout{margin-top:25px;display:flex;gap:18px;align-items:center;justify-content:space-between;background:#e9f0f7;border-radius:18px;padding:25px}.callout h3{margin:0 0 5px;font-size:18px}.callout p{margin:0;color:#6a7e94;font-size:12px}
 footer{text-align:center;color:#8292a5;font-size:11px;padding:35px 20px}
 @media(max-width:600px){.hero{padding:65px 0}.card{padding:21px}.toolbar input{width:100%;min-width:0}.callout{flex-direction:column;align-items:flex-start}.club{min-height:185px}}
+body.embedded .top,body.embedded footer{display:none}body.embedded .hero{padding:27px 0 33px}body.embedded .hero h1{font-size:clamp(32px,3.5vw,43px)}body.embedded .main{padding:25px 0}body.embedded{background:transparent}
 </style></head><body>
 <header class="top"><div class="wrap topbar"><a class="brand" href="/"><span class="mark" aria-label="Energy Business" role="img"></span>Energy Business</a><a class="back" href="/">← Voltar ao desconto normal</a></div></header>
 <section class="hero"><div class="wrap"><span class="eyebrow">Energia + futebol</span><h1>Economize energia e <span>apoie seu clube.</span></h1>
@@ -35,6 +36,7 @@ footer{text-align:center;color:#8292a5;font-size:11px;padding:35px 20px}
 <p class="lead" style="margin:24px 0 0"><strong>Transparência:</strong> a exibição de um clube ou de um endereço não confirma, por si só, contrato, patrocínio ou direito a repasse. Antes de informar dados pessoais em outro site, confira seu domínio e a política de privacidade. O benefício depende de análise, convênio e contratação elegível.</p></div>
 <div class="callout"><div><h3>Quer somente desconto na sua conta?</h3><p>Volte para o cadastro da Energy Business, sem escolher clube.</p></div><a class="btn gold" href="/#cadastro">Fazer cadastro sem clube →</a></div></main><footer>© 2026 Energy Business · Plataforma de homologação · Benefícios sujeitos a condições</footer>
 <script>
+if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embedded");
 (function(){"use strict";
  const grid=document.getElementById("grid"),status=document.getElementById("status"),empty=document.getElementById("empty"),search=document.getElementById("search");
  let clubs=[];

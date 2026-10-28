@@ -27,6 +27,7 @@ label{display:block;font-size:12px;font-weight:780;color:#34516b;margin:7px 0}
 small{font-size:11px;color:#8292a2}
 .hide{display:none!important}
 @media(max-width:600px){main{padding:0 14px 40px;margin-top:22px}.card{padding:18px}.grid{grid-template-columns:1fr}.tier{grid-template-columns:1fr 1fr}.tier button{grid-column:1/-1}}
+body.embedded header{display:none}body.embedded main{max-width:none;margin:0;padding:2px 6px 28px}body.embedded{background:transparent}
 </style></head><body>
 <header><a href="/admin/">← Painel Energy Business</a></header>
 <main>
@@ -47,6 +48,7 @@ small{font-size:11px;color:#8292a2}
 <div class="card"><h2>Indicadores e descontos estimados</h2><div class="scroll"><table><thead><tr><th>Indicador</th><th>Código</th><th>Confirmadas</th><th>Pendentes</th><th>Faixa alcançada</th></tr></thead><tbody id="inviters"></tbody></table></div></div>
 <div class="card"><h2>Conferência de indicações</h2><p>Somente cadastros fictícios completos podem ser confirmados neste ambiente. Contatos repetidos e autoindicações são bloqueados.</p><div class="scroll"><table><thead><tr><th>Indicado</th><th>Indicador</th><th>3 etapas</th><th>Situação</th><th>Validar</th></tr></thead><tbody id="referrals"></tbody></table></div></div>
 </main><script>
+if(new URLSearchParams(location.search).has("embed"))document.body.classList.add("embedded");
 (function(){
 "use strict";
 const $=id=>document.getElementById(id);

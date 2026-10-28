@@ -36,6 +36,11 @@ export async function onRequestPost({request,env}){
  try{
   const id=crypto.randomUUID();
   const row=await env.DB.prepare("INSERT INTO clubs (id,name,state,is_active,club_share_percent,support_message,partner_confirmed) VALUES(?,?,?,?,?,?,?) RETURNING id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at").bind(id,club.name,club.state,club.is_active,club.club_share_percent,club.support_message,club.partner_confirmed).first();
+  const session=await getSession(request,env);
+  await env.DB.prepare("INSERT OR IGNORE INTO strategic_partners(id,name,category,club_id,created_by,updated_by,is_test) VALUES(? ,?,'clube',?,?,?,?)")
+   .bind(row.id,row.name,row.id,session.username,session.username,0).run();
+  await env.DB.prepare("INSERT OR IGNORE INTO partner_history(id,partner_id,event,detail,performed_by) VALUES(?,?,?,?,?)")
+   .bind(crypto.randomUUID(),row.id,"criacao_clube","Novo clube cadastrado na Gestão de Clubes.",session.username).run();
   return respond({club:row},201);
  }catch(err){
   if(/UNIQUE/i.test(String(err)))return respond({error:"Esse clube já está cadastrado."},409);
@@ -54,6 +59,7 @@ export async function onRequestPatch({request,env}){
  try{
   const row=await env.DB.prepare("UPDATE clubs SET name=?,state=?,is_active=?,club_share_percent=?,support_message=?,partner_confirmed=?,updated_at=datetime('now') WHERE id=? RETURNING id,name,state,is_active,club_share_percent,support_message,partner_confirmed,created_at,updated_at").bind(club.name,club.state,club.is_active,club.club_share_percent,club.support_message,club.partner_confirmed,id).first();
   if(!row)return respond({error:"Clube não encontrado."},404);
+  await env.DB.prepare("UPDATE strategic_partners SET name=?,updated_by=?,updated_at=datetime('now') WHERE club_id=?").bind(row.name,(await getSession(request,env)).username,id).run();
   return respond({club:row});
  }catch(err){
   if(/UNIQUE/i.test(String(err)))return respond({error:"Já existe outro clube com esse nome."},409);

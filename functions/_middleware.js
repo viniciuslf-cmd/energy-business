@@ -18,7 +18,8 @@ export async function onRequest(context){
  if(page){
   const result=new Response(response.body,response);
   result.headers.set("Cache-Control","no-store, private");
-  result.headers.set("X-Frame-Options","DENY");
+  result.headers.set("X-Frame-Options",pathname.startsWith("/admin/indicacoes/")?"SAMEORIGIN":"DENY");
+  result.headers.set("Content-Security-Policy",pathname.startsWith("/admin/indicacoes/")?"frame-ancestors 'self'":"frame-ancestors 'none'");
   result.headers.set("X-Content-Type-Options","nosniff");
   result.headers.set("Referrer-Policy","same-origin");
   return result;
