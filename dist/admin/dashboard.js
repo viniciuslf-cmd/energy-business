@@ -48,6 +48,7 @@ function showPane(view,updateHistory=true){
  const iframe=panes.get(view)?.querySelector("iframe[data-src]");
  if(iframe&&!iframe.src)iframe.src=iframe.dataset.src;
  if(view==="parceiros")loadPartners(true);
+ if(view==="inicio")loadPartners();
  if(view==="socios")loadUsers();
 }
 links.forEach(a=>a.addEventListener("click",e=>{e.preventDefault();showPane(a.dataset.view)}));
@@ -65,7 +66,8 @@ async function loadPartners(force=false){
   $("partners-mode").textContent=result.testMode?"Homologação · registros de teste":"Operação comercial";
   await loadClubOptions();
   renderPartners();setMessage("partners-message",partners.length+" negociações carregadas.");
- }catch(e){setMessage("partners-message",e.message,true)}
+ }catch(e){setMessage("partners-message",e.message,true);
+  const item=$("ov-partners-latest");if(item)item.textContent="Não foi possível consultar os parceiros agora.";}
 }
 async function loadClubOptions(){
  try{
@@ -85,7 +87,24 @@ function getFiltered(){
  return partners.filter(p=>(!stage||p.status===stage)&&(!query||p.name.toLocaleLowerCase("pt-BR").includes(query)||
  String(p.created_by||"").toLocaleLowerCase("pt-BR").includes(query)));
 }
+function renderPartnerSummary(){
+ const total=partners.length;
+ $("ov-partners-total").textContent=numbers(total);
+ $("ov-partners-pending").textContent=numbers(partners.filter(p=>p.status==="pendente").length);
+ $("ov-partners-active").textContent=numbers(partners.filter(p=>["contato","negociacao"].includes(p.status)).length);
+ $("ov-partners-closed").textContent=numbers(partners.filter(p=>["acordo","contrato"].includes(p.status)).length);
+ $("overview-partners-tag").textContent=total+" parceiros";
+ const dest=$("ov-partners-latest");dest.replaceChildren();
+ if(!total){make("p",dest,"Nenhum parceiro estratégico cadastrado.");return}
+ const ordered=[...partners].sort((a,b)=>String(b.updated_at||"").localeCompare(String(a.updated_at||"")));
+ for(const partner of ordered.slice(0,3)){
+  const row=make("div",dest,undefined,"partner-overview-row");
+  make("strong",row,partner.name);
+  make("span",row,labels[partner.status]||partner.status);
+ }
+}
 function renderPartners(){
+ renderPartnerSummary();
  $("partners-total").textContent=numbers(partners.length);
  $("partners-negotiating").textContent=numbers(partners.filter(p=>["contato","negociacao"].includes(p.status)).length);
  $("partners-won").textContent=numbers(partners.filter(p=>["acordo","contrato"].includes(p.status)).length);
@@ -102,6 +121,11 @@ function renderPartners(){
   make("td",tr,p.fan_count===null?"—":numbers(p.fan_count));
   make("td",tr,pct(p.club_discount_percent));
   make("td",tr,pct(p.energy_return_percent));
+  make("td",tr,p.current_energy_supplier||"—");
+  make("td",tr,p.current_contract_end_date?String(p.current_contract_end_date).split("-").reverse().join("/"):"—");
+  make("td",tr,p.monthly_energy_consumption===null?"—":Number(p.monthly_energy_consumption).toLocaleString("pt-BR",{maximumFractionDigits:3})+" "+(p.monthly_energy_unit||"MWh"));
+  make("td",tr,({varejista:"Varejista",atacadista:"Atacadista",cativo:"Mercado cativo"})[p.purchase_modality]||"—");
+  make("td",tr,p.energy_provider||"Não informada");
   make("td",tr,p.author_name|| (p.created_by==="sistema"?"Cadastro anterior":p.created_by));
   make("td",tr,fmtDate(p.updated_at));
   const actions=make("td",tr);
@@ -110,7 +134,7 @@ function renderPartners(){
  }
  if(!filtered.length){
   const tr=make("tr",rows),td=make("td",tr,partners.length?"Nenhum parceiro corresponde aos filtros.":"Nenhum parceiro cadastrado. Comece cadastrando um clube ou cliente estratégico.");
-  td.colSpan=8;
+  td.colSpan=13;
  }
 }
 function getPayload(){
@@ -120,7 +144,10 @@ function getPayload(){
   club_id:$("p-club-id").value||null,fan_count:number("p-fans"),potential_accounts:number("p-potential"),
   club_discount_percent:number("p-discount"),energy_return_percent:number("p-return"),
   club_share_percent:number("p-club-share"),monthly_bill_estimate:number("p-bill"),
-  contact_name:$("p-contact").value.trim(),contact_phone:$("p-phone").value.trim(),notes:$("p-notes").value.trim()
+  contact_name:$("p-contact").value.trim(),contact_phone:$("p-phone").value.trim(),energy_provider:$("p-provider").value.trim(),
+  current_energy_supplier:$("p-current-supplier").value.trim(),current_contract_end_date:$("p-contract-end").value,
+  monthly_energy_consumption:number("p-consumption"),monthly_energy_unit:$("p-consumption-unit").value,
+  purchase_modality:$("p-modality").value,notes:$("p-notes").value.trim()
  };
 }
 function fillForm(p){
@@ -129,7 +156,10 @@ function fillForm(p){
  put("p-club-id",p?.club_id);put("p-fans",p?.fan_count);put("p-potential",p?.potential_accounts);
  put("p-discount",p?.club_discount_percent);put("p-return",p?.energy_return_percent);
  put("p-club-share",p?.club_share_percent);put("p-bill",p?.monthly_bill_estimate);
- put("p-contact",p?.contact_name);put("p-phone",p?.contact_phone);put("p-notes",p?.notes);
+ put("p-contact",p?.contact_name);put("p-phone",p?.contact_phone);put("p-provider",p?.energy_provider);
+ put("p-current-supplier",p?.current_energy_supplier);put("p-contract-end",p?.current_contract_end_date);
+ put("p-consumption",p?.monthly_energy_consumption);put("p-consumption-unit",p?.monthly_energy_unit||"MWh");
+ put("p-modality",p?.purchase_modality);put("p-notes",p?.notes);
  $("partner-editor-title").textContent=p?"Editar negociação: "+p.name:"Cadastrar parceiro estratégico";
  $("partner-owner-note").textContent=p?"Cadastrado por: "+(p.author_name||(p.created_by==="sistema"?"Cadastro anterior (sem identificação)":p.created_by))+". O autor do cadastro é preservado.":"O responsável pelo novo cadastro será o sócio que está autenticado.";
  const history=$("partner-history");history.hidden=!p;
@@ -151,11 +181,13 @@ function fillForm(p){
  }
  $("partner-form-message").textContent="";
  $("partner-editor").hidden=false;
- main.scrollTop=0;
+ const editor=$("partner-editor");
+ main.scrollTop+=editor.getBoundingClientRect().top-main.getBoundingClientRect().top-18;
  $("p-name").focus({preventScroll:true});
 }
 function editPartner(p){fillForm(p)}
 $("partners-new").addEventListener("click",()=>fillForm(null));
+$("dashboard-go-partners")?.addEventListener("click",()=>showPane("parceiros"));
 $("partner-cancel").addEventListener("click",()=>{$("partner-editor").hidden=true;$("partner-form").reset()});
 $("partners-refresh").addEventListener("click",()=>loadPartners(true));
 $("partners-search").addEventListener("input",renderPartners);
@@ -184,8 +216,8 @@ $("partner-form").addEventListener("submit",async e=>{
 });
 $("partners-export").addEventListener("click",()=>{
  const data=getFiltered();
- const fields=[["Organização","Tipo","Etapa","Torcedores","Potenciais unidades","Desconto clube (%)","Retorno Energy Business (%)","Participação clube (%)","Conta mensal estimada (R$)","Responsável","Atualizado em"],
-  ...data.map(p=>[p.name,categories[p.category]||p.category,labels[p.status]||p.status,p.fan_count,p.potential_accounts,p.club_discount_percent,p.energy_return_percent,p.club_share_percent,p.monthly_bill_estimate,p.author_name||p.created_by,p.updated_at])];
+ const fields=[["Organização","Tipo","Etapa","Torcedores","Potenciais unidades","Desconto clube (%)","Retorno Energy Business (%)","Participação clube (%)","Conta mensal estimada (R$)","Compra atual (fornecedor)","Fim contrato atual","Consumo mensal de energia","Unidade de consumo","Modalidade de compra","Fornecedora proposta","Responsável","Atualizado em"],
+  ...data.map(p=>[p.name,categories[p.category]||p.category,labels[p.status]||p.status,p.fan_count,p.potential_accounts,p.club_discount_percent,p.energy_return_percent,p.club_share_percent,p.monthly_bill_estimate,p.current_energy_supplier||"",p.current_contract_end_date||"",p.monthly_energy_consumption??"",p.monthly_energy_unit||"",p.purchase_modality||"",p.energy_provider||"",p.author_name||p.created_by,p.updated_at])];
  const protect=v=>{const s=String(v??"");return /^[=+\-@]/.test(s)?"'"+s:s};
  const csv="\uFEFF"+fields.map(row=>row.map(x=>'"'+protect(x).replace(/"/g,'""')+'"').join(";")).join("\r\n");
  const u=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));

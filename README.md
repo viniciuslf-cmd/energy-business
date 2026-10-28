@@ -96,3 +96,12 @@ Recompensas por indicação ainda NÃO estão implementadas. Bonificações exig
 - Sócios autenticados podem atualizar seus próprios nomes e alterar suas senhas. Senhas devem ser longas (mínimo 12 caracteres com letras e números).
 - Manter o ambiente de homologação com dados fictícios até concluir LGPD, configuração comercial e troca da senha provisória do administrador. Não compartilhar o login inicial entre os três sócios.
 - Novo endpoint autenticado `/api/admin/partners` (GET/POST/PATCH), `/api/admin/users` (GET/POST/PATCH), `/api/auth/change-password` (POST).
+
+## Ajustes comerciais e perguntas para compradores de energia (outubro/2026)
+
+- Visão Geral: removidos os blocos de “Próximas etapas” e o convite para abrir o simulador; inserido um resumo em tempo de leitura com total de parceiros, pendentes, em negociação e acordos/contratos, além dos três últimos atualizados.
+- Clubes: o catálogo de clubes cadastrados vem acima do formulário de inclusão.
+- Gestão de Parceiros: acompanhamento comercial antes do formulário de cadastro/edição; ao editar, o formulário aparece abaixo da listagem.
+- Campos para qualificar a compra de energia: fornecedor atual (`current_energy_supplier`); fim do contrato atual (`current_contract_end_date`, data ISO); consumo mensal (`monthly_energy_consumption`) e unidade (`monthly_energy_unit`, kWh/MWh); modalidade (`purchase_modality`, varejista/atacadista/cativo); empresa fornecedora proposta (`energy_provider`).
+- Os campos são opcionais enquanto não forem conhecidos, são validados pelo servidor, exibidos no painel de acompanhamento e incluídos no CSV. As informações permanecem isoladas por autenticação de gestor.
+- D1 alterado com colunas adicionais sem excluir informações antigas. `strategic-partners.sql` atualizado para novas instalações.

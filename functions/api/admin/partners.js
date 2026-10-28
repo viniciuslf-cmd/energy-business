@@ -12,15 +12,23 @@ function validate(d){
  const fan_count=integer(d.fan_count,300000000),potential_accounts=integer(d.potential_accounts,100000000),
  club_discount_percent=percent(d.club_discount_percent),energy_return_percent=percent(d.energy_return_percent),
  club_share_percent=percent(d.club_share_percent),monthly_bill_estimate=money(d.monthly_bill_estimate);
- const notes=clean(d.notes),contact_name=clean(d.contact_name),contact_phone=clean(d.contact_phone);
+ const notes=clean(d.notes),contact_name=clean(d.contact_name),contact_phone=clean(d.contact_phone),energy_provider=clean(d.energy_provider);
+ const current_energy_supplier=clean(d.current_energy_supplier);
+ const current_contract_end_date=clean(d.current_contract_end_date);
+ const monthly_energy_consumption=(d.monthly_energy_consumption===null||d.monthly_energy_consumption===undefined||d.monthly_energy_consumption==="")?null:Number(d.monthly_energy_consumption);
+ const monthly_energy_unit=String(d.monthly_energy_unit||"MWh"),purchase_modality=String(d.purchase_modality||"");
+ const dateValid=!current_contract_end_date||(/^\d{4}-\d{2}-\d{2}$/.test(current_contract_end_date)&&!Number.isNaN(Date.parse(current_contract_end_date+"T00:00:00Z"))&&new Date(current_contract_end_date+"T00:00:00Z").toISOString().startsWith(current_contract_end_date));
  const club_id=d.club_id?String(d.club_id):null;
  if(name.length<2||name.length>140||/[<>\u0000-\u001f]/.test(name)||!types.has(category)||!stages.has(status)||
  [fan_count,potential_accounts,club_discount_percent,energy_return_percent,club_share_percent,monthly_bill_estimate].some(Number.isNaN)||
- notes.length>3000||contact_name.length>110||contact_phone.length>40||
+ notes.length>3000||contact_name.length>110||contact_phone.length>40||energy_provider.length>120||/[<>\u0000-\u001f\u007f]/.test(energy_provider)||
+ current_energy_supplier.length>120||/[<>\u0000-\u001f\u007f]/.test(current_energy_supplier)||!dateValid||
+ (monthly_energy_consumption!==null&&(!Number.isFinite(monthly_energy_consumption)||monthly_energy_consumption<0||monthly_energy_consumption>1000000000000))||
+ !["MWh","kWh"].includes(monthly_energy_unit)||!["","varejista","atacadista","cativo"].includes(purchase_modality)||
  (club_id&&!uuid.test(club_id))||(category!=="clube"&&club_id))return null;
- return {name,category,status,fan_count,potential_accounts,club_discount_percent,energy_return_percent,club_share_percent,monthly_bill_estimate,notes,contact_name,contact_phone,club_id};
+ return {name,category,status,fan_count,potential_accounts,club_discount_percent,energy_return_percent,club_share_percent,monthly_bill_estimate,notes,contact_name,contact_phone,energy_provider,current_energy_supplier,current_contract_end_date,monthly_energy_consumption,monthly_energy_unit,purchase_modality,club_id};
 }
-const fields=["name","category","status","fan_count","potential_accounts","club_discount_percent","energy_return_percent","club_share_percent","monthly_bill_estimate","notes","contact_name","contact_phone","club_id"];
+const fields=["name","category","status","fan_count","potential_accounts","club_discount_percent","energy_return_percent","club_share_percent","monthly_bill_estimate","notes","contact_name","contact_phone","energy_provider","current_energy_supplier","current_contract_end_date","monthly_energy_consumption","monthly_energy_unit","purchase_modality","club_id"];
 async function validateClub(env,data){
  if(!data.club_id)return true;
  const tbl=env.LEADS_ENABLED==="true"?"clubs":"test_clubs";
