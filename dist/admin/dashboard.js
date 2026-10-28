@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id);
 const panes=new Map([...document.querySelectorAll("[data-view-pane]")].map(el=>[el.dataset.viewPane,el]));
 const links=[...document.querySelectorAll("#dashboard-navigation [data-view]")];
-const titles={inicio:"Visão geral",solicitacoes:"Clientes pessoa física",clubes:"Clubes",parceiros:"Gestão de clientes",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
+const titles={inicio:"Visão geral",solicitacoes:"Clientes pessoa física",clubes:"Clubes",parceiros:"Gestão de clientes",fornecedores:"Fornecedores",indicacoes:"Indicações",portal:"Portal dos clubes",simulador:"Simulador",privacidade:"Privacidade",socios:"Acessos dos sócios"};
 const main=$("dashboard-main");
 let current="inicio",partners=[],histories=[],partnerLoaded=false,usersLoaded=false,currentUser=null,clubs=[];
 const labels={pendente:"Pendente",contato:"Em contato",negociacao:"Em negociação",acordo:"Acordo concluído",contrato:"Contrato assinado",pausado:"Pausado",perdido:"Não avançou"};
