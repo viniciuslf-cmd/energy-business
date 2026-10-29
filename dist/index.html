@@ -794,14 +794,14 @@ update();
  if(!form)return;
  const notice=document.createElement('div');
  notice.setAttribute('role','status');
- notice.style.cssText='border:1px solid #c8d8ec;background:#eaf3fb;color:#163451;border-radius:12px;padding:11px 13px;font-size:13px;margin-bottom:12px';
+ notice.style.cssText='border:1px solid #c8d8ec;background:#eaf3fb;color:#163451;border-radius:10px;padding:7px 10px;font-size:12px;line-height:1.4;margin-bottom:9px';
  notice.textContent='Validando o clube escolhido...';
  form.prepend(notice);
  fetch('/api/clubs',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Lista de clubes indisponível');return r.json()}).then(data=>{
    const club=(data.clubs||[]).find(x=>x&&x.id===clubId);
    if(!club){notice.textContent='Clube não encontrado. Volte à seleção de clubes para escolher novamente.';return}
    window.EnergySelectedClub={id:club.id,name:club.name};
-   notice.textContent='Seu clube selecionado: '+club.name+'. Este vínculo acompanhará a solicitação, sujeito à confirmação do sistema.';
+   notice.textContent='Clube selecionado: '+club.name+' · vinculado a este cadastro.';
  }).catch(()=>{notice.textContent='Não foi possível confirmar o clube. Retorne à seleção antes de concluir seu cadastro.'});
 })();
 </script><script>
